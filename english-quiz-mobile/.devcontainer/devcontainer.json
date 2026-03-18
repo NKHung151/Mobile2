@@ -1,0 +1,48 @@
+{
+  "name": "English Quiz Mobile",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "forwardPorts": [8081, 19000, 19001, 19002, 3000],
+  "portsAttributes": {
+    "8081": {
+      "label": "Expo Web",
+      "onAutoForward": "openBrowser"
+    },
+    "19000": {
+      "label": "Expo",
+      "onAutoForward": "notify"
+    },
+    "19001": {
+      "label": "Expo Debugger",
+      "onAutoForward": "silent"
+    },
+    "19002": {
+      "label": "Expo DevTools",
+      "onAutoForward": "silent"
+    },
+    "3000": {
+      "label": "API Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "npm install",
+  "postStartCommand": "echo '✅ Codespace ready! Run: npx expo start --web --tunnel'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "dsznajder.es7-react-js-snippets",
+        "bradlc.vscode-tailwindcss",
+        "formulahendry.auto-rename-tag"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    }
+  }
+}
