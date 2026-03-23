@@ -1,4 +1,4 @@
-rootProject.name = 'EnglishQuiz'
+rootProject.name = 'English Quiz'
 
 dependencyResolutionManagement {
   versionCatalogs {

@@ -53,43 +53,20 @@ async function generateEmbeddingsBatch(texts) {
     const batch = texts.slice(i, i + BATCH_SIZE);
 
     try {
-      const url = `${BASE_URL}/models/${config.gemini.embeddingModel}:batchEmbedContent?key=${config.gemini.apiKey}`;
+      const model = genAI.getGenerativeModel({ model: config.gemini.embeddingModel });
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          requests: batch.map((text) => ({
-            model: `models/${config.gemini.embeddingModel}`,
-            content: { parts: [{ text }] },
-          })),
-        }),
-      });
+      // Generate embeddings for each text in the batch
+      const embeddings = await Promise.all(
+        batch.map(async (text) => {
+          const result = await model.embedContent(text);
+          return result.embedding.values;
+        })
+      );
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          const models = await listAvailableModels();
-          logger.error(
-            "Embedding model not found. Available Gemini models:",
-            models,
-          );
-        }
-        throw new Error(
-          `Embedding API error: ${response.status} ${response.statusText}`,
-        );
-      }
-
-      const data = await response.json();
-      const embeddings = data.embeddings.map((item) => item.values);
       allEmbeddings.push(...embeddings);
-      logger.debug(
-        `Generated embeddings for batch ${Math.floor(i / BATCH_SIZE) + 1}`,
-      );
+      logger.debug(`Generated embeddings for batch ${Math.floor(i / BATCH_SIZE) + 1}`);
     } catch (error) {
-      logger.error(
-        `Error generating embeddings for batch starting at ${i}:`,
-        error,
-      );
+      logger.error(`Error generating embeddings for batch starting at ${i}:`, error);
       throw error;
     }
   }
