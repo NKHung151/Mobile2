@@ -74,7 +74,19 @@ app.use((req, res, next) => {
 
 // Rate limiting
 app.use(generalLimiter);
+// english-quiz-api/src/app.js  ── ADD these lines to your existing app.js ──
 
+// 1. Import the router (add with your other route imports)
+const practiceRoutes = require("./routes/practice");
+
+// 2. Register it (add with your other app.use() calls)
+app.use("/api/practice", practiceRoutes);
+
+// ─── That's it. The 4 endpoints become available: ────────────────────────────
+// GET  /api/practice/topics/:userId
+// POST /api/practice/start
+// POST /api/practice/answer
+// GET  /api/practice/session/:userId/:sessionId
 // Routes
 app.use("/health", healthRoutes);
 app.use("/api/topics", topicsRoutes); // Public topics endpoint (no auth required)

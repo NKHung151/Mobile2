@@ -152,6 +152,33 @@ export default function HomeScreen({ navigation }) {
 
         {/* Main Actions */}
         <View style={styles.actionsContainer}>
+
+
+        <TouchableOpacity
+            style={[styles.actionCard, styles.practiceCard]}
+            onPress={() => handleNavigate("Practice")}
+            activeOpacity={0.9}
+          >
+            <View style={styles.actionContent}>
+              <View style={styles.actionIconWrapper}>
+                <Ionicons name="school" size={28} color="#fff" />
+              </View>
+              <View style={styles.actionTextContainer}>
+                <Text style={styles.actionTitle}>Grammar Practice</Text>
+                <Text style={styles.actionDescription}>
+                  Improve grammar skills with exercises
+                </Text>
+              </View>
+            </View>
+            <View style={styles.actionArrow}>
+              <Ionicons
+                name="arrow-forward"
+                size={20}
+                color="rgba(255,255,255,0.8)"
+              />
+            </View>
+            <View style={styles.cardDecoration} />
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.actionCard, styles.quizCard]}
             onPress={() => handleNavigate("Quiz")}
@@ -444,6 +471,9 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
   },
+  practiceCard: {
+      backgroundColor: "#4CAF50", // xanh lá chính
+    },
   quizCard: {
     backgroundColor: COLORS.primary,
   },
