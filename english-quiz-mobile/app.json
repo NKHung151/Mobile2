@@ -29,6 +29,7 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "sdkVersion": "50.0.0"
+    "sdkVersion": "50.0.0",
+    "platforms": ["ios", "android", "web"]
   }
 }

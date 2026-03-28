@@ -11,6 +11,7 @@ import {
   FlatList,
   Alert,
   Dimensions,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
@@ -308,10 +309,12 @@ export default function HistoryScreen({ navigation }) {
         style={styles.historyCard}
         activeOpacity={0.7}
         onPress={() => {
-          Alert.alert(
-            item.topic_title,
-            `Mode: ${item.mode}\nStatus: ${item.status}\nScore: ${item.total_score}/${item.max_score}\nAccuracy: ${item.accuracy_percentage}%\nDuration: ${item.duration_minutes} minutes`,
-          );
+          const message = `Mode: ${item.mode}\nStatus: ${item.status}\nScore: ${item.total_score}/${item.max_score}\nAccuracy: ${item.accuracy_percentage}%\nDuration: ${item.duration_minutes} minutes`;
+          if (Platform.OS === 'web') {
+            window.alert(`${item.topic_title}\n\n${message}`);
+          } else {
+            Alert.alert(item.topic_title, message);
+          }
         }}
       >
         <View style={styles.historyHeader}>

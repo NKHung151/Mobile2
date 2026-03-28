@@ -17,6 +17,7 @@ const healthRoutes = require("./routes/health");
 const topicsRoutes = require("./routes/topics");
 const learningHistoryRoutes = require("./routes/learningHistory");
 const transcriptionRoutes = require("./routes/transcription");
+const authRoutes = require("./routes/auth");
 
 // Middleware
 const { errorHandler, notFoundHandler } = require("./middleware/errorHandler");
@@ -96,6 +97,7 @@ app.use("/api/transcription", transcriptionRoutes); // Transcription practice en
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/learning", learningHistoryRoutes); // Learning history endpoints
 app.use("/api/admin", adminRoutes); // Admin endpoints (API key required)
+app.use("/api/auth", authRoutes); // Authentication endpoints
 
 // Error handling
 app.use(notFoundHandler);

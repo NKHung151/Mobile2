@@ -159,4 +159,31 @@ export const deleteConversation = async (userId, topicId, mode) => {
   return response.data;
 };
 
+// ==================== AUTH API ====================
+
+export const loginUser = async (username, password) => {
+  const response = await api.post("/api/auth/login", { username, password });
+  return response.data;
+};
+
+export const registerUser = async ({ username, email, phone, password }) => {
+  const response = await api.post("/api/auth/register", {
+    username,
+    email,
+    phone,
+    password,
+  });
+  return response.data;
+};
+
+export const getUserProfile = async (userId) => {
+  const response = await api.get(`/api/auth/profile/${userId}`);
+  return response.data;
+};
+
+export const updateUserProfile = async (userId, data) => {
+  const response = await api.put(`/api/auth/profile/${userId}`, data);
+  return response.data;
+};
+
 export default api;

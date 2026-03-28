@@ -1,95 +1,145 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { UserProvider } from "./src/context/UserContext";
+import { UserProvider, useUser } from "./src/context/UserContext";
 import { NotificationProvider } from "./src/components/NotificationCenter";
-import { TouchableOpacity , Text} from "react-native";
+import { COLORS } from "./src/constants/config";
+
 // Screens
+import LoginScreen from "./src/screens/LoginScreen";
+import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import QuizScreen from "./src/screens/QuizScreen";
 import ChatScreen from "./src/screens/ChatScreen";
 import HistoryScreen from "./src/screens/HistoryScreen_New";
 import TranscribeScreen from "./src/screens/TranscribeScreen";
-
 import PracticeScreen from "./src/screens/PracticeScreen";
+import UserProfileScreen from "./src/screens/UserProfileScreen";
+
 const Stack = createNativeStackNavigator();
-
-
-
 
 const linking = {
   prefixes: ["http://localhost:8081", "englishquiz://"],
   config: {
     screens: {
+      Login: "login",
+      Register: "register",
       Home: "",
       Quiz: "quiz",
       Chat: "chat",
       History: "history",
+      UserProfile: "profile",
     },
   },
 };
+
+function RootNavigator() {
+  const { isAuthenticated, isLoading } = useUser();
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
+
+  return (
+    <NavigationContainer linking={linking}>
+      <StatusBar style="light" />
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#1F2937",
+          },
+          headerTintColor: "#FFFFFF",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          contentStyle: {
+            backgroundColor: "#111827",
+          },
+        }}
+      >
+        {isAuthenticated ? (
+          // App Stack - User is logged in
+          <>
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ title: "English Quiz Master" }}
+            />
+            <Stack.Screen
+              name="Practice"
+              component={PracticeScreen}
+              options={{ title: "Practice" }}
+            />
+            <Stack.Screen
+              name="Quiz"
+              component={QuizScreen}
+              options={{ title: "Quiz Mode" }}
+            />
+            <Stack.Screen
+              name="Chat"
+              component={ChatScreen}
+              options={{ title: "Chat with Tutor" }}
+            />
+            <Stack.Screen
+              name="History"
+              component={HistoryScreen}
+              options={{ title: "My History" }}
+            />
+            <Stack.Screen
+              name="Transcribe"
+              component={TranscribeScreen}
+              options={{ title: "Transcribe" }}
+            />
+            <Stack.Screen
+              name="UserProfile"
+              component={UserProfileScreen}
+              options={{ title: "My Profile" }}
+            />
+          </>
+        ) : (
+          // Auth Stack - User is logged out
+          <>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={RegisterScreen}
+              options={{ headerShown: false }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <UserProvider>
         <NotificationProvider>
-          <NavigationContainer linking={linking}>
-            <StatusBar style="light" />
-            <Stack.Navigator
-              initialRouteName="Home"
-              screenOptions={{
-                headerStyle: {
-                  backgroundColor: "#1F2937",
-                },
-                headerTintColor: "#FFFFFF",
-                headerTitleStyle: {
-                  fontWeight: "bold",
-                },
-                contentStyle: {
-                  backgroundColor: "#111827",
-                },
-              }}
-            >
-              <Stack.Screen
-                name="Home"
-                component={HomeScreen}
-                options={{ title: "English Quiz Master" }}
-              />
-
-              <Stack.Screen
-                name="Practice"
-                component={PracticeScreen}
-                options={{ title: "Practice"}}
-              />
-
-
-              <Stack.Screen
-                name="Quiz"
-                component={QuizScreen}
-                options={{ title: "Quiz Mode" }}
-              />
-              <Stack.Screen
-                name="Chat"
-                component={ChatScreen}
-                options={{ title: "Chat with Tutor" }}
-              />
-              <Stack.Screen
-                name="History"
-                component={HistoryScreen}
-                options={{ title: "My History" }}
-              />
-              <Stack.Screen
-                name="Transcribe"
-                component={TranscribeScreen}
-                options={{ title: "Transcribe" }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <RootNavigator />
         </NotificationProvider>
       </UserProvider>
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#111827",
+  },
+});

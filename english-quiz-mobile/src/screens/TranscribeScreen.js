@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  Platform,
 } from "react-native";
 import * as Speech from "expo-speech";
 import { Ionicons } from "@expo/vector-icons";
@@ -216,7 +217,11 @@ export default function TranscribeScreen({ navigation }) {
         },
       );
     } catch (e) {
-      Alert.alert("Error", "Could not play audio: " + e.message);
+      if (Platform.OS === 'web') {
+        window.alert("Could not play audio: " + e.message);
+      } else {
+        Alert.alert("Error", "Could not play audio: " + e.message);
+      }
     }
   };
 
@@ -305,7 +310,11 @@ export default function TranscribeScreen({ navigation }) {
 
   const handleNext = async () => {
     if (score === null) {
-      Alert.alert("Please check your answer first");
+      if (Platform.OS === 'web') {
+        window.alert("Please check your answer first");
+      } else {
+        Alert.alert("Please check your answer first");
+      }
       return;
     }
 
@@ -398,20 +407,29 @@ export default function TranscribeScreen({ navigation }) {
   };
 
   const handleSkip = () => {
-    Alert.alert("Skip Question", "Skip this sentence?", [
-      { text: "Cancel" },
-      {
-        text: "Skip",
-        onPress: () => {
-          if (currentSentenceIndex < sentences.length - 1) {
-            setCurrentSentenceIndex(currentSentenceIndex + 1);
-            resetPracticeState();
-          } else {
-            handleEndSession();
-          }
+    const skipAction = () => {
+      if (currentSentenceIndex < sentences.length - 1) {
+        setCurrentSentenceIndex(currentSentenceIndex + 1);
+        resetPracticeState();
+      } else {
+        handleEndSession();
+      }
+    };
+
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm("Skip this sentence?");
+      if (confirmed) {
+        skipAction();
+      }
+    } else {
+      Alert.alert("Skip Question", "Skip this sentence?", [
+        { text: "Cancel" },
+        {
+          text: "Skip",
+          onPress: skipAction,
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   // Setup view - Topic selection

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
@@ -18,8 +17,7 @@ import { COLORS, SHADOWS } from "../constants/config";
 const { width } = Dimensions.get("window");
 
 export default function HomeScreen({ navigation }) {
-  const { userId, setUserId, isLoading: userLoading } = useUser();
-  const [localUserId, setLocalUserId] = useState("");
+  const { userId, userData, setUserId, isLoading: userLoading } = useUser();
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,11 +49,7 @@ export default function HomeScreen({ navigation }) {
     ]).start();
   }, []);
 
-  useEffect(() => {
-    if (userId) {
-      setLocalUserId(userId);
-    }
-  }, [userId]);
+
 
   useEffect(() => {
     fetchTopics();
@@ -74,18 +68,11 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
-  const handleSaveUserId = () => {
-    if (localUserId.trim()) {
-      setUserId(localUserId.trim());
-    }
-  };
-
   const handleNavigate = (screen) => {
-    if (!localUserId.trim()) {
-      alert("Please enter a User ID first");
+    if (!userId && !userData?.username) {
+      alert("Please login first");
       return;
     }
-    handleSaveUserId();
     navigation.navigate(screen);
   };
 
@@ -123,8 +110,12 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.subtitle}>Learn & speak with confidence</Text>
         </View>
 
-        {/* User ID Card */}
-        <View style={[styles.card, styles.userCard]}>
+        {/* User Profile Card */}
+        <TouchableOpacity
+          style={[styles.card, styles.userCard]}
+          onPress={() => navigation.navigate("UserProfile")}
+          activeOpacity={0.85}
+        >
           <View style={styles.cardHeader}>
             <View style={styles.iconCircle}>
               <Ionicons name="person" size={18} color={COLORS.primary} />
@@ -132,23 +123,17 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.cardTitle}>Your Profile</Text>
           </View>
           <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your user ID"
-              placeholderTextColor={COLORS.textMuted}
-              value={localUserId}
-              onChangeText={setLocalUserId}
-              onBlur={handleSaveUserId}
-              autoCapitalize="none"
-            />
-            {userId === localUserId && localUserId.length > 0 && (
+            <Text style={styles.usernameDisplay}>
+              {userData?.username || userId || "User"}
+            </Text>
+            {(userData?.username || userId) ? (
               <View style={styles.checkBadge}>
                 <Ionicons name="checkmark" size={14} color="#fff" />
               </View>
-            )}
+            ) : null}
           </View>
           <Text style={styles.hint}>Track your progress across sessions</Text>
-        </View>
+        </TouchableOpacity>
 
         {/* Main Actions */}
         <View style={styles.actionsContainer}>
@@ -445,6 +430,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.text,
     fontWeight: "500",
+  },
+  usernameDisplay: {
+    flex: 1,
+    fontSize: 16,
+    color: COLORS.text,
+    fontWeight: "600",
   },
   checkBadge: {
     width: 24,

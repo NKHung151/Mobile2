@@ -12,6 +12,7 @@ import {
   Dimensions,
   Alert,
   TextInput,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
@@ -127,7 +128,11 @@ export default function PracticeScreen({ navigation }) {
 
   const handleStartPractice = async () => {
     if (!selectedTopic || !selectedLevel) {
-      Alert.alert("Missing info", "Please select a topic and level.");
+      if (Platform.OS === 'web') {
+        window.alert("Please select a topic and level.");
+      } else {
+        Alert.alert("Missing info", "Please select a topic and level.");
+      }
       return;
     }
     try {
