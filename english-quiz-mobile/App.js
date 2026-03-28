@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { UserProvider } from "./src/context/UserContext";
 import { NotificationProvider } from "./src/components/NotificationCenter";
-
+import { TouchableOpacity, Text } from "react-native";
 // Screens
 import HomeScreen from "./src/screens/HomeScreen";
 import QuizScreen from "./src/screens/QuizScreen";
@@ -18,7 +18,7 @@ import CourseDetailFocusModeScreen from "./src/screens/CourseDetailFocusModeScre
 import AddCourseScreen from "./src/screens/AddCourseScreen";
 import EditCourseScreen from "./src/screens/EditCourseScreen";
 import ImportExcelScreen from "./src/screens/ImportExcelScreen";
-
+import PracticeScreen from "./src/screens/PracticeScreen";
 const Stack = createNativeStackNavigator();
 
 const linking = {
@@ -58,6 +58,7 @@ export default function App() {
               }}
             >
               <Stack.Screen name="Home" component={HomeScreen} options={{ title: "English Quiz Master" }} />
+              <Stack.Screen name="Practice" component={PracticeScreen} options={{ title: "Practice" }} />
               <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: "Quiz Mode" }} />
               <Stack.Screen name="Chat" component={ChatScreen} options={{ title: "Chat with Tutor" }} />
               <Stack.Screen name="History" component={HistoryScreen} options={{ title: "My History" }} />
