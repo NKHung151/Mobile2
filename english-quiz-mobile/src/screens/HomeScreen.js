@@ -85,11 +85,7 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <Animated.View
         style={[
           styles.animatedContainer,
@@ -137,112 +133,81 @@ export default function HomeScreen({ navigation }) {
 
         {/* Main Actions */}
         <View style={styles.actionsContainer}>
-
-
-        <TouchableOpacity
-            style={[styles.actionCard, styles.practiceCard]}
-            onPress={() => handleNavigate("Practice")}
-            activeOpacity={0.9}
-          >
+          <TouchableOpacity style={[styles.actionCard, styles.practiceCard]} onPress={() => handleNavigate("Practice")} activeOpacity={0.9}>
             <View style={styles.actionContent}>
               <View style={styles.actionIconWrapper}>
                 <Ionicons name="school" size={28} color="#fff" />
               </View>
               <View style={styles.actionTextContainer}>
                 <Text style={styles.actionTitle}>Grammar Practice</Text>
-                <Text style={styles.actionDescription}>
-                  Improve grammar skills with exercises
-                </Text>
+                <Text style={styles.actionDescription}>Improve grammar skills with exercises</Text>
               </View>
             </View>
             <View style={styles.actionArrow}>
-              <Ionicons
-                name="arrow-forward"
-                size={20}
-                color="rgba(255,255,255,0.8)"
-              />
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
             </View>
             <View style={styles.cardDecoration} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.actionCard, styles.quizCard]}
-            onPress={() => handleNavigate("Quiz")}
-            activeOpacity={0.9}
-          >
+          <TouchableOpacity style={[styles.actionCard, styles.quizCard]} onPress={() => handleNavigate("Quiz")} activeOpacity={0.9}>
             <View style={styles.actionContent}>
               <View style={styles.actionIconWrapper}>
                 <Ionicons name="school" size={28} color="#fff" />
               </View>
               <View style={styles.actionTextContainer}>
                 <Text style={styles.actionTitle}>Start Quiz</Text>
-                <Text style={styles.actionDescription}>
-                  Test your knowledge with AI questions
-                </Text>
+                <Text style={styles.actionDescription}>Test your knowledge with AI questions</Text>
               </View>
             </View>
             <View style={styles.actionArrow}>
-              <Ionicons
-                name="arrow-forward"
-                size={20}
-                color="rgba(255,255,255,0.8)"
-              />
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
             </View>
             <View style={styles.cardDecoration} />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.actionCard, styles.chatCard]}
-            onPress={() => handleNavigate("Chat")}
-            activeOpacity={0.9}
-          >
+          <TouchableOpacity style={[styles.actionCard, styles.chatCard]} onPress={() => handleNavigate("Chat")} activeOpacity={0.9}>
             <View style={styles.actionContent}>
               <View style={[styles.actionIconWrapper, styles.chatIconWrapper]}>
                 <Ionicons name="chatbubbles" size={28} color="#fff" />
               </View>
               <View style={styles.actionTextContainer}>
                 <Text style={styles.actionTitle}>Chat with Tutor</Text>
-                <Text style={styles.actionDescription}>
-                  Ask questions & learn interactively
-                </Text>
+                <Text style={styles.actionDescription}>Ask questions & learn interactively</Text>
               </View>
             </View>
             <View style={styles.actionArrow}>
-              <Ionicons
-                name="arrow-forward"
-                size={20}
-                color="rgba(255,255,255,0.8)"
-              />
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
             </View>
             <View style={[styles.cardDecoration, styles.chatDecoration]} />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.actionCard, styles.transcribeCard]}
-            onPress={() => handleNavigate("Transcribe")}
-            activeOpacity={0.9}
-          >
+          <TouchableOpacity style={[styles.actionCard, styles.transcribeCard]} onPress={() => handleNavigate("Transcribe")} activeOpacity={0.9}>
             <View style={styles.actionContent}>
-              <View
-                style={[
-                  styles.actionIconWrapper,
-                  { backgroundColor: "rgba(255,255,255,0.18)" },
-                ]}
-              >
+              <View style={[styles.actionIconWrapper, { backgroundColor: "rgba(255,255,255,0.18)" }]}>
                 <Ionicons name="mic" size={28} color="#fff" />
               </View>
               <View style={styles.actionTextContainer}>
                 <Text style={styles.actionTitle}>Transcribe</Text>
-                <Text style={styles.actionDescription}>
-                  Listen and type what you hear
-                </Text>
+                <Text style={styles.actionDescription}>Listen and type what you hear</Text>
               </View>
             </View>
             <View style={styles.actionArrow}>
-              <Ionicons
-                name="arrow-forward"
-                size={20}
-                color="rgba(255,255,255,0.8)"
-              />
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
+            </View>
+            <View style={styles.cardDecoration} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.actionCard, styles.libraryCard]} onPress={() => handleNavigate("Library")} activeOpacity={0.9}>
+            <View style={styles.actionContent}>
+              <View style={[styles.actionIconWrapper, { backgroundColor: "rgba(255,255,255,0.18)" }]}>
+                <Ionicons name="library" size={28} color="#fff" />
+              </View>
+              <View style={styles.actionTextContainer}>
+                <Text style={styles.actionTitle}>Library</Text>
+                <Text style={styles.actionDescription}>Access your saved lessons</Text>
+              </View>
+            </View>
+            <View style={styles.actionArrow}>
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
             </View>
             <View style={styles.cardDecoration} />
           </TouchableOpacity>
@@ -266,31 +231,20 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.errorContainer}>
               <Ionicons name="alert-circle" size={24} color={COLORS.error} />
               <Text style={styles.errorText}>{error}</Text>
-              <TouchableOpacity
-                style={styles.retryButton}
-                onPress={fetchTopics}
-              >
+              <TouchableOpacity style={styles.retryButton} onPress={fetchTopics}>
                 <Text style={styles.retryText}>Try Again</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.topicsList}>
               {topics.slice(0, 6).map((topic, index) => (
-                <View
-                  key={topic.topic_id}
-                  style={[
-                    styles.topicChip,
-                    { backgroundColor: getChipColor(index) },
-                  ]}
-                >
+                <View key={topic.topic_id} style={[styles.topicChip, { backgroundColor: getChipColor(index) }]}>
                   <Text style={styles.topicChipText}>{topic.title}</Text>
                 </View>
               ))}
               {topics.length > 6 && (
                 <View style={[styles.topicChip, styles.moreChip]}>
-                  <Text style={styles.moreChipText}>
-                    +{topics.length - 6} more
-                  </Text>
+                  <Text style={styles.moreChipText}>+{topics.length - 6} more</Text>
                 </View>
               )}
             </View>
@@ -298,11 +252,7 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* History Button */}
-        <TouchableOpacity
-          style={styles.historyButton}
-          onPress={() => handleNavigate("History")}
-          activeOpacity={0.8}
-        >
+        <TouchableOpacity style={styles.historyButton} onPress={() => handleNavigate("History")} activeOpacity={0.8}>
           <View style={styles.historyIconCircle}>
             <Ionicons name="time" size={20} color={COLORS.primary} />
           </View>
@@ -320,14 +270,7 @@ export default function HomeScreen({ navigation }) {
 }
 
 const getChipColor = (index) => {
-  const colors = [
-    "rgba(255, 107, 107, 0.12)",
-    "rgba(78, 205, 196, 0.12)",
-    "rgba(255, 217, 61, 0.12)",
-    "rgba(162, 155, 254, 0.12)",
-    "rgba(255, 159, 67, 0.12)",
-    "rgba(116, 185, 255, 0.12)",
-  ];
+  const colors = ["rgba(255, 107, 107, 0.12)", "rgba(78, 205, 196, 0.12)", "rgba(255, 217, 61, 0.12)", "rgba(162, 155, 254, 0.12)", "rgba(255, 159, 67, 0.12)", "rgba(116, 185, 255, 0.12)"];
   return colors[index % colors.length];
 };
 
@@ -463,8 +406,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   practiceCard: {
-      backgroundColor: "#4CAF50", // xanh lá chính
-    },
+    backgroundColor: "#4CAF50", // xanh lá chính
+  },
   quizCard: {
     backgroundColor: COLORS.primary,
   },
@@ -473,6 +416,9 @@ const styles = StyleSheet.create({
   },
   transcribeCard: {
     backgroundColor: "#10B981",
+  },
+  libraryCard: {
+    backgroundColor: "#8B5CF6",
   },
   actionContent: {
     flexDirection: "row",
