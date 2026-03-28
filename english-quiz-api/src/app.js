@@ -65,9 +65,7 @@ app.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
     const duration = Date.now() - start;
-    logger.http(
-      `${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`,
-    );
+    logger.http(`${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
   });
   next();
 });
@@ -107,9 +105,7 @@ const startServer = async () => {
     logger.info("Connected to MongoDB");
 
     app.listen(config.port, () => {
-      logger.info(
-        `Server running on port ${config.port} in ${config.nodeEnv} mode`,
-      );
+      logger.info(`Server running on port ${config.port} in ${config.nodeEnv} mode`);
       logger.info("CORS enabled for all origins in development mode");
     });
   } catch (error) {
