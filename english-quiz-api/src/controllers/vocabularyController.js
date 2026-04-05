@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Course = require("../models/Course");
 const Vocabulary = require("../models/Vocabulary");
+const VocabularyUser = require("../models/VocabularyUser");
+const { findCourseWithAccess } = require("../services/courseUserService");
 
 function isValidObjectId(id) {
   return mongoose.Types.ObjectId.isValid(id);
@@ -26,15 +28,11 @@ const createVocabulary = async (req, res, next) => {
     const {
       term,
       definition,
-      example = "",
       term_image_url = "",
       def_image_url = "",
       term_language_code = "vi",
       definition_language_code = "vi",
-      is_started = false,
     } = req.body;
-
-    console.log(req.body);
 
     if (!isValidObjectId(courseId)) {
       return res.status(400).json({ success: false, error: "Invalid course id" });
@@ -53,12 +51,10 @@ const createVocabulary = async (req, res, next) => {
       course: courseId,
       term,
       definition,
-      example,
       term_image_url,
       def_image_url,
       term_language_code,
       definition_language_code,
-      is_started,
     });
 
     return res.status(201).json({ success: true, data: vocabulary });
@@ -75,19 +71,34 @@ const getCourseVocabularies = async (req, res, next) => {
       return res.status(400).json({ success: false, error: "Invalid course id" });
     }
 
-    const course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(404).json({ success: false, error: "Course not found" });
+    const access = await findCourseWithAccess(courseId, req.user.id);
+    if (access.error) {
+      return res.status(access.error.status).json({ success: false, error: access.error.message });
     }
 
-    const isOwner = course.creator.toString() === req.user.id;
-    if (!isOwner && !course.is_public) {
-      return res.status(403).json({ success: false, error: "You cannot access this course vocabularies" });
-    }
+    const { courseUser } = access;
 
     const vocabularies = await Vocabulary.find({ course: courseId }).sort({ createdAt: 1 });
 
-    return res.json({ success: true, data: vocabularies });
+    const vocabularyUsers = await VocabularyUser.find({
+      course_user: courseUser._id,
+      vocabulary: { $in: vocabularies.map((item) => item._id) },
+    }).lean();
+
+    const vocabularyUserMap = new Map(vocabularyUsers.map((item) => [item.vocabulary.toString(), item]));
+
+    const result = vocabularies.map((item) => {
+      const userState = vocabularyUserMap.get(item._id.toString());
+      return {
+        ...item.toObject(),
+        user_state: {
+          is_memorized: Boolean(userState?.is_memorized),
+          is_star: Boolean(userState?.is_star),
+        },
+      };
+    });
+
+    return res.json({ success: true, data: result });
   } catch (error) {
     return next(error);
   }
@@ -111,7 +122,7 @@ const updateVocabulary = async (req, res, next) => {
       return res.status(404).json({ success: false, error: "Vocabulary not found in this course" });
     }
 
-    const fields = ["term", "definition", "example", "term_image_url", "def_image_url", "term_language_code", "definition_language_code", "is_started"];
+    const fields = ["term", "definition", "term_image_url", "def_image_url", "term_language_code", "definition_language_code"];
     fields.forEach((field) => {
       if (req.body[field] !== undefined) {
         vocabulary[field] = req.body[field];

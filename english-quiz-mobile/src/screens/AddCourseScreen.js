@@ -150,7 +150,6 @@ export default function AddCourseScreen({ navigation, route }) {
           def_image_url: (word.def_image_url || "").trim(),
           term_language_code: word.term_language_code,
           definition_language_code: word.definition_language_code,
-          is_started: false,
         });
       }
 

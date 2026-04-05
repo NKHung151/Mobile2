@@ -220,6 +220,13 @@ export const deleteCourse = async (courseId) => {
   return response.data;
 };
 
+export const updateCourseStar = async (courseId, isStar) => {
+  const response = await api.put(`/api/courses/${courseId}/star`, {
+    is_star: Boolean(isStar),
+  });
+  return response.data;
+};
+
 // ==================== VOCABULARY API ====================
 
 export const getCourseVocabularies = async (courseId) => {
@@ -239,6 +246,33 @@ export const updateVocabulary = async (courseId, vocabularyId, payload) => {
 
 export const deleteVocabulary = async (courseId, vocabularyId) => {
   const response = await api.delete(`/api/courses/${courseId}/vocabularies/${vocabularyId}`);
+  return response.data;
+};
+
+// ==================== FLASHCARD PROGRESS API ====================
+
+export const createCoursePracticeSession = async (courseId, payload = {}) => {
+  const response = await api.post(`/api/progress/courses/${courseId}/practices`, payload);
+  return response.data;
+};
+
+export const getLatestCoursePractice = async (courseId) => {
+  const response = await api.get(`/api/progress/courses/${courseId}/latest`);
+  return response.data;
+};
+
+export const updateCoursePracticeProgress = async (courseId, payload) => {
+  const response = await api.put(`/api/progress/courses/${courseId}`, payload);
+  return response.data;
+};
+
+export const updateVocabularyProgress = async (vocabularyId, payload) => {
+  const response = await api.put(`/api/progress/vocabularies/${vocabularyId}`, payload);
+  return response.data;
+};
+
+export const getPracticeHistory = async () => {
+  const response = await api.get("/api/progress/history");
   return response.data;
 };
 

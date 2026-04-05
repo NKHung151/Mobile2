@@ -20,12 +20,6 @@ const vocabularySchema = new mongoose.Schema(
       trim: true,
       maxlength: 2000,
     },
-    example: {
-      type: String,
-      default: "",
-      trim: true,
-      maxlength: 2000,
-    },
     term_image_url: {
       type: String,
       default: "",
@@ -49,11 +43,6 @@ const vocabularySchema = new mongoose.Schema(
       default: "vi",
       trim: true,
       maxlength: 10,
-    },
-    is_started: {
-      type: Boolean,
-      default: false,
-      index: true,
     },
   },
   {

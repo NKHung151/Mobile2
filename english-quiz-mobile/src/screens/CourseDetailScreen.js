@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { COLORS } from "../constants/config";
-import { getCourseById, getCourseVocabularies, deleteCourse as deleteCourseApi } from "../services/api";
+import { getCourseById, getCourseVocabularies, deleteCourse as deleteCourseApi, updateCourseStar, updateVocabularyProgress } from "../services/api";
 
 const { width } = Dimensions.get("window");
 
@@ -33,6 +33,7 @@ export default function CourseDetailScreen({ navigation, route }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [playingAudio, setPlayingAudio] = useState(null);
+  const [isUpdatingCourseStar, setIsUpdatingCourseStar] = useState(false);
   const flipAnim = useRef(new Animated.Value(0)).current;
   const soundRef = useRef(null);
 
@@ -155,6 +156,7 @@ export default function CourseDetailScreen({ navigation, route }) {
   };
 
   const totalTerms = flashcards.length;
+  const isCourseStar = Boolean(course?.course_user?.is_star);
 
   const normalizedCards = Array.isArray(flashcards)
     ? flashcards.map((card) => ({
@@ -165,8 +167,55 @@ export default function CourseDetailScreen({ navigation, route }) {
         def_image_url: card.def_image_url,
         term_language_code: card.term_language_code,
         definition_language_code: card.definition_language_code,
+        is_star: Boolean(card?.user_state?.is_star),
+        is_memorized: Boolean(card?.user_state?.is_memorized),
       }))
     : [];
+
+  const toggleCourseStar = async () => {
+    if (!course || isUpdatingCourseStar) return;
+
+    const next = !Boolean(course?.course_user?.is_star);
+    setIsUpdatingCourseStar(true);
+    try {
+      await updateCourseStar(courseId, next);
+      setCourse((prev) => ({
+        ...(prev || {}),
+        course_user: {
+          ...(prev?.course_user || {}),
+          is_star: next,
+        },
+      }));
+    } catch (err) {
+      Alert.alert("Lỗi", err.message || "Không thể cập nhật đánh dấu học phần");
+    } finally {
+      setIsUpdatingCourseStar(false);
+    }
+  };
+
+  const toggleVocabularyStar = async (card) => {
+    if (!card?._id) return;
+    const next = !Boolean(card?.user_state?.is_star);
+
+    try {
+      await updateVocabularyProgress(card._id, { is_star: next });
+      setFlashcards((prev) =>
+        prev.map((item) =>
+          item._id === card._id
+            ? {
+                ...item,
+                user_state: {
+                  ...(item.user_state || {}),
+                  is_star: next,
+                },
+              }
+            : item,
+        ),
+      );
+    } catch (err) {
+      Alert.alert("Lỗi", err.message || "Không thể cập nhật từ vựng yêu thích");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -197,8 +246,8 @@ export default function CourseDetailScreen({ navigation, route }) {
             <Ionicons name="arrow-back" size={28} color="#FFFFFF" />
           </TouchableOpacity>
           <View style={styles.headerIcons}>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Ionicons name="bookmark-outline" size={24} color="#FFFFFF" />
+            <TouchableOpacity activeOpacity={0.7} onPress={toggleCourseStar} disabled={isUpdatingCourseStar}>
+              <Ionicons name={isCourseStar ? "bookmark" : "bookmark-outline"} size={24} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.7} style={{ marginLeft: 16 }} onPress={() => setIsMenuVisible(true)}>
               <Ionicons name="ellipsis-vertical" size={24} color="#FFFFFF" />
@@ -244,7 +293,15 @@ export default function CourseDetailScreen({ navigation, route }) {
                       </TouchableOpacity>
                     </View>
                     <View style={styles.slideStarIcon}>
-                      <Ionicons name="star-outline" size={24} color={COLORS.primary} />
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleVocabularyStar(currentCard);
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name={currentCard?.user_state?.is_star ? "star" : "star-outline"} size={24} color={COLORS.primary} />
+                      </TouchableOpacity>
                     </View>
                   </TouchableOpacity>
                 </Animated.View>
@@ -283,7 +340,15 @@ export default function CourseDetailScreen({ navigation, route }) {
                       </TouchableOpacity>
                     </View>
                     <View style={styles.slideStarIcon}>
-                      <Ionicons name="star" size={24} color={COLORS.primary} />
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleVocabularyStar(currentCard);
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name={currentCard?.user_state?.is_star ? "star" : "star-outline"} size={24} color={COLORS.primary} />
+                      </TouchableOpacity>
                     </View>
                   </TouchableOpacity>
                 </Animated.View>
@@ -370,6 +435,7 @@ export default function CourseDetailScreen({ navigation, route }) {
                     <Text style={styles.cardListEnglish}>{card.english}</Text>
                     <Text style={styles.cardListVietnamese}>{card.vietnamese}</Text>
                   </View>
+                  {card.is_star ? <Ionicons name="star" size={16} color={COLORS.primary} /> : null}
                 </View>
               </View>
             ))}

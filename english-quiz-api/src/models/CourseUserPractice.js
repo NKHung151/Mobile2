@@ -1,22 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const courseUserPracticeSchema = new mongoose.Schema(
   {
-    user: {
+    course_user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "CourseUser",
       required: true,
       index: true,
     },
-    course: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
-      required: true,
-      index: true,
-    },
-    status: {
+    unmemorized_count: {
       type: Number,
-      enum: [0, 1],
+      min: 0,
       default: 0,
       index: true,
     },
@@ -24,12 +18,25 @@ const courseUserPracticeSchema = new mongoose.Schema(
       type: Number,
       default: 0,
       min: 0,
-      max: 100,
     },
-    created_at: {
+    status: {
+      type: String,
+      enum: ["completed", "in_progress"],
+      default: "in_progress",
+      index: true,
+    },
+    started_at: {
       type: Date,
       default: Date.now,
-      immutable: true,
+    },
+    finished_at: {
+      type: Date,
+      default: null,
+    },
+    is_finished: {
+      type: Boolean,
+      default: false,
+      index: true,
     },
   },
   {
@@ -37,6 +44,7 @@ const courseUserPracticeSchema = new mongoose.Schema(
   },
 );
 
-courseUserPracticeSchema.index({ user: 1, course: 1 }, { unique: true });
+courseUserPracticeSchema.index({ course_user: 1, started_at: -1 });
+courseUserPracticeSchema.index({ course_user: 1, is_finished: 1, started_at: -1 });
 
-module.exports = mongoose.model('CourseUserPractice', courseUserPracticeSchema);
+module.exports = mongoose.model("CourseUserPractice", courseUserPracticeSchema);
