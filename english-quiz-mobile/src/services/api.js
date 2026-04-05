@@ -1,5 +1,8 @@
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_BASE_URL } from "../constants/config";
+
+export const AUTH_TOKEN_KEY = "@english_quiz_auth_token";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -12,7 +15,14 @@ const api = axios.create({
 
 // Request interceptor for logging
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    const token = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
+    if (token && !config.headers?.Authorization) {
+      config.headers = {
+        ...(config.headers || {}),
+        Authorization: `Bearer ${token}`,
+      };
+    }
     console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
     return config;
   },
@@ -24,16 +34,19 @@ api.interceptors.request.use(
 
 // Response interceptor for error handling
 api.interceptors.response.use(
-  (response) => {
-    console.log(
-      "[API] Response:",
-      JSON.stringify(response.data, null, 2).substring(0, 500),
-    );
+  async (response) => {
+    console.log("[API] Response:", JSON.stringify(response.data, null, 2).substring(0, 500));
+
+    // Persist JWT token after login/register so protected APIs work.
+    const token = response?.data?.token;
+    if (token && (response.config?.url?.includes("/api/auth/login") || response.config?.url?.includes("/api/auth/register"))) {
+      await AsyncStorage.setItem(AUTH_TOKEN_KEY, token);
+    }
+
     return response;
   },
   (error) => {
-    const message =
-      error.response?.data?.error || error.message || "An error occurred";
+    const message = error.response?.data?.error || error.message || "An error occurred";
     console.error("[API] Response Error:", message);
     return Promise.reject(new Error(message));
   },
@@ -98,13 +111,7 @@ export const getTranscriptionSentences = async (topicId) => {
   return response.data;
 };
 
-export const submitTranscription = async (
-  userId,
-  topicId,
-  sentenceId,
-  transcription,
-  score,
-) => {
+export const submitTranscription = async (userId, topicId, sentenceId, transcription, score) => {
   const response = await api.post("/api/transcription/submit", {
     user_id: userId,
     topic_id: topicId,
@@ -184,6 +191,95 @@ export const getUserProfile = async (userId) => {
 export const updateUserProfile = async (userId, data) => {
   const response = await api.put(`/api/auth/profile/${userId}`, data);
   return response.data;
+};
+
+// ==================== COURSE API ====================
+
+export const getCourses = async () => {
+  const response = await api.get("/api/courses");
+  return response.data;
+};
+
+export const getCourseById = async (courseId) => {
+  const response = await api.get(`/api/courses/${courseId}`);
+  return response.data;
+};
+
+export const createCourse = async (payload) => {
+  const response = await api.post("/api/courses", payload);
+  return response.data;
+};
+
+export const updateCourse = async (courseId, payload) => {
+  const response = await api.put(`/api/courses/${courseId}`, payload);
+  return response.data;
+};
+
+export const deleteCourse = async (courseId) => {
+  const response = await api.delete(`/api/courses/${courseId}`);
+  return response.data;
+};
+
+// ==================== VOCABULARY API ====================
+
+export const getCourseVocabularies = async (courseId) => {
+  const response = await api.get(`/api/courses/${courseId}/vocabularies`);
+  return response.data;
+};
+
+export const createVocabulary = async (courseId, payload) => {
+  const response = await api.post(`/api/courses/${courseId}/vocabularies`, payload);
+  return response.data;
+};
+
+export const updateVocabulary = async (courseId, vocabularyId, payload) => {
+  const response = await api.put(`/api/courses/${courseId}/vocabularies/${vocabularyId}`, payload);
+  return response.data;
+};
+
+export const deleteVocabulary = async (courseId, vocabularyId) => {
+  const response = await api.delete(`/api/courses/${courseId}/vocabularies/${vocabularyId}`);
+  return response.data;
+};
+
+// ==================== UPLOAD API ====================
+
+export const uploadFile = async (file, fileType) => {
+  const formData = new FormData();
+  formData.append("file", {
+    uri: file.uri,
+    type: file.type || (fileType === "image" ? "image/jpeg" : "audio/mpeg"),
+    name: file.name || `${fileType}_${Date.now()}`,
+  });
+
+  const response = await api.post(`/api/upload?type=${fileType}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  // Validate response structure
+  if (!response.data || typeof response.data !== "object") {
+    throw new Error("Invalid upload response format");
+  }
+
+  return response.data;
+};
+
+// ==================== SETTING API ====================
+
+export const getMySetting = async () => {
+  const response = await api.get("/api/settings/me");
+  return response.data;
+};
+
+export const updateMySetting = async (payload) => {
+  const response = await api.put("/api/settings/me", payload);
+  return response.data;
+};
+
+export const clearAuthToken = async () => {
+  await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
 };
 
 export default api;

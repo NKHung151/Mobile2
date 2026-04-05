@@ -1,32 +1,120 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, FlatList } from "react-native";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS, SHADOWS } from "../constants/config";
-import { LIBRARY_LESSONS, LIBRARY_TABS } from "../constants/libraryData";
+import { getCourses } from "../services/api";
+
+const LIBRARY_TABS = [
+  { id: "lessons", label: "Học phần" },
+  // { id: "folders", label: "Thư mục" },
+  // { id: "recent", label: "Gần đây" },
+];
 
 export default function LibraryScreen({ navigation }) {
   const [activeTab, setActiveTab] = useState("lessons");
   const [searchText, setSearchText] = useState("");
+  const [courses, setCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState("");
+
+  const loadCourses = useCallback(async (refresh = false) => {
+    try {
+      setError("");
+      if (refresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+
+      const response = await getCourses();
+      setCourses(response?.data || []);
+    } catch (err) {
+      setError(err.message || "Không thể tải danh sách học phần");
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      loadCourses();
+    });
+
+    return unsubscribe;
+  }, [navigation, loadCourses]);
+
+  const filteredCourses = useMemo(() => {
+    const keyword = searchText.trim().toLowerCase();
+    if (!keyword) return courses;
+
+    return courses.filter((course) => {
+      const title = course?.title?.toLowerCase() || "";
+      const description = course?.description?.toLowerCase() || "";
+      return title.includes(keyword) || description.includes(keyword);
+    });
+  }, [courses, searchText]);
+
+  const todayCourses = useMemo(() => {
+    const now = new Date();
+    return filteredCourses.filter((course) => {
+      const createdAt = new Date(course.createdAt);
+      const diffMs = now - createdAt;
+      return diffMs <= 24 * 60 * 60 * 1000;
+    });
+  }, [filteredCourses]);
+
+  const previousWeekCourses = useMemo(() => {
+    const now = new Date();
+    return filteredCourses.filter((course) => {
+      const createdAt = new Date(course.createdAt);
+      const diffMs = now - createdAt;
+      return diffMs > 24 * 60 * 60 * 1000 && diffMs <= 7 * 24 * 60 * 60 * 1000;
+    });
+  }, [filteredCourses]);
+
+  const olderCourses = useMemo(() => {
+    const now = new Date();
+    return filteredCourses.filter((course) => {
+      const createdAt = new Date(course.createdAt);
+      const diffMs = now - createdAt;
+      return diffMs > 7 * 24 * 60 * 60 * 1000;
+    });
+  }, [filteredCourses]);
 
   const renderLessonItem = (item) => (
-    <TouchableOpacity key={item.id} style={styles.lessonItem} activeOpacity={0.7} onPress={() => navigation.navigate("CourseDetail", { courseId: item.id })}>
+    <TouchableOpacity key={item._id} style={styles.lessonItem} activeOpacity={0.7} onPress={() => navigation.navigate("CourseDetail", { courseId: item._id })}>
       <View style={styles.lessonIconContainer}>
-        <Text style={styles.lessonIcon}>{item.icon}</Text>
+        <Text style={styles.lessonIcon}>📚</Text>
       </View>
       <View style={styles.lessonContent}>
         <Text style={styles.lessonTitle}>{item.title}</Text>
-        <Text style={styles.lessonMeta}>
-          {item.subject} - {item.duration}
-        </Text>
-        <Text style={styles.lessonInstructor}>{item.instructor}</Text>
+        <Text style={styles.lessonMeta}>{item.is_public ? "Công khai" : "Riêng tư"}</Text>
+        <Text style={styles.lessonInstructor}>{item.description || "Không có mô tả"}</Text>
       </View>
     </TouchableOpacity>
   );
 
+  const renderSection = (title, sectionCourses) => {
+    if (!sectionCourses.length) return null;
+
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{title}</Text>
+        {sectionCourses.map(renderLessonItem)}
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={() => loadCourses(true)} tintColor="#FFFFFF" />}
+      >
         {/* Tabs with Plus Icon */}
         <View style={styles.tabsContainer}>
           {LIBRARY_TABS.map((tab) => (
@@ -48,22 +136,36 @@ export default function LibraryScreen({ navigation }) {
         {/* Sort */}
         <View style={styles.sortContainer}>
           <Text style={styles.sortLabel}>Tất cả</Text>
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity activeOpacity={0.7} onPress={() => loadCourses(true)}>
             <Ionicons name="swap-vertical" size={18} color="#9CA3AF" />
           </TouchableOpacity>
         </View>
 
-        {/* Today Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Hôm nay</Text>
-          {LIBRARY_LESSONS.today.map(renderLessonItem)}
-        </View>
+        {isLoading ? (
+          <View style={styles.emptyContainer}>
+            <ActivityIndicator size="large" color="#FFFFFF" />
+          </View>
+        ) : null}
 
-        {/* Previous Week Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Tuần trước</Text>
-          {LIBRARY_LESSONS.previous_week.map(renderLessonItem)}
-        </View>
+        {!isLoading && !!error ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>{error}</Text>
+          </View>
+        ) : null}
+
+        {!isLoading && !error ? (
+          <>
+            {renderSection("Hôm nay", todayCourses)}
+            {renderSection("Tuần trước", previousWeekCourses)}
+            {renderSection("Cũ hơn", olderCourses)}
+
+            {!filteredCourses.length ? (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>Không có học phần nào</Text>
+              </View>
+            ) : null}
+          </>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
@@ -205,5 +307,15 @@ const styles = StyleSheet.create({
   lessonInstructor: {
     fontSize: 12,
     color: "#6B7280",
+  },
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 32,
+  },
+  emptyText: {
+    color: "#9CA3AF",
+    fontSize: 14,
+    textAlign: "center",
   },
 });

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AUTH_TOKEN_KEY } from '../services/api';
 
 const USER_ID_KEY = '@english_quiz_user_id';
 const USER_DATA_KEY = '@english_quiz_user_data';
@@ -72,7 +73,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await AsyncStorage.multiRemove([USER_ID_KEY, USER_DATA_KEY]);
+      await AsyncStorage.multiRemove([USER_ID_KEY, USER_DATA_KEY, AUTH_TOKEN_KEY]);
       setUserIdState('');
       setUserData(null);
       setIsAuthenticated(false);

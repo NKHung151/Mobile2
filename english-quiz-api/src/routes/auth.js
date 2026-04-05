@@ -6,6 +6,7 @@ const {
   getProfile,
   updateProfile,
 } = require('../controllers/authController');
+const { authenticateToken } = require('../middleware/auth');
 
 // POST /api/auth/register
 router.post('/register', register);
@@ -14,9 +15,15 @@ router.post('/register', register);
 router.post('/login', login);
 
 // GET /api/auth/profile/:userId
-router.get('/profile/:userId', getProfile);
+router.get('/profile/:userId', authenticateToken, getProfile);
+
+// GET /api/auth/me
+router.get('/me', authenticateToken, getProfile);
 
 // PUT /api/auth/profile/:userId
-router.put('/profile/:userId', updateProfile);
+router.put('/profile/:userId', authenticateToken, updateProfile);
+
+// PUT /api/auth/me
+router.put('/me', authenticateToken, updateProfile);
 
 module.exports = router;

@@ -1,10 +1,24 @@
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 const logger = require('../utils/logger');
+
+function createAccessToken(user) {
+  return jwt.sign(
+    {
+      userId: user._id.toString(),
+      username: user.username,
+      email: user.email,
+    },
+    config.jwt.secret,
+    { expiresIn: config.jwt.expiresIn },
+  );
+}
 
 // Register a new user
 const register = async (req, res) => {
   try {
-    const { username, email, phone, fullName, password } = req.body;
+    const { username, email, phone, fullName, fullname, password } = req.body;
 
     // Validate required fields
     if (!username || !email || !password) {
@@ -44,11 +58,12 @@ const register = async (req, res) => {
       username,
       email,
       phone: phone || '',
-      fullName: fullName || '',
+      fullName: fullName || fullname || '',
       password,
     });
 
     await user.save();
+    const token = createAccessToken(user);
 
     logger.info(`New user registered: ${username}`);
 
@@ -56,6 +71,7 @@ const register = async (req, res) => {
       success: true,
       message: 'User registered successfully',
       user: user.toJSON(),
+      token,
     });
   } catch (error) {
     logger.error('Registration error:', error);
@@ -97,11 +113,13 @@ const login = async (req, res) => {
     }
 
     logger.info(`User logged in: ${username}`);
+    const token = createAccessToken(user);
 
     res.json({
       success: true,
       message: 'Login successful',
       user: user.toJSON(),
+      token,
     });
   } catch (error) {
     logger.error('Login error:', error);
@@ -115,7 +133,14 @@ const login = async (req, res) => {
 // Get user profile
 const getProfile = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.params.userId || req.user?.id;
+
+    if (req.params.userId && req.params.userId !== req.user?.id) {
+      return res.status(403).json({
+        success: false,
+        error: 'You can only access your own profile',
+      });
+    }
 
     const user = await User.findById(userId);
     if (!user) {
@@ -141,8 +166,15 @@ const getProfile = async (req, res) => {
 // Update user profile
 const updateProfile = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.params.userId || req.user?.id;
     const { fullName, email, phone } = req.body;
+
+    if (req.params.userId && req.params.userId !== req.user?.id) {
+      return res.status(403).json({
+        success: false,
+        error: 'You can only update your own profile',
+      });
+    }
 
     const user = await User.findById(userId);
     if (!user) {

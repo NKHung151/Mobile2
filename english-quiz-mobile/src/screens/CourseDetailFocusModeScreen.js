@@ -1,14 +1,16 @@
-import React, { useState, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated, Modal, Switch } from "react-native";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated, Modal, Switch, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { LESSON_DETAILS } from "../constants/vocabularyData";
+import { getCourseVocabularies, getMySetting, updateMySetting } from "../services/api";
 
 const { width } = Dimensions.get("window");
 
 export default function CourseDetailScreen({ navigation, route }) {
   const { courseId } = route.params;
-  const course = LESSON_DETAILS[courseId];
+  const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -20,10 +22,55 @@ export default function CourseDetailScreen({ navigation, route }) {
   const [isCategorized, setIsCategorized] = useState(true);
   const [frontLanguage, setFrontLanguage] = useState("english"); // "english" or "vietnamese"
 
-  if (!course) {
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        setError("");
+        const [vocabRes, settingRes] = await Promise.all([getCourseVocabularies(courseId), getMySetting()]);
+        setCards(vocabRes?.data || []);
+
+        const frontSide = settingRes?.data?.front_side;
+        if (frontSide === "definition") {
+          setFrontLanguage("vietnamese");
+        } else {
+          setFrontLanguage("english");
+        }
+      } catch (err) {
+        setError(err.message || "Không thể tải chế độ tập trung");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [courseId]);
+
+  const normalizedCards = useMemo(
+    () =>
+      cards.map((card) => ({
+        id: card._id,
+        english: card.term,
+        vietnamese: card.definition,
+      })),
+    [cards],
+  );
+
+  const currentCard = normalizedCards[currentSlideIndex] || normalizedCards[0];
+  const totalCards = normalizedCards.length;
+
+  if (isLoading) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Course not found</Text>
+        <ActivityIndicator size="large" color="#FFFFFF" />
+      </View>
+    );
+  }
+
+  if (error || !cards.length) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>{error || "Học phần chưa có thẻ"}</Text>
       </View>
     );
   }
@@ -46,9 +93,6 @@ export default function CourseDetailScreen({ navigation, route }) {
     setIsShuffled(false);
     // TODO: Implement restore order logic
   };
-
-  const currentCard = course.flashcards[currentSlideIndex] || course.flashcards[0];
-  const totalCards = course.flashcards.length;
 
   // Animation mặt trước: 0 -> 180 độ
   const frontInterpolate = flipAnim.interpolate({
@@ -141,16 +185,8 @@ export default function CourseDetailScreen({ navigation, route }) {
 
       {/* Settings Modal */}
       <Modal visible={isSettingsVisible} transparent={true} animationType="slide" onRequestClose={() => setIsSettingsVisible(false)}>
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setIsSettingsVisible(false)}
-        >
-          <TouchableOpacity 
-            style={styles.modalContent}
-            activeOpacity={1}
-            onPress={(e) => e.stopPropagation()}
-          >
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setIsSettingsVisible(false)}>
+          <TouchableOpacity style={styles.modalContent} activeOpacity={1} onPress={(e) => e.stopPropagation()}>
             {/* Modal Handle */}
             <View style={styles.modalHandle} />
 
@@ -185,11 +221,33 @@ export default function CourseDetailScreen({ navigation, route }) {
               <Text style={styles.sectionSubtitle}>Mặt trước</Text>
 
               <View style={styles.languageButtonsRow}>
-                <TouchableOpacity style={[styles.languageButton, frontLanguage === "english" && styles.languageButtonActive]} onPress={() => setFrontLanguage("english")} activeOpacity={0.7}>
+                <TouchableOpacity
+                  style={[styles.languageButton, frontLanguage === "english" && styles.languageButtonActive]}
+                  onPress={async () => {
+                    setFrontLanguage("english");
+                    try {
+                      await updateMySetting({ front_side: "term" });
+                    } catch (e) {
+                      // Ignore preference save error in UI.
+                    }
+                  }}
+                  activeOpacity={0.7}
+                >
                   <Text style={[styles.languageButtonText, frontLanguage === "english" && styles.languageButtonTextActive]}>Tiếng anh</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.languageButton, frontLanguage === "vietnamese" && styles.languageButtonActive]} onPress={() => setFrontLanguage("vietnamese")} activeOpacity={0.7}>
+                <TouchableOpacity
+                  style={[styles.languageButton, frontLanguage === "vietnamese" && styles.languageButtonActive]}
+                  onPress={async () => {
+                    setFrontLanguage("vietnamese");
+                    try {
+                      await updateMySetting({ front_side: "definition" });
+                    } catch (e) {
+                      // Ignore preference save error in UI.
+                    }
+                  }}
+                  activeOpacity={0.7}
+                >
                   <Text style={[styles.languageButtonText, frontLanguage === "vietnamese" && styles.languageButtonTextActive]}>Tiếng việt</Text>
                 </TouchableOpacity>
               </View>
