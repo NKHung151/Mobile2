@@ -18,7 +18,12 @@ import HistoryScreen from "./src/screens/HistoryScreen_New";
 import TranscribeScreen from "./src/screens/TranscribeScreen";
 import PracticeScreen from "./src/screens/PracticeScreen";
 import UserProfileScreen from "./src/screens/UserProfileScreen";
-
+import LibraryScreen from "./src/screens/LibraryScreen";
+import CourseDetailScreen from "./src/screens/CourseDetailScreen";
+import CourseDetailFocusModeScreen from "./src/screens/CourseDetailFocusModeScreen";
+import AddCourseScreen from "./src/screens/AddCourseScreen";
+import EditCourseScreen from "./src/screens/EditCourseScreen";
+import ImportExcelScreen from "./src/screens/ImportExcelScreen";
 const Stack = createNativeStackNavigator();
 
 const linking = {
@@ -32,6 +37,8 @@ const linking = {
       Chat: "chat",
       History: "history",
       UserProfile: "profile",
+      Library: "library",
+      CourseDetail: "course/:courseId",
     },
   },
 };
@@ -67,55 +74,25 @@ function RootNavigator() {
         {isAuthenticated ? (
           // App Stack - User is logged in
           <>
-            <Stack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{ title: "English Quiz Master" }}
-            />
-            <Stack.Screen
-              name="Practice"
-              component={PracticeScreen}
-              options={{ title: "Practice" }}
-            />
-            <Stack.Screen
-              name="Quiz"
-              component={QuizScreen}
-              options={{ title: "Quiz Mode" }}
-            />
-            <Stack.Screen
-              name="Chat"
-              component={ChatScreen}
-              options={{ title: "Chat with Tutor" }}
-            />
-            <Stack.Screen
-              name="History"
-              component={HistoryScreen}
-              options={{ title: "My History" }}
-            />
-            <Stack.Screen
-              name="Transcribe"
-              component={TranscribeScreen}
-              options={{ title: "Transcribe" }}
-            />
-            <Stack.Screen
-              name="UserProfile"
-              component={UserProfileScreen}
-              options={{ title: "My Profile" }}
-            />
+            <Stack.Screen name="Home" component={HomeScreen} options={{ title: "English Quiz Master" }} />
+            <Stack.Screen name="Practice" component={PracticeScreen} options={{ title: "Practice" }} />
+            <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: "Quiz Mode" }} />
+            <Stack.Screen name="Chat" component={ChatScreen} options={{ title: "Chat with Tutor" }} />
+            <Stack.Screen name="History" component={HistoryScreen} options={{ title: "My History" }} />
+            <Stack.Screen name="Transcribe" component={TranscribeScreen} options={{ title: "Transcribe" }} />
+            <Stack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: "My Profile" }} />
+            <Stack.Screen name="Library" component={LibraryScreen} options={{ title: "Library" }} />
+            <Stack.Screen name="CourseDetail" component={CourseDetailScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="CourseDetailFocusMode" component={CourseDetailFocusModeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AddCourse" component={AddCourseScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="EditCourse" component={EditCourseScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ImportExcel" component={ImportExcelScreen} options={{ headerShown: false }} />
           </>
         ) : (
           // Auth Stack - User is logged out
           <>
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Register"
-              component={RegisterScreen}
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
           </>
         )}
       </Stack.Navigator>

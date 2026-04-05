@@ -1,6 +1,7 @@
 module.exports = {
   port: process.env.PORT || 3000,
   nodeEnv: process.env.NODE_ENV || "development",
+  serverUrl: process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3000}`,
 
   mongodb: {
     uri: process.env.MONGODB_URI,
@@ -21,6 +22,11 @@ module.exports = {
     apiKey: process.env.ADMIN_API_KEY,
   },
 
+  jwt: {
+    secret: process.env.JWT_SECRET || "dev-jwt-secret-change-me",
+    expiresIn: process.env.JWT_EXPIRES_IN || "7d",
+  },
+
   rateLimit: {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 60000,
     maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
@@ -28,8 +34,7 @@ module.exports = {
 
   vectorSearch: {
     indexName: process.env.VECTOR_SEARCH_INDEX_NAME || "chunk_vector_index",
-    numCandidates:
-      parseInt(process.env.VECTOR_SEARCH_NUM_CANDIDATES, 10) || 100,
+    numCandidates: parseInt(process.env.VECTOR_SEARCH_NUM_CANDIDATES, 10) || 100,
     limit: parseInt(process.env.VECTOR_SEARCH_LIMIT, 10) || 5,
   },
 
@@ -40,8 +45,7 @@ module.exports = {
   },
 
   chat: {
-    maxConversationHistory:
-      parseInt(process.env.MAX_CONVERSATION_HISTORY, 10) || 10,
+    maxConversationHistory: parseInt(process.env.MAX_CONVERSATION_HISTORY, 10) || 10,
   },
 
   chunking: {
@@ -50,9 +54,7 @@ module.exports = {
   },
 
   cors: {
-    origins: process.env.CORS_ORIGINS
-      ? process.env.CORS_ORIGINS.split(",")
-      : "*",
+    origins: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(",") : "*",
   },
 
   logging: {

@@ -6,11 +6,7 @@ const schemas = {
   quizStart: Joi.object({
     user_id: Joi.string().required().min(1).max(100),
     topic_id: Joi.string().required().min(1).max(100),
-    total_questions: Joi.number()
-      .integer()
-      .min(1)
-      .max(config.quiz.maxQuestions)
-      .default(config.quiz.defaultQuestions),
+    total_questions: Joi.number().integer().min(1).max(config.quiz.maxQuestions).default(config.quiz.defaultQuestions),
   }),
 
   quizAnswer: Joi.object({
@@ -49,6 +45,93 @@ const schemas = {
     user_id: Joi.string().required().min(1).max(100),
   }),
 
+  // Flashcard course schemas
+  courseCreate: Joi.object({
+    title: Joi.string().trim().min(1).max(200).required(),
+    description: Joi.string().trim().max(2000).allow("").optional(),
+    is_public: Joi.boolean().optional(),
+  }),
+
+  courseUpdate: Joi.object({
+    title: Joi.string().trim().min(1).max(200).optional(),
+    description: Joi.string().trim().max(2000).allow("").optional(),
+    is_public: Joi.boolean().optional(),
+  }).min(1),
+
+  courseStarUpdate: Joi.object({
+    is_star: Joi.boolean().optional(),
+  }),
+
+  courseParams: Joi.object({
+    id: Joi.string().length(24).hex().required(),
+  }),
+
+  // Flashcard vocabulary schemas
+  vocabularyCreate: Joi.object({
+    term: Joi.string().trim().min(1).max(200).required(),
+    definition: Joi.string().trim().min(1).max(2000).required(),
+    term_image_url: Joi.string().trim().uri().allow("").optional(),
+    def_image_url: Joi.string().trim().uri().allow("").optional(),
+    term_language_code: Joi.string().trim().max(10).optional(),
+    definition_language_code: Joi.string().trim().max(10).optional(),
+  }),
+
+  vocabularyUpdate: Joi.object({
+    term: Joi.string().trim().min(1).max(200).optional(),
+    definition: Joi.string().trim().min(1).max(2000).optional(),
+    term_image_url: Joi.string().trim().uri().allow("").optional(),
+    def_image_url: Joi.string().trim().uri().allow("").optional(),
+    term_language_code: Joi.string().trim().max(10).optional(),
+    definition_language_code: Joi.string().trim().max(10).optional(),
+  }).min(1),
+
+  vocabularyCourseParams: Joi.object({
+    courseId: Joi.string().length(24).hex().required(),
+  }),
+
+  vocabularyParams: Joi.object({
+    courseId: Joi.string().length(24).hex().required(),
+    vocabularyId: Joi.string().length(24).hex().required(),
+  }),
+
+  // Progress schemas
+  progressCourseParams: Joi.object({
+    courseId: Joi.string().length(24).hex().required(),
+  }),
+
+  progressCourseUpdate: Joi.object({
+    practiceId: Joi.string().length(24).hex().optional(),
+    status: Joi.string().valid("completed", "in_progress").optional(),
+    progress: Joi.number().min(0).optional(),
+    unmemorized_count: Joi.number().integer().min(0).optional(),
+    started_at: Joi.date().optional(),
+    finished_at: Joi.date().allow(null).optional(),
+    is_finished: Joi.boolean().optional(),
+  }).min(1),
+
+  progressPracticeCreate: Joi.object({
+    status: Joi.string().valid("completed", "in_progress").optional(),
+    progress: Joi.number().min(0).optional(),
+    unmemorized_count: Joi.number().integer().min(0).optional(),
+    started_at: Joi.date().optional(),
+    is_finished: Joi.boolean().optional(),
+  }),
+
+  progressVocabularyParams: Joi.object({
+    vocabularyId: Joi.string().length(24).hex().required(),
+  }),
+
+  progressVocabularyUpdate: Joi.object({
+    is_memorized: Joi.boolean().optional(),
+    is_star: Joi.boolean().optional(),
+  }).min(1),
+
+  // Setting schemas
+  settingUpdate: Joi.object({
+    theme: Joi.string().valid("light", "dark").optional(),
+    front_side: Joi.string().valid("term", "definition").optional(),
+  }).min(1),
+
   // Admin schemas - files are optional when using multipart upload
   createTopic: Joi.object({
     topic_id: Joi.string()
@@ -68,11 +151,7 @@ const schemas = {
     metadata: Joi.alternatives()
       .try(
         Joi.object({
-          difficulty: Joi.string().valid(
-            "beginner",
-            "intermediate",
-            "advanced",
-          ),
+          difficulty: Joi.string().valid("beginner", "intermediate", "advanced"),
           duration: Joi.string(),
           tags: Joi.array().items(Joi.string()),
         }),
@@ -94,11 +173,7 @@ const schemas = {
     metadata: Joi.alternatives()
       .try(
         Joi.object({
-          difficulty: Joi.string().valid(
-            "beginner",
-            "intermediate",
-            "advanced",
-          ),
+          difficulty: Joi.string().valid("beginner", "intermediate", "advanced"),
           duration: Joi.string(),
           tags: Joi.array().items(Joi.string()),
         }),
