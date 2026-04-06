@@ -24,7 +24,7 @@ const learningSessionSchema = new mongoose.Schema(
     },
     mode: {
       type: String,
-      enum: ["quiz", "chat", "transcribe"],
+      enum: ["quiz", "chat", "homophone_groups", "listening_part2"],
       required: true,
     },
     status: {
@@ -90,6 +90,21 @@ const learningSessionSchema = new mongoose.Schema(
     },
     learning_tags: [String],
     difficulties_encountered: [String],
+    // Questions summary (for listening_part2 and similar detailed modes)
+    questions_summary: [{
+      question_id: {
+        type: String,
+      },
+      is_correct: {
+        type: Boolean,
+      },
+      user_answer: {
+        type: String,
+      },
+      correct_answer: {
+        type: String,
+      },
+    }],
     // Metadata
     device_type: String,
     ip_address: String,

@@ -23,7 +23,20 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1F2937"
       },
-      "package": "com.englishquiz.mobile"
+      "package": "com.englishquiz.mobile",
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.DETECT_SCREEN_CAPTURE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
+      "intentFilters": [
+        {
+          "action": "android.intent.action.MAIN",
+          "category": "android.intent.category.LAUNCHER"
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",

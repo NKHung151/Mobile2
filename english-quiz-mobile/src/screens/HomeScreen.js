@@ -205,35 +205,49 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionCard, styles.transcribeCard]}
-            onPress={() => handleNavigate("Transcribe")}
+            style={[styles.actionCard, styles.homophoneGroupsCard]}
+            onPress={() => handleNavigate("HomophoneGroups")}
             activeOpacity={0.9}
           >
             <View style={styles.actionContent}>
-              <View
-                style={[
-                  styles.actionIconWrapper,
-                  { backgroundColor: "rgba(255,255,255,0.18)" },
-                ]}
-              >
-                <Ionicons name="mic" size={28} color="#fff" />
+              <View style={[styles.actionIconWrapper, { backgroundColor: "rgba(255,255,255,0.18)" }]}>
+                <Ionicons name="ear" size={28} color="#fff" />
               </View>
               <View style={styles.actionTextContainer}>
-                <Text style={styles.actionTitle}>Transcribe</Text>
+                <Text style={styles.actionTitle}>Homophone Groups</Text>
                 <Text style={styles.actionDescription}>
-                  Listen and type what you hear
+                  Listen and choose the correct word
                 </Text>
               </View>
             </View>
             <View style={styles.actionArrow}>
-              <Ionicons
-                name="arrow-forward"
-                size={20}
-                color="rgba(255,255,255,0.8)"
-              />
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
             </View>
             <View style={styles.cardDecoration} />
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.actionCard, styles.listeningCard]}
+            onPress={() => handleNavigate("ListeningPart2")}
+            activeOpacity={0.9}
+          >
+            <View style={styles.actionContent}>
+              <View style={[styles.actionIconWrapper, { backgroundColor: "rgba(255,255,255,0.18)" }]}>
+                <Ionicons name="headset" size={28} color="#fff" />
+              </View>
+              <View style={styles.actionTextContainer}>
+                <Text style={styles.actionTitle}>Listening Part 2</Text>
+                <Text style={styles.actionDescription}>
+                  TOEIC listening comprehension practice
+                </Text>
+              </View>
+            </View>
+            <View style={styles.actionArrow}>
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
+            </View>
+            <View style={styles.cardDecoration} />
+          </TouchableOpacity>
+
         </View>
 
         {/* Topics Section */}
@@ -450,9 +464,19 @@ const styles = StyleSheet.create({
   chatCard: {
     backgroundColor: COLORS.secondary,
   },
-  transcribeCard: {
-    backgroundColor: "#10B981",
+  homophoneGroupsCard: {
+    backgroundColor: "#6C5CE7",
   },
+  listeningCard: {
+    backgroundColor: "#FF8C42",
+  },
+  historyCard: {
+    backgroundColor: "#8B5CF6",
+  },
+  historyIconWrapper: {
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+  },
+
   actionContent: {
     flexDirection: "row",
     alignItems: "center",

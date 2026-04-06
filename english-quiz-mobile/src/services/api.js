@@ -46,10 +46,7 @@ export const getTopics = async () => {
   return response.data;
 };
 
-export const getTopic = async (topicId) => {
-  const response = await api.get(`/api/topics/${topicId}`);
-  return response.data;
-};
+
 
 // ==================== QUIZ API ====================
 
@@ -71,12 +68,7 @@ export const submitAnswer = async (userId, topicId, answer) => {
   return response.data;
 };
 
-export const getQuizStatus = async (userId, topicId) => {
-  const response = await api.get(`/api/quiz/status`, {
-    params: { user_id: userId, topic_id: topicId },
-  });
-  return response.data;
-};
+
 
 // ==================== CHAT API ====================
 
@@ -89,28 +81,134 @@ export const sendChatMessage = async (userId, topicId, message) => {
   return response.data;
 };
 
-// ==================== TRANSCRIPTION API ====================
+// ==================== HOMOPHONE GROUPS API ====================
 
-export const getTranscriptionSentences = async (topicId) => {
-  const response = await api.get(`/api/transcription/sentences`, {
-    params: { topic_id: topicId },
+/**
+ * Start a homophone groups learning session
+ */
+export const startHomophoneGroupsSession = async (userId) => {
+  const response = await api.post("/api/homophone-groups/session/start", {
+    user_id: userId,
   });
   return response.data;
 };
 
-export const submitTranscription = async (
-  userId,
-  topicId,
-  sentenceId,
-  transcription,
-  score,
+/**
+ * Get the next homophone groups question
+ */
+export const startHomophoneGroups = async () => {
+  const response = await api.post("/api/homophone-groups/start");
+  return response.data;
+};
+
+/**
+ * Submit an answer to a homophone groups question
+ */
+export const submitHomophoneGroupsAnswer = async (
+  questionId,
+  userAnswer,
+  sessionId = null,
+  userId = null,
 ) => {
-  const response = await api.post("/api/transcription/submit", {
+  const response = await api.post("/api/homophone-groups/answer", {
+    question_id: questionId,
+    user_answer: userAnswer,
+    session_id: sessionId,
     user_id: userId,
-    topic_id: topicId,
-    sentence_id: sentenceId,
-    transcription,
-    score,
+  });
+  return response.data;
+};
+
+/**
+ * Complete a homophone groups learning session
+ */
+export const completeHomophoneGroupsSession = async (sessionId, userId) => {
+  const response = await api.post("/api/homophone-groups/session/complete", {
+    session_id: sessionId,
+    user_id: userId,
+  });
+  return response.data;
+};
+
+// ==================== LISTENING PART 2 API ====================
+
+/**
+ * Start a listening part 2 TOEIC learning session
+ */
+export const startListeningSession = async (userId, questionCount = 10) => {
+  const response = await api.post("/api/listening-part2/session/start", {
+    user_id: userId,
+    question_count: questionCount,
+  });
+  return response.data;
+};
+
+/**
+ * Submit answer to a listening part 2 question
+ */
+export const submitListeningAnswer = async (sessionId, selectedOptionIndex) => {
+  const response = await api.post("/api/listening-part2/answer", {
+    session_id: sessionId,
+    selected_option_index: selectedOptionIndex,
+  });
+  return response.data;
+};
+
+// ==================== LISTENING PART 2 HISTORY API ====================
+
+/**
+ * Save a completed listening session to history
+ */
+export const saveListeningSessionToHistory = async (
+  userId,
+  totalQuestions,
+  correctAnswers,
+  questionsSummary,
+  startTime,
+  endTime,
+) => {
+  const response = await api.post("/api/listening-part2-history/save", {
+    user_id: userId,
+    total_questions: totalQuestions,
+    correct_answers: correctAnswers,
+    questions_summary: questionsSummary,
+    start_time: startTime,
+    end_time: endTime,
+    device_type: "mobile",
+  });
+  return response.data;
+};
+
+/**
+ * Get all listening history for a user
+ */
+export const getListeningHistory = async (userId) => {
+  const response = await api.get(`/api/listening-part2-history/${userId}`);
+  return response.data;
+};
+
+/**
+ * Get listening statistics for a user
+ */
+export const getListeningStats = async (userId) => {
+  const response = await api.get(`/api/listening-part2-history/${userId}/stats`);
+  return response.data;
+};
+
+/**
+ * Get details of a specific listening session
+ */
+export const getListeningSessionDetails = async (sessionId) => {
+  const response = await api.get(`/api/listening-part2-history/session/${sessionId}`);
+  return response.data;
+};
+
+/**
+ * Delete a listening session
+ */
+export const deleteListeningSession = async (sessionId, userId) => {
+  const response = await api.delete(`/api/listening-part2-history/session/${sessionId}`, {
+    data: { user_id: userId },
   });
   return response.data;
 };
@@ -145,18 +243,5 @@ export const getConversations = async (userId) => {
   return { conversations: [] };
 };
 
-export const getConversationDetails = async (userId, topicId, mode) => {
-  const response = await api.get(`/api/conversations/${topicId}`, {
-    params: { user_id: userId, mode },
-  });
-  return response.data;
-};
-
-export const deleteConversation = async (userId, topicId, mode) => {
-  const response = await api.delete(`/api/conversations/${topicId}`, {
-    params: { user_id: userId, mode },
-  });
-  return response.data;
-};
 
 export default api;

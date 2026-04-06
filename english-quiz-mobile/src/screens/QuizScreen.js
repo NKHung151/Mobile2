@@ -28,7 +28,6 @@ import {
 } from "../constants/config";
 import {
   useNotification,
-  CompletionNotification,
 } from "../components/NotificationCenter";
 
 const { width } = Dimensions.get("window");

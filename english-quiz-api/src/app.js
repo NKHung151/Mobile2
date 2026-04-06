@@ -16,7 +16,9 @@ const adminRoutes = require("./routes/admin");
 const healthRoutes = require("./routes/health");
 const topicsRoutes = require("./routes/topics");
 const learningHistoryRoutes = require("./routes/learningHistory");
-const transcriptionRoutes = require("./routes/transcription");
+const homophoneGroupsRoutes = require("./routes/homophoneGroups");
+const listeningPart2Routes = require("./routes/listeningPart2");
+const listeningPart2HistoryRoutes = require("./routes/listeningPart2History");
 
 // Middleware
 const { errorHandler, notFoundHandler } = require("./middleware/errorHandler");
@@ -80,9 +82,11 @@ app.use("/health", healthRoutes);
 app.use("/api/topics", topicsRoutes); // Public topics endpoint (no auth required)
 app.use("/api/quiz", quizRoutes);
 app.use("/api/chat", chatRoutes);
-app.use("/api/transcription", transcriptionRoutes); // Transcription practice endpoints
 app.use("/api/conversations", conversationRoutes);
-app.use("/api/learning", learningHistoryRoutes); // Learning history endpoints
+app.use("/api/learning", learningHistoryRoutes);
+app.use("/api/homophone-groups", homophoneGroupsRoutes); // Homophone Groups listening practice
+app.use("/api/listening-part2", listeningPart2Routes); // Listening Part 2 TOEIC practice
+app.use("/api/listening-part2-history", listeningPart2HistoryRoutes); // Listening Part 2 History
 app.use("/api/admin", adminRoutes); // Admin endpoints (API key required)
 
 // Error handling

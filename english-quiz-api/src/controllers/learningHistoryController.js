@@ -120,7 +120,7 @@ async function updateSessionProgress(req, res, next) {
  */
 async function completeLearningSession(req, res, next) {
   try {
-    const { session_id, user_id } = req.body;
+    const { session_id, user_id, questions_summary } = req.body;
 
     if (!session_id || !user_id) {
       return res.status(400).json({
@@ -139,6 +139,11 @@ async function completeLearningSession(req, res, next) {
 
     session.status = "completed";
     session.end_time = new Date();
+
+    // Store questions summary if provided (for listening_part2, etc)
+    if (questions_summary && Array.isArray(questions_summary)) {
+      session.questions_summary = questions_summary;
+    }
 
     // Calculate duration
     if (session.end_time && session.start_time) {

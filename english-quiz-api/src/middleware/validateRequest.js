@@ -31,18 +31,7 @@ const schemas = {
     message: Joi.string().required().min(1).max(2000),
   }),
 
-  // Transcription schemas
-  transcriptionSentences: Joi.object({
-    topic_id: Joi.string().required().min(1).max(100),
-  }),
 
-  transcriptionSubmit: Joi.object({
-    user_id: Joi.string().required().min(1).max(100),
-    topic_id: Joi.string().required().min(1).max(100),
-    sentence_id: Joi.string().required().min(1).max(100),
-    transcription: Joi.string().required().min(1).max(2000),
-    score: Joi.number().integer().min(0).max(100).required(),
-  }),
 
   // Conversation schemas
   conversationQuery: Joi.object({

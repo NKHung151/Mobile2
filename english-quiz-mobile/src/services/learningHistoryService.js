@@ -126,19 +126,6 @@ export const getLearningStatistics = async (userId) => {
 };
 
 /**
- * Get topic progress
- */
-export const getTopicProgress = async (userId, topicId) => {
-  const response = await learningApi.get("/api/learning/topic-progress", {
-    params: {
-      user_id: userId,
-      topic_id: topicId,
-    },
-  });
-  return response.data;
-};
-
-/**
  * Get learning dashboard data
  */
 export const getLearningDashboard = async (userId) => {
@@ -157,15 +144,6 @@ export const getRecommendations = async (userId) => {
   const response = await learningApi.get("/api/learning/recommendations", {
     params,
   });
-  return response.data;
-};
 
-/**
- * Delete learning history
- */
-export const deleteAllLearningHistory = async (userId) => {
-  const response = await learningApi.delete("/api/learning/history", {
-    params: { user_id: userId },
-  });
   return response.data;
 };
