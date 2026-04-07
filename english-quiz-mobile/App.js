@@ -18,6 +18,8 @@ import HistoryScreen from "./src/screens/HistoryScreen_New";
 import TranscribeScreen from "./src/screens/TranscribeScreen";
 import PracticeScreen from "./src/screens/PracticeScreen";
 import UserProfileScreen from "./src/screens/UserProfileScreen";
+import ListVideoScreen from "./src/screens/ListVideoScreen";
+import VideoScreen from "./src/screens/VideoScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -101,6 +103,16 @@ function RootNavigator() {
               name="UserProfile"
               component={UserProfileScreen}
               options={{ title: "My Profile" }}
+            />
+            <Stack.Screen
+              name="ListVideo"
+              component={ListVideoScreen}
+              options={{ title: "Learning Video" }}
+            />
+            <Stack.Screen
+              name="VideoPlayer"
+              component={VideoScreen}
+              options={{ title: "Learning Video" }}
             />
           </>
         ) : (
