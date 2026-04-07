@@ -1,10 +1,19 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated, Modal, Switch, ActivityIndicator, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated, Modal, Switch, ActivityIndicator, Alert, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { Audio } from "expo-av";
 import { getCourseVocabularies, getMySetting, updateMySetting, updateVocabularyProgress, createCoursePracticeSession, updateCoursePracticeProgress } from "../services/api";
 
 const { width } = Dimensions.get("window");
+
+const generateGoogleTTSUrl = (text, languageCode = "en") => {
+  if (!text || text.trim() === "") {
+    return "";
+  }
+  const encodedText = encodeURIComponent(text);
+  return `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=${languageCode}&client=tw-ob`;
+};
 
 export default function CourseDetailFocusMode({ navigation, route }) {
   const { courseId } = route.params;
@@ -25,6 +34,16 @@ export default function CourseDetailFocusMode({ navigation, route }) {
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
   const [isShuffled, setIsShuffled] = useState(false);
   const [frontLanguage, setFrontLanguage] = useState("english");
+  const [playingAudio, setPlayingAudio] = useState(null);
+  const soundRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.unloadAsync();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -177,6 +196,39 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     }
   };
 
+  const playAudio = async (audioUrl, side = "front") => {
+    if (!audioUrl) {
+      Alert.alert("Thông báo", "Không có âm thanh cho mục này");
+      return;
+    }
+
+    try {
+      if (soundRef.current) {
+        await soundRef.current.unloadAsync();
+      }
+
+      const sound = new Audio.Sound();
+      soundRef.current = sound;
+      await sound.loadAsync({ uri: audioUrl });
+      await sound.playAsync();
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          setPlayingAudio(null);
+        }
+      });
+    } catch (err) {
+      Alert.alert("Lỗi", "Không thể phát âm thanh: " + err.message);
+      setPlayingAudio(null);
+    }
+  };
+
+  const stopAudio = async () => {
+    if (soundRef.current) {
+      await soundRef.current.stopAsync();
+      setPlayingAudio(null);
+    }
+  };
+
   const currentCard = cards[currentSlideIndex];
 
   const frontInterpolate = flipAnim.interpolate({
@@ -233,7 +285,38 @@ export default function CourseDetailFocusMode({ navigation, route }) {
 
             <TouchableOpacity onPress={handleFlipCard} activeOpacity={1} style={styles.cardTouchable}>
               <View style={styles.cardContent}>
+                {frontLanguage === "english" && currentCard?.term_image_url ? (
+                  <Image source={{ uri: currentCard.term_image_url }} style={styles.cardImage} />
+                ) : frontLanguage === "vietnamese" && currentCard?.def_image_url ? (
+                  <Image source={{ uri: currentCard.def_image_url }} style={styles.cardImage} />
+                ) : null}
                 <Text style={styles.cardWord}>{frontLanguage === "english" ? currentCard?.term : currentCard?.definition}</Text>
+                <TouchableOpacity
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    const text = frontLanguage === "english" ? currentCard?.term : currentCard?.definition;
+                    const langCode = frontLanguage === "english" ? currentCard?.term_language_code || "en" : currentCard?.definition_language_code || "vi";
+                    const audioUrl = generateGoogleTTSUrl(text, langCode);
+                    const audioId = frontLanguage === "english" ? `term_${currentCard?._id}` : `def_${currentCard?._id}`;
+
+                    if (playingAudio === audioId) {
+                      stopAudio();
+                    } else {
+                      playAudio(audioUrl, "front");
+                      setPlayingAudio(audioId);
+                    }
+                  }}
+                  style={styles.audioButton}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={
+                      playingAudio === (frontLanguage === "english" ? `term_${currentCard?._id}` : `def_${currentCard?._id}`) ? "pause" : "volume-high"
+                    }
+                    size={20}
+                    color="#FFFFFF"
+                  />
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           </Animated.View>
@@ -247,7 +330,38 @@ export default function CourseDetailFocusMode({ navigation, route }) {
 
             <TouchableOpacity onPress={handleFlipCard} activeOpacity={1} style={styles.cardTouchable}>
               <View style={styles.cardContent}>
+                {frontLanguage === "english" && currentCard?.def_image_url ? (
+                  <Image source={{ uri: currentCard.def_image_url }} style={styles.cardImage} />
+                ) : frontLanguage === "vietnamese" && currentCard?.term_image_url ? (
+                  <Image source={{ uri: currentCard.term_image_url }} style={styles.cardImage} />
+                ) : null}
                 <Text style={styles.cardWord}>{frontLanguage === "english" ? currentCard?.definition : currentCard?.term}</Text>
+                <TouchableOpacity
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    const text = frontLanguage === "english" ? currentCard?.definition : currentCard?.term;
+                    const langCode = frontLanguage === "english" ? currentCard?.definition_language_code || "vi" : currentCard?.term_language_code || "en";
+                    const audioUrl = generateGoogleTTSUrl(text, langCode);
+                    const audioId = frontLanguage === "english" ? `def_${currentCard?._id}` : `term_${currentCard?._id}`;
+
+                    if (playingAudio === audioId) {
+                      stopAudio();
+                    } else {
+                      playAudio(audioUrl, "back");
+                      setPlayingAudio(audioId);
+                    }
+                  }}
+                  style={styles.audioButton}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={
+                      playingAudio === (frontLanguage === "english" ? `def_${currentCard?._id}` : `term_${currentCard?._id}`) ? "pause" : "volume-high"
+                    }
+                    size={20}
+                    color="#FFFFFF"
+                  />
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           </Animated.View>
@@ -329,6 +443,16 @@ const styles = StyleSheet.create({
   starIcon: { position: "absolute", top: 16, right: 16, padding: 8, zIndex: 999, elevation: 999 },
   cardContent: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },
   cardWord: { fontSize: 32, fontWeight: "700", color: "#FFFFFF", textAlign: "center" },
+  cardImage: { width: 150, height: 150, borderRadius: 12, marginBottom: 16 },
+  audioButton: {
+    marginTop: 12,
+    backgroundColor: "rgba(91, 127, 255, 0.3)",
+    borderRadius: 50,
+    width: 44,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   footer: { flexDirection: "row", justifyContent: "center", alignItems: "center", paddingVertical: 24, gap: 20 },
   memorizedButton: { flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 25, backgroundColor: "rgba(91, 127, 255, 0.2)" },
   footerText: { color: "#FFFFFF", fontWeight: "500" },
