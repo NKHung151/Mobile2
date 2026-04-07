@@ -47,41 +47,40 @@ const createCourse = async (req, res, next) => {
 
 const getCourses = async (req, res, next) => {
   try {
-    const [ownerOrPublicCourses, courseUsers] = await Promise.all([
-      Course.find({
-        $or: [{ creator: req.user.id }, { is_public: true }],
-      }).sort({ createdAt: -1 }),
+    const [creatorCourses, courseUsers] = await Promise.all([
+      Course.find({ creator: req.user.id }).sort({ createdAt: -1 }),
       CourseUser.find({ user: req.user.id }),
     ]);
 
     const courseUserMap = new Map(courseUsers.map((item) => [item.course.toString(), item]));
-    const courseIdSet = new Set(ownerOrPublicCourses.map((item) => item._id.toString()));
 
-    courseUsers.forEach((item) => {
-      courseIdSet.add(item.course.toString());
-    });
+    // Combine: courses of creator + courses user has joined
+    const courseIdSet = new Set();
+    creatorCourses.forEach((course) => courseIdSet.add(course._id.toString()));
+    courseUsers.forEach((item) => courseIdSet.add(item.course.toString()));
 
+    console.log("[getCourses] courseIdSet:", Array.from(courseIdSet));
     const allCourseIds = Array.from(courseIdSet);
     const allCourses = await Course.find({ _id: { $in: allCourseIds } }).sort({ createdAt: -1 });
 
-    const courses = await Promise.all(
-      allCourses.map(async (course) => {
-        const existing = courseUserMap.get(course._id.toString()) || (await getOrCreateCourseUser(course._id, req.user.id));
-        return {
-          ...course.toObject(),
-          course_user: {
-            _id: existing._id,
-            is_star: existing.is_star,
-          },
-        };
-      }),
-    );
+    console.log("[getCourses] allCourses count:", allCourses.length);
+    const courses = allCourses.map((course) => {
+      const courseUser = courseUserMap.get(course._id.toString());
+      return {
+        ...course.toObject(),
+        course_user: courseUser ? {
+          _id: courseUser._id,
+          is_star: courseUser.is_star,
+        } : null,
+      };
+    });
 
     return res.json({
       success: true,
       data: courses,
     });
   } catch (error) {
+    console.error("[getCourses] Error:", error.message, error);
     return next(error);
   }
 };
@@ -159,27 +158,22 @@ const deleteCourse = async (req, res, next) => {
       return res.status(404).json({ success: false, error: "Course not found" });
     }
 
-    if (course.creator.toString() !== req.user.id) {
-      return res.status(403).json({ success: false, error: "Only creator can delete this course" });
+    // Find the CourseUser record for this user and course
+    const courseUser = await CourseUser.findOne({ course: id, user: req.user.id });
+    if (!courseUser) {
+      return res.status(404).json({ success: false, error: "Course not found in library" });
     }
 
-    const vocabularies = await Vocabulary.find({ course: course._id }).select("_id").lean();
-    const vocabularyIds = vocabularies.map((item) => item._id);
-    const courseUsers = await CourseUser.find({ course: course._id }).select("_id").lean();
-    const courseUserIds = courseUsers.map((item) => item._id);
-
+    // Delete only user's related data: VocabularyUser and CourseUserPractice
     await Promise.all([
-      vocabularyIds.length ? VocabularyUser.deleteMany({ vocabulary: { $in: vocabularyIds } }) : Promise.resolve(),
-      courseUserIds.length ? VocabularyUser.deleteMany({ course_user: { $in: courseUserIds } }) : Promise.resolve(),
-      courseUserIds.length ? CourseUserPractice.deleteMany({ course_user: { $in: courseUserIds } }) : Promise.resolve(),
-      Vocabulary.deleteMany({ course: course._id }),
-      CourseUser.deleteMany({ course: course._id }),
-      course.deleteOne(),
+      VocabularyUser.deleteMany({ course_user: courseUser._id }),
+      CourseUserPractice.deleteMany({ course_user: courseUser._id }),
+      courseUser.deleteOne(),
     ]);
 
     return res.json({
       success: true,
-      message: "Course deleted successfully",
+      message: "Course removed from library successfully",
     });
   } catch (error) {
     return next(error);
@@ -223,6 +217,83 @@ const updateCourseStar = async (req, res, next) => {
   }
 };
 
+// Generate share code for course
+const shareCourse = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ success: false, error: "Invalid course id" });
+    }
+
+    const course = await Course.findById(id);
+    if (!course) {
+      return res.status(404).json({ success: false, error: "Course not found" });
+    }
+
+    // Only creator can share
+    if (course.creator.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, error: "Only creator can share this course" });
+    }
+
+    // Generate share code if not exists
+    if (!course.share_code) {
+      const generateShareCode = () => {
+        return Math.random().toString(36).substring(2, 8).toUpperCase() + Date.now().toString(36).toUpperCase();
+      };
+
+      course.share_code = generateShareCode();
+      await course.save();
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        course_id: course._id,
+        share_code: course.share_code,
+        share_link: `https://english-quiz-mobile.com/share/${course.share_code}`,
+      },
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// Redeem share code to add course to user
+const redeemShareCode = async (req, res, next) => {
+  try {
+    const { share_code } = req.body;
+
+    if (!share_code) {
+      return res.status(400).json({ success: false, error: "share_code is required" });
+    }
+
+    const course = await Course.findOne({ share_code: share_code.trim().toUpperCase() });
+    if (!course) {
+      return res.status(404).json({ success: false, error: "Invalid share code" });
+    }
+
+    // Get or create course user
+    console.log("[redeemShareCode] Creating CourseUser:", { courseId: course._id, userId: req.user.id });
+    const courseUser = await getOrCreateCourseUser(course._id, req.user.id);
+    console.log("[redeemShareCode] CourseUser created:", courseUser);
+
+    return res.json({
+      success: true,
+      data: {
+        ...course.toObject(),
+        course_user: {
+          _id: courseUser._id,
+          is_star: courseUser.is_star,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("[redeemShareCode] Error:", error.message, error);
+    return next(error);
+  }
+};
+
 module.exports = {
   createCourse,
   getCourses,
@@ -230,4 +301,6 @@ module.exports = {
   updateCourse,
   deleteCourse,
   updateCourseStar,
+  shareCourse,
+  redeemShareCode,
 };

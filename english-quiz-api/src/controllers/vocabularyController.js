@@ -25,14 +25,7 @@ async function ensureCourseOwner(courseId, userId) {
 const createVocabulary = async (req, res, next) => {
   try {
     const { courseId } = req.params;
-    const {
-      term,
-      definition,
-      term_image_url = "",
-      def_image_url = "",
-      term_language_code = "vi",
-      definition_language_code = "vi",
-    } = req.body;
+    const { term, definition, term_image_url = "", def_image_url = "", term_language_code = "vi", definition_language_code = "vi" } = req.body;
 
     if (!isValidObjectId(courseId)) {
       return res.status(400).json({ success: false, error: "Invalid course id" });

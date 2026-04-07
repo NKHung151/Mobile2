@@ -46,8 +46,21 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    const message = error.response?.data?.error || error.message || "An error occurred";
-    console.error("[API] Response Error:", message);
+    const errorData = error.response?.data;
+    let message = "An error occurred";
+
+    if (typeof errorData === "object" && errorData !== null) {
+      // Try different error formats
+      message = errorData.error || errorData.message || errorData.errors || JSON.stringify(errorData);
+    } else {
+      message = error.message;
+    }
+
+    console.error("[API] Response Error:", {
+      status: error.response?.status,
+      data: errorData,
+      message: message,
+    });
     return Promise.reject(new Error(message));
   },
 );
@@ -223,6 +236,18 @@ export const deleteCourse = async (courseId) => {
 export const updateCourseStar = async (courseId, isStar) => {
   const response = await api.put(`/api/courses/${courseId}/star`, {
     is_star: Boolean(isStar),
+  });
+  return response.data;
+};
+
+export const shareCourse = async (courseId) => {
+  const response = await api.post(`/api/courses/${courseId}/share`);
+  return response.data;
+};
+
+export const redeemShareCode = async (shareCode) => {
+  const response = await api.post("/api/courses/redeem/share", {
+    share_code: shareCode,
   });
   return response.data;
 };

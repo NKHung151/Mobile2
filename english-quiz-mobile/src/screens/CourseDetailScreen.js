@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Animated, Modal, ActivityIndicator, Alert, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Animated, Modal, ActivityIndicator, Alert, Image, Clipboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { COLORS } from "../constants/config";
-import { getCourseById, getCourseVocabularies, deleteCourse as deleteCourseApi, updateCourseStar, updateVocabularyProgress } from "../services/api";
+import { getCourseById, getCourseVocabularies, deleteCourse as deleteCourseApi, updateCourseStar, updateVocabularyProgress, shareCourse, updateCourse } from "../services/api";
 
 const { width } = Dimensions.get("window");
 
@@ -217,6 +217,41 @@ export default function CourseDetailScreen({ navigation, route }) {
     }
   };
 
+  const handleShareCourse = async () => {
+    if (!course) return;
+
+    try {
+      if (!course.is_public) {
+        Alert.alert(
+          "Private Course",
+          "This course is private. Do you want to make it public before sharing?",
+          [
+            { text: "Cancel", onPress: () => {} },
+            {
+              text: "Make Public & Share",
+              onPress: async () => {
+                await updateCourse(course._id, { is_public: true });
+                const response = await shareCourse(course._id);
+                Clipboard.setString(response.data.share_code);
+                setCourse((prev) => ({
+                  ...(prev || {}),
+                  is_public: true,
+                }));
+                Alert.alert("Shared!", `Share code copied: ${response.data.share_code}`);
+              },
+            },
+          ],
+        );
+      } else {
+        const response = await shareCourse(course._id);
+        Clipboard.setString(response.data.share_code);
+        Alert.alert("Shared!", `Share code copied: ${response.data.share_code}`);
+      }
+    } catch (err) {
+      Alert.alert("Error", err.message || "Failed to share course");
+    }
+  };
+
   if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
@@ -248,6 +283,9 @@ export default function CourseDetailScreen({ navigation, route }) {
           <View style={styles.headerIcons}>
             <TouchableOpacity activeOpacity={0.7} onPress={toggleCourseStar} disabled={isUpdatingCourseStar}>
               <Ionicons name={isCourseStar ? "bookmark" : "bookmark-outline"} size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.7} style={{ marginLeft: 16 }} onPress={handleShareCourse}>
+              <Ionicons name="share-social" size={24} color="#FFFFFF" />
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.7} style={{ marginLeft: 16 }} onPress={() => setIsMenuVisible(true)}>
               <Ionicons name="ellipsis-vertical" size={24} color="#FFFFFF" />
@@ -391,8 +429,8 @@ export default function CourseDetailScreen({ navigation, route }) {
                 <Text style={styles.avatarEmoji}>👤</Text>
               </View>
               <View style={styles.authorDetails}>
-                <Text style={styles.authorName}>{course.is_public ? "Công khai" : "Riêng tư"}</Text>
-                <Text style={styles.authorMeta}>{totalTerms} Thuật ngữ</Text>
+                <Text style={styles.authorName}>{course.is_public ? "Public" : "Private"}</Text>
+                <Text style={styles.authorMeta}>{totalTerms} Terms</Text>
               </View>
             </View>
           </View>
@@ -400,33 +438,12 @@ export default function CourseDetailScreen({ navigation, route }) {
           {/* Focus Mode Button */}
           <TouchableOpacity onPress={() => navigation.navigate("CourseDetailFocusMode", { courseId })} activeOpacity={0.7} style={styles.focusModeButton}>
             <Ionicons name="flash" size={20} color="white" />
-            <Text style={styles.focusModeButtonText}>Chế độ tập trung</Text>
+            <Text style={styles.focusModeButtonText}>Practice Mode</Text>
           </TouchableOpacity>
-
-          {/* Menu Items */}
-          <View style={styles.menuContainer}>
-            {LESSON_MENU_ITEMS.map((item) => (
-              <TouchableOpacity
-                key={item.id}
-                style={styles.menuItem}
-                activeOpacity={0.7}
-                onPress={() => {
-                  if (item.id === 1) {
-                    navigation.navigate("CourseDetailFocusMode", { courseId });
-                  }
-                }}
-              >
-                <View style={styles.menuIconContainer}>
-                  <Ionicons name={item.icon} size={24} color={COLORS.primary} />
-                </View>
-                <Text style={styles.menuItemText}>{item.label}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
 
           {/* Flashcards List */}
           <View style={styles.flashcardsListSection}>
-            <Text style={styles.flashcardsListTitle}>Tất cả thẻ</Text>
+            <Text style={styles.flashcardsListTitle}>All cards</Text>
             {normalizedCards.map((card, index) => (
               <View key={card.id} style={[styles.flashcardListItem, index === currentSlideIndex && styles.activeFlashcardListItem]}>
                 <View style={styles.cardListContent}>
@@ -455,7 +472,7 @@ export default function CourseDetailScreen({ navigation, route }) {
                 activeOpacity={0.7}
               >
                 <Ionicons name="create-outline" size={24} color="#FFFFFF" />
-                <Text style={styles.modalItemText}>Sửa</Text>
+                <Text style={styles.modalItemText}>Edit</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -467,12 +484,12 @@ export default function CourseDetailScreen({ navigation, route }) {
                 activeOpacity={0.7}
               >
                 <Ionicons name="add" size={24} color="#FFFFFF" />
-                <Text style={styles.modalItemText}>Tạo học phần mới</Text>
+                <Text style={styles.modalItemText}>Create new flashcard set</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={[styles.modalItem, styles.modalItemDanger]} onPress={handleDeleteCourse} activeOpacity={0.7}>
                 <Ionicons name="trash-outline" size={24} color="#EF4444" />
-                <Text style={[styles.modalItemText, styles.modalItemTextDanger]}>Xóa học phần</Text>
+                <Text style={[styles.modalItemText, styles.modalItemTextDanger]}>Delete flashcard set</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>

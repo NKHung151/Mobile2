@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
+import XLSX from "xlsx";
 
 export default function ImportExcelScreen({ navigation, route }) {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const pickDocument = async () => {
     try {
@@ -25,14 +28,74 @@ export default function ImportExcelScreen({ navigation, route }) {
     }
   };
 
-  const handleImport = () => {
+  const parseExcelFile = async (fileUri) => {
+    try {
+      const base64 = await FileSystem.readAsStringAsync(fileUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const workbook = XLSX.read(base64, { type: "base64" });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const json = XLSX.utils.sheet_to_json(worksheet);
+
+      if (!json || json.length === 0) {
+        Alert.alert("Lỗi", "File Excel trống hoặc không có dữ liệu");
+        return null;
+      }
+
+      const headers = Object.keys(json[0]);
+      const termCol = headers.find((h) => h.toLowerCase().includes("term") || h.toLowerCase().includes("thuật"));
+      const defCol = headers.find((h) => h.toLowerCase().includes("definition") || h.toLowerCase().includes("định"));
+
+      if (!termCol || !defCol) {
+        Alert.alert("Lỗi", "File cần có cột 'Thuật ngữ' (Term) và 'Định nghĩa' (Definition)");
+        return null;
+      }
+
+      const importedWords = json.map((row, index) => ({
+        term: (row[termCol] || "").toString().trim(),
+        definition: (row[defCol] || "").toString().trim(),
+        term_image_url: "",
+        def_image_url: "",
+        term_language_code: "vi",
+        definition_language_code: "vi",
+      }));
+
+      const filteredWords = importedWords.filter((word) => word.term && word.definition);
+      if (filteredWords.length === 0) {
+        Alert.alert("Lỗi", "Không có dữ liệu hợp lệ để import");
+        return null;
+      }
+
+      return filteredWords;
+    } catch (err) {
+      console.error("Error parsing Excel:", err);
+      Alert.alert("Lỗi", "Không thể đọc file Excel: " + err.message);
+      return null;
+    }
+  };
+
+  const handleImport = async () => {
     if (!selectedFile) {
       Alert.alert("Lỗi", "Vui lòng chọn file Excel trước");
       return;
     }
 
-    // TODO: Process Excel file and import data
-    Alert.alert("Thành công", "Import dữ liệu thành công", [{ text: "OK", onPress: () => navigation.goBack() }]);
+    setIsProcessing(true);
+    const importedWords = await parseExcelFile(selectedFile.uri);
+    setIsProcessing(false);
+
+    if (!importedWords) return;
+
+    Alert.alert("Thành công", `Đã import ${importedWords.length} từ`, [
+      {
+        text: "OK",
+        onPress: () => {
+          navigation.navigate(route.params?.fromScreen || "AddCourse", { importedWords });
+        },
+      },
+    ]);
   };
 
   const handleSave = () => {
@@ -47,14 +110,11 @@ export default function ImportExcelScreen({ navigation, route }) {
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Tạo học phần</Text>
+        <Text style={styles.headerTitle}>Import Excel</Text>
 
         <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.headerButton}>
-            <Ionicons name="settings-outline" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
           <TouchableOpacity onPress={handleSave} style={styles.headerButton}>
-            <Ionicons name="checkmark" size={28} color="#FFFFFF" />
+            <Ionicons name="close" size={28} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       </View>
@@ -65,7 +125,7 @@ export default function ImportExcelScreen({ navigation, route }) {
 
         {/* Upload Area */}
         <View style={styles.uploadArea}>
-          <TouchableOpacity style={styles.uploadButton} onPress={pickDocument} activeOpacity={0.7}>
+          <TouchableOpacity style={styles.uploadButton} onPress={pickDocument} activeOpacity={0.7} disabled={isProcessing}>
             <Ionicons name="cloud-upload-outline" size={32} color="#5B7FFF" />
             <Text style={styles.uploadButtonText}>Tải file lên</Text>
           </TouchableOpacity>
@@ -82,15 +142,19 @@ export default function ImportExcelScreen({ navigation, route }) {
         )}
 
         {/* Import Button */}
-        <TouchableOpacity style={[styles.importButton, !selectedFile && styles.importButtonDisabled]} onPress={handleImport} activeOpacity={0.7} disabled={!selectedFile}>
-          <Text style={styles.importButtonText}>Import</Text>
+        <TouchableOpacity style={[styles.importButton, !selectedFile && styles.importButtonDisabled]} onPress={handleImport} activeOpacity={0.7} disabled={!selectedFile || isProcessing}>
+          {isProcessing ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.importButtonText}>Import</Text>
+          )}
         </TouchableOpacity>
 
         {/* Instructions */}
         <View style={styles.instructions}>
           <Text style={styles.instructionTitle}>Hướng dẫn:</Text>
           <Text style={styles.instructionText}>
-            • File Excel cần có 2 cột: Thuật ngữ và Định nghĩa{"\n"}• Hàng đầu tiên là tiêu đề cột{"\n"}• Định dạng file: .xlsx, .xls
+            • File Excel cần có 2 cột: Thuật ngữ (Term) và Định nghĩa (Definition){"\n"}• Hàng đầu tiên là tiêu đề cột{"\n"}• Định dạng file: .xlsx, .xls{"\n"}• Các hàng trống hoặc không đầy đủ sẽ bị bỏ qua
           </Text>
         </View>
       </View>

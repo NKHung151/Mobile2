@@ -55,7 +55,7 @@ export default function EditCourseScreen({ navigation, route }) {
           })),
         );
       } catch (err) {
-        Alert.alert("Lỗi", err.message || "Không thể tải dữ liệu học phần", [{ text: "OK", onPress: () => navigation.goBack() }]);
+        Alert.alert("Error", err.message || "Can not load Flashcard Set data", [{ text: "OK", onPress: () => navigation.goBack() }]);
       } finally {
         setIsLoading(false);
       }
@@ -68,9 +68,38 @@ export default function EditCourseScreen({ navigation, route }) {
     setWords((prev) => prev.map((word) => (word.id === id ? { ...word, [field]: value } : word)));
   };
 
+  const handleLanguageChange = (id, field, newValue) => {
+    const currentWord = words.find((w) => w.id === id);
+    if (!currentWord) return;
+
+    const currentValue = currentWord[field];
+    if (currentValue === newValue) {
+      updateWord(id, field, newValue);
+      return;
+    }
+
+    const fieldLabel = field === "term_language_code" ? "Term" : "Definition";
+    const targetLanguage = LANGUAGE_CODES.find((l) => l.value === newValue)?.label || newValue;
+
+    Alert.alert("Change Language", `Do you want to change the language of all ${fieldLabel.toLowerCase()} to ${targetLanguage}?`, [
+      { text: "No", onPress: () => {} },
+      {
+        text: "Yes",
+        onPress: () => {
+          setWords((prevWords) =>
+            prevWords.map((word) => ({
+              ...word,
+              [field]: newValue,
+            })),
+          );
+        },
+      },
+    ]);
+  };
+
   const deleteWord = (id) => {
     if (words.length === 1) {
-      Alert.alert("Lỗi", "Phải có ít nhất một thẻ");
+      Alert.alert("Error", "Must have at least one card");
       return;
     }
 
@@ -113,13 +142,13 @@ export default function EditCourseScreen({ navigation, route }) {
         if (uploadResponse.success && uploadResponse.data?.url) {
           const fullUrl = `${API_BASE_URL}/${uploadResponse.data.url}`;
           updateWord(wordId, field, fullUrl);
-          Alert.alert("Thành công", "Tệp đã tải lên thành công");
+          Alert.alert("Success", "File uploaded successfully");
         } else {
-          throw new Error("Không nhận được link ảnh từ server");
+          throw new Error("Failed to get image link from server");
         }
       }
     } catch (err) {
-      Alert.alert("Lỗi", err.message || "Không thể tải tệp lên");
+      Alert.alert("Error", err.message || "Failed to upload file");
     } finally {
       setIsSaving(false);
     }
@@ -127,13 +156,13 @@ export default function EditCourseScreen({ navigation, route }) {
 
   const handleSave = async () => {
     if (!lessonTitle.trim()) {
-      Alert.alert("Lỗi", "Vui lòng nhập tiêu đề học phần");
+      Alert.alert("Error", "Please enter a title for the flashcard set");
       return;
     }
 
     const hasEmptyCards = words.some((word) => !word.term.trim() || !word.definition.trim());
     if (hasEmptyCards) {
-      Alert.alert("Lỗi", "Vui lòng điền đầy đủ thuật ngữ và định nghĩa cho tất cả các thẻ");
+      Alert.alert("Error", "Please fill in all terms and definitions for the flashcards");
       return;
     }
 
@@ -167,16 +196,16 @@ export default function EditCourseScreen({ navigation, route }) {
         }
       }
 
-      Alert.alert("Thành công", "Đã lưu thay đổi", [{ text: "OK", onPress: () => navigation.replace("CourseDetail", { courseId }) }]);
+      Alert.alert("Success", "Changes saved successfully", [{ text: "OK", onPress: () => navigation.replace("CourseDetail", { courseId }) }]);
     } catch (err) {
-      Alert.alert("Lỗi", err.message || "Không thể lưu thay đổi");
+      Alert.alert("Error", err.message || "Failed to save changes");
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleImportExcel = () => {
-    navigation.navigate("ImportExcel");
+    navigation.navigate("ImportExcel", { fromScreen: "EditCourse" });
   };
 
   if (isLoading) {
@@ -196,7 +225,7 @@ export default function EditCourseScreen({ navigation, route }) {
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Sửa học phần</Text>
+        <Text style={styles.headerTitle}>Edit Flashcard Set</Text>
 
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={handleSave} style={styles.headerButton}>
@@ -207,16 +236,16 @@ export default function EditCourseScreen({ navigation, route }) {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
         <View style={styles.lessonCard}>
-          <Text style={styles.lessonNumber}>Số thẻ: {words.length}</Text>
+          <Text style={styles.lessonNumber}>Number of Cards: {words.length}</Text>
           <View style={styles.divider} />
-          <TextInput style={styles.titleInput} placeholder="Tiêu đề" placeholderTextColor="#6B7280" value={lessonTitle} onChangeText={setLessonTitle} />
+          <TextInput style={styles.titleInput} placeholder="Title" placeholderTextColor="#6B7280" value={lessonTitle} onChangeText={setLessonTitle} />
           <View style={styles.divider} />
-          <TextInput style={styles.titleInput} placeholder="Mô tả" placeholderTextColor="#6B7280" value={description} onChangeText={setDescription} />
+          <TextInput style={styles.titleInput} placeholder="Description" placeholderTextColor="#6B7280" value={description} onChangeText={setDescription} />
 
           <View style={styles.visibilityRow}>
-            <Text style={styles.visibilityLabel}>Công khai</Text>
+            <Text style={styles.visibilityLabel}>Public</Text>
             <TouchableOpacity style={[styles.visibilityToggle, isPublic && styles.visibilityToggleActive]} onPress={() => setIsPublic((prev) => !prev)} activeOpacity={0.7}>
-              <Text style={[styles.visibilityToggleText, isPublic && styles.visibilityToggleTextActive]}>{isPublic ? "Bật" : "Tắt"}</Text>
+              <Text style={[styles.visibilityToggleText, isPublic && styles.visibilityToggleTextActive]}>{isPublic ? "On" : "Off"}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -235,22 +264,22 @@ export default function EditCourseScreen({ navigation, route }) {
               </TouchableOpacity>
             )}
 
-            <Text style={styles.wordCardTitle}>{word.term || `Thẻ ${index + 1}`}</Text>
+            <Text style={styles.wordCardTitle}>{word.term || `Card ${index + 1}`}</Text>
             <View style={styles.divider} />
 
-            <Text style={styles.fieldLabel}>Thuật ngữ</Text>
-            <TextInput style={styles.wordInput} placeholder="Nhập thuật ngữ..." placeholderTextColor="#6B7280" value={word.term} onChangeText={(text) => updateWord(word.id, "term", text)} />
+            <Text style={styles.fieldLabel}>Term</Text>
+            <TextInput style={styles.wordInput} placeholder="Enter term..." placeholderTextColor="#6B7280" value={word.term} onChangeText={(text) => updateWord(word.id, "term", text)} />
 
             <View style={styles.divider} />
 
-            <Text style={styles.fieldLabel}>Tải ảnh cho thuật ngữ</Text>
+            <Text style={styles.fieldLabel}>Upload Image for Term</Text>
             <TouchableOpacity style={styles.uploadButton} onPress={() => pickFile(word.id, "term_image_url", "image")} activeOpacity={0.7}>
               <Ionicons name="image" size={20} color="#5B7FFF" />
-              <Text style={styles.uploadButtonText}>{word.term_image_url ? "Đổi ảnh" : "Chọn ảnh"}</Text>
+              <Text style={styles.uploadButtonText}>{word.term_image_url ? "Change Image" : "Select Image"}</Text>
             </TouchableOpacity>
             {word.term_image_url && (
               <Text style={styles.fileNameText} numberOfLines={1}>
-                ✓ Ảnh đã tải lên
+                ✓ Image uploaded
               </Text>
             )}
 
@@ -258,10 +287,10 @@ export default function EditCourseScreen({ navigation, route }) {
 
             <View style={styles.divider} />
 
-            <Text style={styles.fieldLabel}>Định nghĩa</Text>
+            <Text style={styles.fieldLabel}>Definition</Text>
             <TextInput
               style={styles.wordInput}
-              placeholder="Nhập định nghĩa..."
+              placeholder="Enter definition..."
               placeholderTextColor="#6B7280"
               value={word.definition}
               onChangeText={(text) => updateWord(word.id, "definition", text)}
@@ -270,22 +299,22 @@ export default function EditCourseScreen({ navigation, route }) {
 
             <View style={styles.divider} />
 
-            <Text style={styles.fieldLabel}>Tải ảnh cho định nghĩa</Text>
+            <Text style={styles.fieldLabel}>Upload Image for Definition</Text>
             <TouchableOpacity style={styles.uploadButton} onPress={() => pickFile(word.id, "def_image_url", "image")} activeOpacity={0.7}>
               <Ionicons name="image" size={20} color="#5B7FFF" />
-              <Text style={styles.uploadButtonText}>{word.def_image_url ? "Đổi ảnh" : "Chọn ảnh"}</Text>
+              <Text style={styles.uploadButtonText}>{word.def_image_url ? "Change Image" : "Select Image"}</Text>
             </TouchableOpacity>
             {word.def_image_url && (
               <Text style={styles.fileNameText} numberOfLines={1}>
-                ✓ Ảnh đã tải lên
+                ✓ Image uploaded
               </Text>
             )}
 
             <View style={styles.divider} />
 
-            <Text style={styles.fieldLabel}>Chọn ngôn ngữ cho âm thanh thuật ngữ</Text>
+            <Text style={styles.fieldLabel}>Select Language for Term Audio</Text>
             <View style={styles.pickerContainer}>
-              <Picker selectedValue={word.term_language_code} onValueChange={(value) => updateWord(word.id, "term_language_code", value)} style={styles.picker}>
+              <Picker selectedValue={word.term_language_code} onValueChange={(value) => handleLanguageChange(word.id, "term_language_code", value)} style={styles.picker}>
                 {LANGUAGE_CODES.map((lang) => (
                   <Picker.Item key={lang.value} label={lang.label} value={lang.value} />
                 ))}
@@ -294,9 +323,9 @@ export default function EditCourseScreen({ navigation, route }) {
 
             <View style={styles.divider} />
 
-            <Text style={styles.fieldLabel}>Chọn ngôn ngữ cho âm thanh định nghĩa</Text>
+            <Text style={styles.fieldLabel}>Select Language for Definition Audio</Text>
             <View style={styles.pickerContainer}>
-              <Picker selectedValue={word.definition_language_code} onValueChange={(value) => updateWord(word.id, "definition_language_code", value)} style={styles.picker}>
+              <Picker selectedValue={word.definition_language_code} onValueChange={(value) => handleLanguageChange(word.id, "definition_language_code", value)} style={styles.picker}>
                 {LANGUAGE_CODES.map((lang) => (
                   <Picker.Item key={lang.value} label={lang.label} value={lang.value} />
                 ))}
@@ -311,7 +340,7 @@ export default function EditCourseScreen({ navigation, route }) {
       {isSaving ? (
         <View style={styles.savingOverlay}>
           <ActivityIndicator size="large" color="#FFFFFF" />
-          <Text style={styles.savingText}>Đang lưu thay đổi...</Text>
+          <Text style={styles.savingText}>Saving changes...</Text>
         </View>
       ) : null}
 

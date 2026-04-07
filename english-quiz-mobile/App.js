@@ -26,8 +26,6 @@ import CourseDetailFocusModeScreen from "./src/screens/CourseDetailFocusModeScre
 import AddCourseScreen from "./src/screens/AddCourseScreen";
 import EditCourseScreen from "./src/screens/EditCourseScreen";
 import ImportExcelScreen from "./src/screens/ImportExcelScreen";
-
-
 const Stack = createNativeStackNavigator();
 
 const linking = {
@@ -85,22 +83,14 @@ function RootNavigator() {
             <Stack.Screen name="History" component={HistoryScreen} options={{ title: "My History" }} />
             <Stack.Screen name="Transcribe" component={TranscribeScreen} options={{ title: "Transcribe" }} />
             <Stack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: "My Profile" }} />
-            <Stack.Screen name="Library" component={LibraryScreen} options={{ title: "Library" }} />
+            <Stack.Screen name="Library" component={LibraryScreen} options={{ title: "Flashcards" }} />
             <Stack.Screen name="CourseDetail" component={CourseDetailScreen} options={{ headerShown: false }} />
             <Stack.Screen name="CourseDetailFocusMode" component={CourseDetailFocusModeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="AddCourse" component={AddCourseScreen} options={{ headerShown: false }} />
             <Stack.Screen name="EditCourse" component={EditCourseScreen} options={{ headerShown: false }} />
             <Stack.Screen name="ImportExcel" component={ImportExcelScreen} options={{ headerShown: false }} />
-            <Stack.Screen
-              name="ListVideo"
-              component={ListVideoScreen}
-              options={{ title: "Learning Video" }}
-            />
-            <Stack.Screen
-              name="VideoPlayer"
-              component={VideoScreen}
-              options={{ title: "Learning Video" }}
-            />
+            <Stack.Screen name="ListVideo" component={ListVideoScreen} options={{ title: "Learning Video" }} />
+            <Stack.Screen name="VideoPlayer" component={VideoScreen} options={{ title: "Learning Video" }} />
           </>
         ) : (
           // Auth Stack - User is logged out

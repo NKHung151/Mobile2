@@ -23,14 +23,25 @@ function errorHandler(err, req, res, next) {
     message: err.message,
     stack: err.stack,
     path: req.originalUrl,
-    method: req.method
+    method: req.method,
+    errName: err.name,
+    errCode: err.code,
   });
 
   if (err.name === 'ValidationError') {
+    const details = Object.values(err.errors).map(e => ({
+      field: e.path,
+      message: e.message,
+      value: e.value
+    }));
+    const message = process.env.NODE_ENV === 'production'
+      ? 'Validation error'
+      : `Validation error: ${Object.values(err.errors).map(e => e.message).join(', ')}`;
+
     return res.status(400).json({
       success: false,
-      error: 'Validation error',
-      details: Object.values(err.errors).map(e => e.message)
+      error: message,
+      details: details
     });
   }
 

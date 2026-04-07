@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  Animated,
-  Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Animated, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
 import { getTopics } from "../services/api";
@@ -48,8 +39,6 @@ export default function HomeScreen({ navigation }) {
       }),
     ]).start();
   }, []);
-
-
 
   useEffect(() => {
     fetchTopics();
@@ -107,11 +96,7 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* User Profile Card */}
-        <TouchableOpacity
-          style={[styles.card, styles.userCard]}
-          onPress={() => navigation.navigate("UserProfile")}
-          activeOpacity={0.85}
-        >
+        <TouchableOpacity style={[styles.card, styles.userCard]} onPress={() => navigation.navigate("UserProfile")} activeOpacity={0.85}>
           <View style={styles.cardHeader}>
             <View style={styles.iconCircle}>
               <Ionicons name="person" size={18} color={COLORS.primary} />
@@ -119,10 +104,8 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.cardTitle}>Your Profile</Text>
           </View>
           <View style={styles.inputContainer}>
-            <Text style={styles.usernameDisplay}>
-              {userData?.username || userId || "User"}
-            </Text>
-            {(userData?.username || userId) ? (
+            <Text style={styles.usernameDisplay}>{userData?.username || userId || "User"}</Text>
+            {userData?.username || userId ? (
               <View style={styles.checkBadge}>
                 <Ionicons name="checkmark" size={14} color="#fff" />
               </View>
@@ -202,8 +185,8 @@ export default function HomeScreen({ navigation }) {
                 <Ionicons name="library" size={28} color="#fff" />
               </View>
               <View style={styles.actionTextContainer}>
-                <Text style={styles.actionTitle}>Library</Text>
-                <Text style={styles.actionDescription}>Access your saved lessons</Text>
+                <Text style={styles.actionTitle}>Flashcards</Text>
+                <Text style={styles.actionDescription}>Remember vocab & phrases faster</Text>
               </View>
             </View>
             <View style={styles.actionArrow}>
