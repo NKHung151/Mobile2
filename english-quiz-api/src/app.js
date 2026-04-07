@@ -18,6 +18,11 @@ const topicsRoutes = require("./routes/topics");
 const learningHistoryRoutes = require("./routes/learningHistory");
 const transcriptionRoutes = require("./routes/transcription");
 const authRoutes = require("./routes/auth");
+const coursesRoutes = require("./routes/courses");
+const vocabulariesRoutes = require("./routes/vocabularies");
+const uploadRoutes = require("./routes/upload");
+const progressRoutes = require("./routes/progress");
+const settingsRoutes = require("./routes/settings");
 
 // Middleware
 const { errorHandler, notFoundHandler } = require("./middleware/errorHandler");
@@ -61,6 +66,9 @@ app.options("*", cors(corsOptions));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
+// Static file serving
+app.use('/uploads', express.static(require('path').join(__dirname, '../uploads')));
+
 // Request logging
 app.use((req, res, next) => {
   const start = Date.now();
@@ -73,19 +81,9 @@ app.use((req, res, next) => {
 
 // Rate limiting
 app.use(generalLimiter);
-// english-quiz-api/src/app.js  ── ADD these lines to your existing app.js ──
-
-// 1. Import the router (add with your other route imports)
 const practiceRoutes = require("./routes/practice");
-
-// 2. Register it (add with your other app.use() calls)
 app.use("/api/practice", practiceRoutes);
 
-// ─── That's it. The 4 endpoints become available: ────────────────────────────
-// GET  /api/practice/topics/:userId
-// POST /api/practice/start
-// POST /api/practice/answer
-// GET  /api/practice/session/:userId/:sessionId
 // Routes
 app.use("/health", healthRoutes);
 app.use("/api/topics", topicsRoutes); // Public topics endpoint (no auth required)
@@ -96,6 +94,11 @@ app.use("/api/conversations", conversationRoutes);
 app.use("/api/learning", learningHistoryRoutes); // Learning history endpoints
 app.use("/api/admin", adminRoutes); // Admin endpoints (API key required)
 app.use("/api/auth", authRoutes); // Authentication endpoints
+app.use("/api/courses", coursesRoutes); // Course CRUD endpoints
+app.use("/api", vocabulariesRoutes); // Vocabulary CRUD endpoints by course
+app.use("/api", uploadRoutes); // File upload endpoints
+app.use("/api/progress", progressRoutes); // User learning progress endpoints
+app.use("/api/settings", settingsRoutes); // User setting endpoints
 
 // Error handling
 app.use(notFoundHandler);
