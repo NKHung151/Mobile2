@@ -211,6 +211,22 @@ export default function HomeScreen({ navigation }) {
             </View>
             <View style={styles.cardDecoration} />
           </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.actionCard, styles.videoCard]} onPress={() => handleNavigate("ListVideo")} activeOpacity={0.9}>
+            <View style={styles.actionContent}>
+              <View style={[styles.actionIconWrapper, { backgroundColor: "rgba(255,255,255,0.18)" }]}>
+                <Ionicons name="play-circle" size={28} color="#fff" />
+              </View>
+              <View style={styles.actionTextContainer}>
+                <Text style={styles.actionTitle}>Learning Video</Text>
+                <Text style={styles.actionDescription}>Learn through video</Text>
+              </View>
+            </View>
+            <View style={styles.actionArrow}>
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
+            </View>
+            <View style={styles.cardDecoration} />
+          </TouchableOpacity>
         </View>
 
         {/* Topics Section */}
@@ -419,6 +435,9 @@ const styles = StyleSheet.create({
   },
   libraryCard: {
     backgroundColor: "#8B5CF6",
+  },
+  videoCard: {
+    backgroundColor: "#E74C3C",
   },
   actionContent: {
     flexDirection: "row",

@@ -18,12 +18,16 @@ import HistoryScreen from "./src/screens/HistoryScreen_New";
 import TranscribeScreen from "./src/screens/TranscribeScreen";
 import PracticeScreen from "./src/screens/PracticeScreen";
 import UserProfileScreen from "./src/screens/UserProfileScreen";
+import ListVideoScreen from "./src/screens/ListVideoScreen";
+import VideoScreen from "./src/screens/VideoScreen";
 import LibraryScreen from "./src/screens/LibraryScreen";
 import CourseDetailScreen from "./src/screens/CourseDetailScreen";
 import CourseDetailFocusModeScreen from "./src/screens/CourseDetailFocusModeScreen";
 import AddCourseScreen from "./src/screens/AddCourseScreen";
 import EditCourseScreen from "./src/screens/EditCourseScreen";
 import ImportExcelScreen from "./src/screens/ImportExcelScreen";
+
+
 const Stack = createNativeStackNavigator();
 
 const linking = {
@@ -87,6 +91,16 @@ function RootNavigator() {
             <Stack.Screen name="AddCourse" component={AddCourseScreen} options={{ headerShown: false }} />
             <Stack.Screen name="EditCourse" component={EditCourseScreen} options={{ headerShown: false }} />
             <Stack.Screen name="ImportExcel" component={ImportExcelScreen} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="ListVideo"
+              component={ListVideoScreen}
+              options={{ title: "Learning Video" }}
+            />
+            <Stack.Screen
+              name="VideoPlayer"
+              component={VideoScreen}
+              options={{ title: "Learning Video" }}
+            />
           </>
         ) : (
           // Auth Stack - User is logged out
