@@ -26,7 +26,6 @@ import CourseDetailFocusModeScreen from "./src/screens/CourseDetailFocusModeScre
 import AddCourseScreen from "./src/screens/AddCourseScreen";
 import EditCourseScreen from "./src/screens/EditCourseScreen";
 import ImportExcelScreen from "./src/screens/ImportExcelScreen";
-
 const Stack = createNativeStackNavigator();
 
 const linking = {
