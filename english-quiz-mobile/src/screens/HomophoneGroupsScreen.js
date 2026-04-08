@@ -354,21 +354,6 @@ export default function HomophoneGroupsScreen({ navigation }) {
 
         {/* Header with progress */}
         <View style={styles.header}>
-          <View style={styles.headerTop}>
-            <View style={styles.headerLeft}>
-              <Text style={styles.headerEmoji}>👂</Text>
-              <View>
-                <Text style={styles.headerTitle}>Homophone Groups</Text>
-                <Text style={styles.headerSub}>Listen & choose correctly</Text>
-              </View>
-            </View>
-            <TouchableOpacity 
-              style={styles.exitBtn} 
-              onPress={handleCompleteSession}
-            >
-              <Ionicons name="close" size={24} color={COLORS.textSecondary} />
-            </TouchableOpacity>
-          </View>
 
           {/* Score display */}
           <View style={styles.scoreBar}>
@@ -407,7 +392,7 @@ export default function HomophoneGroupsScreen({ navigation }) {
               color="#fff"
             />
             <Text style={styles.speakBtnText}>
-              {isSpeaking ? "Speaking..." : "🔊 Listen"}
+              {isSpeaking ? "Speaking..." : "Listen"}
             </Text>
           </TouchableOpacity>
 
