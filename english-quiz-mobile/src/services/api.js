@@ -402,70 +402,27 @@ export const startListeningSession = async (userId, questionCount = 10) => {
 /**
  * Submit answer to a listening part 2 question
  */
-export const submitListeningAnswer = async (sessionId, selectedOptionIndex) => {
+export const submitListeningAnswer = async (sessionId, userId, selectedOptionIndex) => {
   const response = await api.post("/api/listening-part2/answer", {
     session_id: sessionId,
+    user_id: userId,
     selected_option_index: selectedOptionIndex,
   });
   return response.data;
 };
 
 /**
- * Save a completed listening session to history
+ * Complete a listening part 2 session (same pattern as HomophoneGroups)
  */
-export const saveListeningSessionToHistory = async (
-  userId,
-  totalQuestions,
-  correctAnswers,
-  questionsSummary,
-  startTime,
-  endTime,
-) => {
-  const response = await api.post("/api/listening-part2-history/save", {
+export const completeListeningPart2Session = async (sessionId, userId) => {
+  const response = await api.post("/api/listening-part2/session/complete", {
+    session_id: sessionId,
     user_id: userId,
-    total_questions: totalQuestions,
-    correct_answers: correctAnswers,
-    questions_summary: questionsSummary,
-    start_time: startTime,
-    end_time: endTime,
-    device_type: "mobile",
   });
   return response.data;
 };
 
-/**
- * Get all listening history for a user
- */
-export const getListeningHistory = async (userId) => {
-  const response = await api.get(`/api/listening-part2-history/${userId}`);
-  return response.data;
-};
 
-/**
- * Get listening statistics for a user
- */
-export const getListeningStats = async (userId) => {
-  const response = await api.get(`/api/listening-part2-history/${userId}/stats`);
-  return response.data;
-};
-
-/**
- * Get details of a specific listening session
- */
-export const getListeningSessionDetails = async (sessionId) => {
-  const response = await api.get(`/api/listening-part2-history/session/${sessionId}`);
-  return response.data;
-};
-
-/**
- * Delete a listening session
- */
-export const deleteListeningSession = async (sessionId, userId) => {
-  const response = await api.delete(`/api/listening-part2-history/session/${sessionId}`, {
-    data: { user_id: userId },
-  });
-  return response.data;
-};
 
 export const clearAuthToken = async () => {
   await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
