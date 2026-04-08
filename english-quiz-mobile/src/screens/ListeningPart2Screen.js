@@ -14,7 +14,7 @@ import { useUser } from "../context/UserContext";
 import {
   startListeningSession,
   submitListeningAnswer,
-  saveListeningSessionToHistory,
+  completeListeningPart2Session,
 } from "../services/api";
 import { COLORS, SHADOWS } from "../constants/config";
 
@@ -179,7 +179,7 @@ export default function ListeningPart2Screen({ navigation }) {
 
     try {
       setState(STATES.LOADING);
-      const response = await submitListeningAnswer(sessionId, optionIndex);
+      const response = await submitListeningAnswer(sessionId, userId, optionIndex);
       
       setResult(response);
       setState(STATES.FEEDBACK);
@@ -218,8 +218,8 @@ export default function ListeningPart2Screen({ navigation }) {
 
     try {
       if (nextQuestionData.isComplete) {
-        // Save session to history
-        saveSessionToHistory(nextQuestionData.newCorrectCount);
+        // Complete session (same pattern as HomophoneGroups)
+        await completeListeningPart2Session(sessionId, userId);
         setState(STATES.RESULTS);
         animateIn();
       } else {
@@ -246,40 +246,6 @@ export default function ListeningPart2Screen({ navigation }) {
       console.error("[ListeningPart2] Error moving to next question:", err);
       setError(err.message);
       setState(STATES.ERROR);
-    }
-  };
-
-  const saveSessionToHistory = async (finalCorrectCount) => {
-    try {
-      if (!sessionStartTimeRef.current) {
-        console.warn("[ListeningPart2] No session start time recorded");
-        return;
-      }
-
-      const endTime = new Date();
-      const startTime = sessionStartTimeRef.current;
-
-      console.log("[ListeningPart2] Saving session to history...", {
-        userId,
-        totalQuestions,
-        correctAnswers: finalCorrectCount,
-        startTime,
-        endTime,
-      });
-
-      await saveListeningSessionToHistory(
-        userId,
-        totalQuestions,
-        finalCorrectCount,
-        questionsSummaryRef.current,
-        startTime,
-        endTime,
-      );
-
-      console.log("[ListeningPart2] Session saved to history successfully");
-    } catch (err) {
-      console.error("[ListeningPart2] Error saving to history:", err.message || err);
-      // Don't throw - let the user continue even if history save fails
     }
   };
 
