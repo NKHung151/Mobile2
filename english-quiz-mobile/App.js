@@ -26,6 +26,8 @@ import CourseDetailFocusModeScreen from "./src/screens/CourseDetailFocusModeScre
 import AddCourseScreen from "./src/screens/AddCourseScreen";
 import EditCourseScreen from "./src/screens/EditCourseScreen";
 import ImportExcelScreen from "./src/screens/ImportExcelScreen";
+import HomophoneGroupsScreen from "./src/screens/HomophoneGroupsScreen";
+import ListeningPart2Screen from "./src/screens/ListeningPart2Screen";
 const Stack = createNativeStackNavigator();
 
 const linking = {
@@ -82,6 +84,8 @@ function RootNavigator() {
             <Stack.Screen name="Chat" component={ChatScreen} options={{ title: "Chat with Tutor" }} />
             <Stack.Screen name="History" component={HistoryScreen} options={{ title: "My History" }} />
             <Stack.Screen name="Transcribe" component={TranscribeScreen} options={{ title: "Transcribe" }} />
+            <Stack.Screen name="HomophoneGroups" component={HomophoneGroupsScreen} options={{ title: "Homophone Groups" }} />
+            <Stack.Screen name="ListeningPart2" component={ListeningPart2Screen} options={{ title: "Listening Part 2" }} />
             <Stack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: "My Profile" }} />
             <Stack.Screen name="Library" component={LibraryScreen} options={{ title: "Flashcards" }} />
             <Stack.Screen name="CourseDetail" component={CourseDetailScreen} options={{ headerShown: false }} />

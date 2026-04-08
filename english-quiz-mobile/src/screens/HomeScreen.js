@@ -210,6 +210,38 @@ export default function HomeScreen({ navigation }) {
             </View>
             <View style={styles.cardDecoration} />
           </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.actionCard, styles.homophoneCard]} onPress={() => handleNavigate("HomophoneGroups")} activeOpacity={0.9}>
+            <View style={styles.actionContent}>
+              <View style={[styles.actionIconWrapper, styles.homophoneIconWrapper]}>
+                <Ionicons name="ear" size={28} color="#fff" />
+              </View>
+              <View style={styles.actionTextContainer}>
+                <Text style={styles.actionTitle}>Homophone Groups</Text>
+                <Text style={styles.actionDescription}>Master words that sound the same</Text>
+              </View>
+            </View>
+            <View style={styles.actionArrow}>
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
+            </View>
+            <View style={[styles.cardDecoration, styles.homophoneDecoration]} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.actionCard, styles.listeningCard]} onPress={() => handleNavigate("ListeningPart2")} activeOpacity={0.9}>
+            <View style={styles.actionContent}>
+              <View style={[styles.actionIconWrapper, styles.listeningIconWrapper]}>
+                <Ionicons name="headset" size={28} color="#fff" />
+              </View>
+              <View style={styles.actionTextContainer}>
+                <Text style={styles.actionTitle}>Listening Part 2</Text>
+                <Text style={styles.actionDescription}>TOEIC listening practice</Text>
+              </View>
+            </View>
+            <View style={styles.actionArrow}>
+              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
+            </View>
+            <View style={[styles.cardDecoration, styles.listeningDecoration]} />
+          </TouchableOpacity>
         </View>
 
         {/* Topics Section */}
@@ -421,6 +453,24 @@ const styles = StyleSheet.create({
   },
   videoCard: {
     backgroundColor: "#E74C3C",
+  },
+  homophoneCard: {
+    backgroundColor: "#9B59B6",
+  },
+  homophoneIconWrapper: {
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+  },
+  homophoneDecoration: {
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+  },
+  listeningCard: {
+    backgroundColor: "#3498DB",
+  },
+  listeningIconWrapper: {
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+  },
+  listeningDecoration: {
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
   },
   actionContent: {
     flexDirection: "row",
