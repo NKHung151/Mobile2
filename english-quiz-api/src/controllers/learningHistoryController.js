@@ -324,11 +324,6 @@ async function getLearningStatistics(req, res, next) {
       `[Statistics] Found ${allSessions.length} total sessions, ${completedSessions.length} completed`,
     );
 
-    // Get topic progress
-    const topicProgress = await TopicProgress.find({ user_id }).sort({
-      updated_at: -1,
-    });
-
     // Calculate overall statistics
     const totalSessions = allSessions.length;
     const totalCompleted = completedSessions.length;
@@ -358,16 +353,51 @@ async function getLearningStatistics(req, res, next) {
       (s) => s.created_at >= sevenDaysAgo,
     );
 
-    // Get top topics
-    const topTopics = topicProgress.slice(0, 5).map((tp) => ({
-      topic_id: tp.topic_id,
-      topic_title: tp.topic_title,
-      sessions: tp.total_sessions,
-      average_accuracy: tp.average_accuracy,
-      level: tp.level,
-      mastery_percentage: tp.mastery_percentage,
-      time_spent_minutes: tp.total_time_minutes,
-    }));
+    // Get top topics from LearningHistory (replaced TopicProgress query)
+    const allTopics = await LearningHistory.aggregate([
+      { $match: { user_id, status: "completed" } },
+      {
+        $group: {
+          _id: "$topic_id",
+          topic_title: { $first: "$topic_title" },
+          sessions: { $sum: 1 },
+          total_questions: { $sum: "$questions_answered" },
+          total_correct: { $sum: "$correct_answers" },
+          total_time_minutes: { $sum: "$duration_minutes" },
+        },
+      },
+      {
+        $addFields: {
+          average_accuracy: {
+            $cond: [
+              { $gt: ["$total_questions", 0] },
+              {
+                $round: [
+                  { $multiply: [{ $divide: ["$total_correct", "$total_questions"] }, 100] },
+                  0,
+                ],
+              },
+              0,
+            ],
+          },
+        },
+      },
+      { $sort: { average_accuracy: -1 } },
+      {
+        $project: {
+          topic_id: "$_id",
+          topic_title: 1,
+          sessions: 1,
+          average_accuracy: 1,
+          level: "beginner",
+          mastery_percentage: "$average_accuracy",
+          time_spent_minutes: "$total_time_minutes",
+        },
+      },
+    ]);
+
+    // Get top 5 topics for display
+    const topTopics = allTopics.slice(0, 5);
 
     const statistics = {
       overall: {
@@ -396,7 +426,7 @@ async function getLearningStatistics(req, res, next) {
         ).size,
       },
       topics: {
-        total_topics_studied: topicProgress.length,
+        total_topics_studied: allTopics.length,
         top_topics: topTopics,
       },
     };
@@ -488,20 +518,56 @@ async function getLearningDashboard(req, res, next) {
       status: "completed",
     });
 
-    // Get this week's data
-    const weekAgo = new Date(today);
-    weekAgo.setDate(weekAgo.getDate() - 7);
+    // Get this week's data — same 7-day window as FE chart (today - 6 days → today)
+    const sixDaysAgo = new Date(today);
+    sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
 
     const thisWeekSessions = await LearningHistory.find({
       user_id,
-      created_at: { $gte: weekAgo },
+      created_at: { $gte: sixDaysAgo, $lt: tomorrow },
       status: "completed",
     });
 
-    // Get all topics progress
-    const allProgress = await TopicProgress.find({ user_id }).sort({
-      average_accuracy: -1,
-    });
+    // Get topics to review from LearningHistory (replaced TopicProgress query)
+    const topicsToReview = await LearningHistory.aggregate([
+      { $match: { user_id, status: "completed" } },
+      {
+        $group: {
+          _id: "$topic_id",
+          topic_title: { $first: "$topic_title" },
+          total_questions: { $sum: "$questions_answered" },
+          total_correct: { $sum: "$correct_answers" },
+          sessions_completed: { $sum: 1 },
+        },
+      },
+      {
+        $addFields: {
+          mastery_percentage: {
+            $cond: [
+              { $gt: ["$total_questions", 0] },
+              {
+                $round: [
+                  { $multiply: [{ $divide: ["$total_correct", "$total_questions"] }, 100] },
+                  0,
+                ],
+              },
+              0,
+            ],
+          },
+        },
+      },
+      { $sort: { mastery_percentage: 1 } },
+      { $limit: 5 },
+      {
+        $project: {
+          topic_id: "$_id",
+          topic_title: 1,
+          current_level: "beginner",
+          mastery_percentage: 1,
+          sessions_completed: 1,
+        },
+      },
+    ]);
 
     // Calculate metrics
     const todayStats = {
@@ -531,14 +597,6 @@ async function getLearningDashboard(req, res, next) {
       ),
     };
 
-    const topicsToReview = allProgress.slice(0, 5).map((tp) => ({
-      topic_id: tp.topic_id,
-      topic_title: tp.topic_title,
-      current_level: tp.level,
-      mastery_percentage: tp.mastery_percentage,
-      sessions_completed: tp.completed_sessions,
-    }));
-
     logger.info(
       `[Dashboard] Today: ${todayStats.sessions_completed} sessions, This week: ${weekStats.sessions_completed} sessions`,
     );
@@ -562,7 +620,7 @@ async function getLearningDashboard(req, res, next) {
         ...weekStats,
       },
       topics_overview: {
-        total_topics: allProgress.length,
+        total_topics: topicsToReview.length,
         top_topics: topicsToReview,
       },
     };
@@ -591,65 +649,73 @@ async function getRecommendations(req, res, next) {
       return res.status(400).json({ success: false, error: "Missing user_id" });
     }
 
-    // Load topic progress and recent sessions
-    const topicProgress = await TopicProgress.find({ user_id }).sort({
-      mastery_percentage: 1,
-    });
-    const recentSessions = await LearningHistory.find({ user_id })
-      .sort({ created_at: -1 })
-      .limit(20);
+    // Use aggregation from LearningHistory to get topic summaries
+    // This includes all modes: quiz, chat, homophone_groups, listening_part2, etc.
+    const topicSummaries = await LearningHistory.aggregate([
+      { $match: { user_id, status: "completed" } },
+      {
+        $group: {
+          _id: "$topic_id",
+          topic_title: { $first: "$topic_title" },
+          total_questions: { $sum: "$questions_answered" },
+          total_correct: { $sum: "$correct_answers" },
+          session_count: { $sum: 1 },
+          modes: { $addToSet: "$mode" },
+        },
+      },
+      {
+        $addFields: {
+          average_accuracy:
+            {
+              $cond: [
+                { $gt: ["$total_questions", 0] },
+                { $round: [{ $multiply: [{ $divide: ["$total_correct", "$total_questions"] }, 100] }, 0] },
+                0,
+              ],
+            },
+        },
+      },
+      { $sort: { average_accuracy: 1 } },
+    ]);
 
-    // Determine weakest topic (lowest mastery)
+    // Determine weakest topic
     let weakest = null;
-    if (topicProgress && topicProgress.length > 0) {
-      const wp = topicProgress[0];
+    if (topicSummaries && topicSummaries.length > 0) {
+      const wp = topicSummaries[0];
       weakest = {
-        topic_id: wp.topic_id,
+        topic_id: wp._id,
         topic_title: wp.topic_title,
-        mastery_percentage: wp.mastery_percentage || 0,
-        completed_sessions: wp.completed_sessions || 0,
-        average_accuracy: wp.average_accuracy || 0,
+        average_accuracy: wp.average_accuracy,
+        session_count: wp.session_count,
+        total_questions: wp.total_questions,
+        total_correct: wp.total_correct,
       };
-    } else if (recentSessions && recentSessions.length > 0) {
-      // fallback: pick topic with most recent low scores
-      const byTopic = {};
-      recentSessions.forEach((s) => {
-        const id = s.topic_id || "unknown";
-        byTopic[id] = byTopic[id] || { topic_title: s.topic_title, scores: [] };
-        byTopic[id].scores.push(s.accuracy_percentage || 0);
-      });
-      const entries = Object.entries(byTopic).map(([topic_id, v]) => ({
-        topic_id,
-        topic_title: v.topic_title,
-        avg: v.scores.reduce((a, b) => a + b, 0) / v.scores.length,
-      }));
-      entries.sort((a, b) => a.avg - b.avg);
-      if (entries.length > 0) {
-        weakest = {
-          topic_id: entries[0].topic_id,
-          topic_title: entries[0].topic_title,
-          mastery_percentage: Math.round(entries[0].avg) || 0,
-          completed_sessions: 0,
-          average_accuracy: Math.round(entries[0].avg) || 0,
-        };
-      }
     }
 
-    // If AI requested and configured, attempt to call generative API
+    // If AI requested and configured, build comprehensive prompt with all topics
     let ai_advice = null;
     let ai_error = null;
     const aiEnabled = config?.gemini?.apiKey ? true : false;
     if (aiEnabled) {
       try {
+        // Build comprehensive topic summary
+        const topicSummaryText = topicSummaries
+          .slice(0, 5) // Top 5 weakest topics
+          .map(
+            (t, i) =>
+              `${i + 1}. ${t.topic_title}: ${t.average_accuracy}% (${t.session_count} sessions)`,
+          )
+          .join("\n");
+
         const prompt =
-          `User learning progress:\n` +
-          `- Weakest topic: ${weakest?.topic_title || "Not determined"}\n` +
-          `- Current mastery: ${weakest?.mastery_percentage || 0}%\n` +
-          `- Completed sessions: ${weakest?.completed_sessions || 0}\n` +
-          `\nBased on this progress, provide:\n` +
+          `User learning progress summary:\n\n` +
+          `Topics studied (sorted by accuracy):\n${topicSummaryText}\n\n` +
+          `Weakest area: ${weakest?.topic_title || "Not determined"} (${weakest?.average_accuracy || 0}%)\n` +
+          `Total completed sessions: ${topicSummaries.reduce((sum, t) => sum + t.session_count, 0)}\n\n` +
+          `Based on this comprehensive progress data, provide:\n` +
           `1. A personalized encouragement message (1-2 sentences)\n` +
-          `2. Three specific study recommendations for improvement\n` +
-          `3. Suggested quiz difficulty level\n` +
+          `2. Three specific study recommendations prioritizing weakest areas\n` +
+          `3. Suggested learning path or next topics to focus on\n` +
           `Keep it concise and motivating.`;
 
         ai_advice = await generateWithFallbacks(prompt);
@@ -676,6 +742,7 @@ async function getRecommendations(req, res, next) {
     res.json({
       success: true,
       weakest_topic: weakest,
+      topic_summaries: topicSummaries,
       ai_advice,
       ai_error: ai_advice ? null : ai_error,
     });

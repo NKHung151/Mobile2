@@ -62,6 +62,17 @@ export default function HistoryScreen({ navigation }) {
     }
   };
 
+  // Helper function to get mode label
+  const getModeLabel = (mode) => {
+    const modeMap = {
+      quiz: "Quiz",
+      chat: "Chat",
+      homophone_groups: "Listening",
+      listening_part2: "Listening",
+    };
+    return modeMap[mode] || mode;
+  };
+
   const fetchAllData = async () => {
     try {
       setLoading(true);
@@ -118,13 +129,20 @@ export default function HistoryScreen({ navigation }) {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "Unknown";
 
-    const now = new Date();
-    const diff = now - date;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    // So sánh theo calendar day (00:00 → 23:59 mỗi ngày)
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
 
-    if (days === 0) return "Today";
-    if (days === 1) return "Yesterday";
-    if (days < 7) return `${days}d ago`;
+    const sessionDayStart = new Date(date);
+    sessionDayStart.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.round(
+      (todayStart - sessionDayStart) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays}d ago`;
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -178,9 +196,9 @@ export default function HistoryScreen({ navigation }) {
           </View>
         </View>
 
-        {/* This Week */}
+        {/* Last 7 Days */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📊 This Week</Text>
+          <Text style={styles.sectionTitle}>📈 Last 7 Days</Text>
           <View style={styles.weekCard}>
             <View style={styles.weekStat}>
               <Ionicons name="book" size={24} color={COLORS.primary} />
@@ -282,7 +300,7 @@ export default function HistoryScreen({ navigation }) {
           <View style={styles.historyTitle}>
             <Text style={styles.historyTitleText}> {item.topic_title}</Text>
             <Text style={styles.historyMode}>
-              {item.mode === "quiz" ? "Quiz" : item.mode === "chat" ? "Chat" : item.mode}
+              {getModeLabel(item.mode)}
             </Text>
           </View>
         </View>
