@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { start, startSession, answer, completeSession } = require('../controllers/homophoneGroupsController');
+const { start, startSession, answer, completeSession, deleteSession } = require('../controllers/homophoneGroupsController');
 const { chatLimiter } = require('../middleware/rateLimiter');
 
 router.use(chatLimiter);
@@ -16,5 +16,8 @@ router.post('/answer', answer);
 
 // POST /api/homophone-groups/session/complete - Complete session
 router.post('/session/complete', completeSession);
+
+// DELETE /api/homophone-groups/session/:session_id - Delete incomplete session (HYBRID 70%)
+router.delete('/session/:session_id', deleteSession);
 
 module.exports = router;

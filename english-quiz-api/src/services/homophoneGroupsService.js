@@ -8,6 +8,80 @@ const logger = require('../utils/logger');
 const questionStore = new Map();
 const QUESTION_TTL_MS = 10 * 60 * 1000;
 
+// Homophone-specific fallback sentences (more natural and precise)
+const HOMOPHONE_SPECIFIC_SENTENCES = {
+  'hear/here': [
+    `I can _____ you from here.`,
+    `Did you _____ what I said?`,
+    `Come _____, I want to tell you something.`,
+    `Can you _____ the music?`,
+    `_____ are my keys!`,
+  ],
+  'there/their': [
+    `They live _____.`,
+    `This is _____ house.`,
+    `Look over _____.`,
+    `_____ friends are coming today.`,
+    `Is anyone _____ right now?`,
+  ],
+  'to/too/two': [
+    `I want _____ go home.`,
+    `This coffee is _____ hot.`,
+    `We have _____ cats.`,
+    `Can I come _____?`,
+    `He is _____ tall for that car.`,
+  ],
+  'see/sea': [
+    `I can _____ the beach from here.`,
+    `Do you _____ that boat?`,
+    `We love swimming in the _____.`,
+    `I can _____ the mountain in the distance.`,
+    `The _____ is beautiful today.`,
+  ],
+  'right/write': [
+    `Turn _____ at the traffic light.`,
+    `Can you _____ your name here?`,
+    `He is _____ about that.`,
+    `Please _____ the answer on the paper.`,
+    `Is this the _____ way to the station?`,
+  ],
+  'know/no': [
+    `I don't _____ the answer.`,
+    `Say _____ if you disagree.`,
+    `Do you _____ him?`,
+    `_____, I don't want to go.`,
+    `I didn't _____ it was raining.`,
+  ],
+  'sun/son': [
+    `The _____ is shining today.`,
+    `My _____ likes to play soccer.`,
+    `The _____ rises in the east.`,
+    `She has one daughter and one _____.`,
+    `We stayed in the _____ all day.`,
+  ],
+  'not/knot': [
+    `This is _____ the right way.`,
+    `There is a _____ in my shoelace.`,
+    `I'm _____ ready yet.`,
+    `She tied a _____ in the rope.`,
+    `That's _____ allowed.`,
+  ],
+  'brake/break': [
+    `Please _____ the window.`,
+    `Press the _____ to stop the car.`,
+    `We had a _____ for lunch.`,
+    `Can you _____ this into pieces?`,
+    `Step on the _____ if you need to stop.`,
+  ],
+  'wear/where': [
+    `_____ are you going?`,
+    `I like to _____ blue shirts.`,
+    `Can you tell me _____ the bathroom is?`,
+    `She always _____ a hat in summer.`,
+    `_____ did you put my keys?`,
+  ],
+};
+
 function cleanExpiredQuestions() {
   const now = Date.now();
   for (const [id, q] of questionStore.entries()) {
@@ -31,79 +105,159 @@ async function getRandomHomophoneGroup() {
 }
 
 /**
- * Generate a sentence using Gemini AI with a blank for the homophone word
- * This creates a meaningful sentence with context clues but without revealing the answer
+ * VALIDATION: Check if a sentence is grammatically valid for a specific word
+ * Edge case #4 fix: Prevents sentences meant for other words in the group
+ * 
+ * Example:
+ *   sentence: "The _____ is shining brightly"
+ *   word: "sun"     → ✅ Valid (makes sense)
+ *   word: "hot"     → ❌ Invalid (doesn't make sense - "The hot is shining brightly" is wrong)
  */
-async function generateSentenceWithAI(word) {
+async function validateSentenceForWord(sentence, word, homophoneGroup, model) {
   try {
-    const prompt = `Create a contextual English sentence (max 12 words) with a blank (_____ or [blank]) where the word "${word}" should go.
-
-Rules:
-- Replace "${word}" with _____ to mark the missing word position
-- The sentence should make natural sense and provide context clues WITHOUT spoiling the answer
-- Example word "${word}" could be: "their/there", "see/sea", "hear/here", "right/write", "know/no", "to/too/two"
-- Keep it simple and clear for English learners (beginner level)
-- The blank should be replaceable ONLY by the target word in the sentence context
-- Return ONLY the sentence with the blank, no quotes, no explanation
-
-Examples of GOOD sentences (with blanks):
-- "I can _____ the beach from my window" (for "see/sea")
-- "She _____ her book on the desk" (for "put/putt")
-- "I _____ the door is open" (for "know/no")
-- "We need to go _____" (for "there/their")
-
-Return the sentence now:`;
-
-    const model = genAI.getGenerativeModel({ model: config.gemini.model });
-    const result = await model.generateContent(prompt);
-    let sentence = result.response.text().trim().replace(/^["']|["']$/g, '');
+    const otherWords = homophoneGroup.words.filter(w => w.toLowerCase() !== word.toLowerCase()).join(', ');
     
-    // Ensure the sentence contains the blank marker
-    if (!sentence.includes('_____') && !sentence.includes('[blank]')) {
-      logger.warn(`[HomophoneGroups] AI sentence missing blank: "${sentence}". Regenerating with fallback.`);
-      return null;
+    const validationPrompt = `You are a grammar validator. Check if this sentence is GRAMMATICALLY CORRECT and makes SEMANTIC SENSE when the blank is filled with the target word.
+
+Sentence with blank: "${sentence}"
+Target word to fill: "${word}"
+Other words in this homophones group (do NOT fit): ${otherWords}
+
+Answer ONLY with JSON, no explanation:
+{
+  "is_valid": true/false,
+  "reason": "brief reason"
+}
+
+Rules for VALID:
+1. "${word}" fits naturally and grammatically in the blank
+2. The sentence is NOT better with another word from this group
+3. Native English speakers would use this sentence only with "${word}"
+
+Answer now:`;
+
+    const result = await model.generateContent(validationPrompt);
+    const responseText = result.response.text().trim();
+    
+    // Parse JSON response
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      logger.warn(`[HomophoneGroups] Validation response not JSON: "${responseText}"`);
+      return false;
     }
     
-    logger.info(`[HomophoneGroups] AI generated sentence: "${sentence}"`);
-    return sentence;
+    const validation = JSON.parse(jsonMatch[0]);
+    return validation.is_valid === true;
   } catch (err) {
-    logger.warn(`[HomophoneGroups] AI sentence generation failed: ${err.message}`);
-    return null;
+    logger.warn(`[HomophoneGroups] Validation error: ${err.message}`);
+    return false;
   }
 }
 
 /**
- * Generate contextual fallback sentences with blanks for homophones
- * These are generic templates that work for any homophone pair
+ * Generate a sentence using Gemini AI with a blank for the homophone word
+ * Includes validation to prevent edge case #4 (wrong word assigned)
  */
-function generateFallbackSentence(word) {
-  // Generic templates with blanks that work for most homophones
-  // The context should be vague enough to not reveal the answer but specific enough to require thought
-  const templates = [
-    `I can _____ you very clearly.`,              // for "hear/here"
-    `They went _____ last summer.`,                // for "there/their"
-    `She _____ a beautiful song.`,                 // for "sang/sun"
-    `We need to _____ this problem.`,              // for "solve/soul"
-    `He _____ the answer quickly.`,                // for "knew/new"
-    `I _____ to the store yesterday.`,             // for "went/want"
-    `She _____ the window is open.`,               // for "knows/nose"
-    `Can you _____ my name correctly?`,            // for "read/red"
-    `Please _____ my homework.`,                   // for "check/Czech"
-    `The _____ is very high today.`,               // for "sun/son"
-    `I _____ to go home now.`,                     // for "want/went"
-    `They _____ to the beach.`,                    // for "went/want"
-    `She _____ the door carefully.`,               // for "closed/clothes"
-    `We _____ this work together.`,                // for "do/due/dew"
-    `I _____ your message.`,                       // for "got/got"
-    `Please _____ attention in class.`,            // for "pay/pea"
-    `The _____ is shining brightly.`,              // for "sun/son"
-    `I _____ the book on the table.`,              // for "put/putt"
-    `Can you _____ me find my keys?`,              // for "help/kelp" or "aid/aide"
-    `She _____ to be very intelligent.`,           // for "seems/seams"
+async function generateSentenceWithAI(word, homophoneGroup, maxRetries = 3) {
+  let attempts = 0;
+  let lastError = null;
+
+  while (attempts < maxRetries) {
+    attempts++;
+    try {
+      const otherWords = homophoneGroup.words.filter(w => w.toLowerCase() !== word.toLowerCase()).slice(0, 3).join(', ');
+
+      const prompt = `You are an English teacher for beginner learners. Create ONE natural sentence with a blank (_____ ) where ONLY the word "${word}" fits perfectly.
+
+CRITICAL:
+- The blank must be filled ONLY by "${word}", not by: ${otherWords}
+- Do NOT create a sentence that also fits: ${otherWords}
+- The sentence must be grammatically correct when "${word}" is inserted
+- Keep it simple (max 12 words) for A2-B1 learners
+
+Examples of GOOD sentences (ONLY fit the target word):
+- "I can _____ the music" (ONLY "hear" fits, not "here")
+- "They live over _____" (ONLY "there" fits, not "their")  
+- "I want _____ go home" (ONLY "to" fits, not "too" or "two")
+
+Example of BAD sentence (multiple words fit):
+- "The _____ is shining" (fits "sun" AND "star" — DO NOT CREATE THIS)
+
+Return ONLY the sentence with blank, no quotes, no explanation:`;
+
+      const model = genAI.getGenerativeModel({ model: config.gemini.model });
+      const result = await model.generateContent(prompt);
+      let sentence = result.response.text().trim().replace(/^["']|["']$/g, '');
+
+      // Check if sentence has blank marker
+      if (!sentence.includes('_____') && !sentence.includes('[blank]')) {
+        logger.warn(`[HomophoneGroups] Attempt ${attempts}: AI sentence missing blank: "${sentence}"`);
+        lastError = 'No blank marker in sentence';
+        continue;
+      }
+
+      // VALIDATE the sentence
+      const isValid = await validateSentenceForWord(sentence, word, homophoneGroup, model);
+      if (!isValid) {
+        logger.warn(`[HomophoneGroups] Attempt ${attempts}: Validation failed for sentence: "${sentence}" with word: "${word}"`);
+        lastError = 'Validation failed - sentence fits other words';
+        continue;
+      }
+
+      logger.info(`[HomophoneGroups] ✅ AI sentence generated (attempt ${attempts}): "${sentence}" for word: "${word}"`);
+      return sentence;
+    } catch (err) {
+      lastError = err.message;
+      logger.warn(`[HomophoneGroups] Attempt ${attempts} error: ${err.message}`);
+    }
+  }
+
+  logger.warn(`[HomophoneGroups] AI generation failed after ${maxRetries} retries. Last error: ${lastError}`);
+  return null;
+}
+
+/**
+ * Generate contextual fallback sentences with blanks for homophones
+ * Now uses homophone-specific templates for better accuracy
+ */
+function generateFallbackSentence(word, homophoneGroup) {
+  // Try to find homophones-specific templates first
+  for (const [groupKey, sentences] of Object.entries(HOMOPHONE_SPECIFIC_SENTENCES)) {
+    const words = groupKey.split('/').map(w => w.trim().toLowerCase());
+    if (words.includes(word.toLowerCase())) {
+      const sentence = sentences[Math.floor(Math.random() * sentences.length)];
+      logger.info(`[HomophoneGroups] Using homophones-specific fallback for "${word}": "${sentence}"`);
+      return sentence;
+    }
+  }
+
+  // Fallback to generic templates if no specific match found
+  const genericTemplates = [
+    `I can _____ you very clearly.`,
+    `They went _____ last summer.`,
+    `She _____ a beautiful song.`,
+    `We need to _____ this problem.`,
+    `He _____ the answer quickly.`,
+    `I _____ to the store yesterday.`,
+    `She _____ the window is open.`,
+    `Can you _____ my name correctly?`,
+    `Please _____ my homework.`,
+    `The _____ is very high today.`,
+    `I _____ to go home now.`,
+    `They _____ to the beach.`,
+    `She _____ the door carefully.`,
+    `We _____ this work together.`,
+    `I _____ your message.`,
+    `Please _____ attention in class.`,
+    `The _____ is shining brightly.`,
+    `I _____ the book on the table.`,
+    `Can you _____ me find my keys?`,
+    `She _____ to be very intelligent.`,
   ];
-  
-  // Return a random template
-  return templates[Math.floor(Math.random() * templates.length)];
+
+  const sentence = genericTemplates[Math.floor(Math.random() * genericTemplates.length)];
+  logger.info(`[HomophoneGroups] Using generic fallback template for "${word}": "${sentence}"`);
+  return sentence;
 }
 
 /**
@@ -120,6 +274,7 @@ function shuffle(arr) {
 
 /**
  * Main: generate a full question from a HomophoneGroup
+ * Includes AI with validation + fallback with homophones-specific sentences
  */
 async function generateQuestion(homophoneGroup) {
   // Pick a random correct word
@@ -127,10 +282,13 @@ async function generateQuestion(homophoneGroup) {
   const correctWord = homophoneGroup.words[correctIndex];
   const correctPhonetic = homophoneGroup.phonetics[correctIndex] || null;
 
-  // Try AI sentence, fallback to template
-  let sentence = await generateSentenceWithAI(correctWord);
+  // Try AI sentence first (with validation to prevent edge case #4)
+  let sentence = await generateSentenceWithAI(correctWord, homophoneGroup);
+  
+  // If AI fails, use homophones-specific fallback (or generic fallback if not available)
   if (!sentence) {
-    sentence = generateFallbackSentence(correctWord);
+    sentence = generateFallbackSentence(correctWord, homophoneGroup);
+    logger.info(`[HomophoneGroups] Fallback to template for "${correctWord}": "${sentence}"`);
   }
 
   // Build choices array with phonetics attached
@@ -157,7 +315,7 @@ async function generateQuestion(homophoneGroup) {
   cleanExpiredQuestions();
   questionStore.set(question_id, question);
 
-  logger.info(`[HomophoneGroups] Question created: id=${question_id}, correct="${correctWord}"`);
+  logger.info(`[HomophoneGroups] Question created: id=${question_id}, correct="${correctWord}", sentence="${sentence}"`);
 
   // Return without leaking correct_answer to client
   // But send correctAnswerForAudio for text-to-speech (to make audio sound complete)

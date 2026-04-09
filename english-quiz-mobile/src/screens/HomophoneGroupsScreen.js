@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Animated,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
@@ -16,6 +17,7 @@ import {
   startHomophoneGroups,
   submitHomophoneGroupsAnswer,
   completeHomophoneGroupsSession,
+  deleteHomophoneGroupsSession,
 } from "../services/api";
 import { COLORS, SHADOWS } from "../constants/config";
 
@@ -49,6 +51,9 @@ export default function HomophoneGroupsScreen({ navigation }) {
   const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
   const [totalAnswersCount, setTotalAnswersCount] = useState(0);
 
+  // Flag to prevent navigation loop when intentionally exiting
+  const isIntentionalExitRef = useRef(false);
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
 
@@ -57,6 +62,105 @@ export default function HomophoneGroupsScreen({ navigation }) {
     animateIn(); // Trigger animation on mount
     return () => Speech.stop();
   }, []);
+
+  /**
+   * Exit handling (HYBRID 70% rule)
+   * Show confirmation dialog when user tries to exit
+   */
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      // If user intentionally exiting (after confirming), allow navigation
+      if (isIntentionalExitRef.current) {
+        console.log('[HomophoneGroupsScreen] Allowing intentional exit');
+        isIntentionalExitRef.current = false; // Reset flag
+        return;
+      }
+
+      // Only handle if session is in progress
+      if (!sessionId || state === STATES.SETUP || state === STATES.RESULTS) {
+        return; // Allow normal navigation
+      }
+
+      // Prevent navigation and show dialog instead
+      e.preventDefault();
+      handleConfirmExit();
+    });
+
+    return unsubscribe;
+  }, [navigation, sessionId, state, totalAnswersCount, selectedQuestionCount, userId]);
+
+  /**
+   * Confirm exit dialog with HYBRID 70% rule
+   */
+  const handleConfirmExit = () => {
+    const total = selectedQuestionCount || 0;
+    const threshold = total * 0.7;
+    const isEnough = totalAnswersCount >= threshold;
+
+    console.log(`[HomophoneGroupsScreen] Confirm exit - answered: ${totalAnswersCount}/${total} (threshold: ${threshold}, isEnough: ${isEnough})`);
+
+    if (isEnough) {
+      // CASE 1: ≥ 70% → Offer to save session
+      Alert.alert(
+        "Confirm Exit",
+        `You have completed ${totalAnswersCount} of ${total} questions (${Math.round((totalAnswersCount / total) * 100)}%). Do you want to save your progress?`,
+        [
+          {
+            text: "Continue",
+            style: "cancel",
+            onPress: () => console.log("[HomophoneGroupsScreen] Continue session"),
+          },
+          {
+            text: "End Session",
+            style: "default",
+            onPress: async () => {
+              try {
+                console.log("[HomophoneGroupsScreen] Completing session before exit");
+                await completeHomophoneGroupsSession(sessionId, userId);
+                console.log("[HomophoneGroupsScreen] Session completed, setting exit flag");
+                isIntentionalExitRef.current = true; // Mark as intentional exit
+                navigation.goBack();
+              } catch (err) {
+                console.error("[HomophoneGroupsScreen] Error completing session:", err);
+                isIntentionalExitRef.current = true; // Still exit even on error
+                navigation.goBack();
+              }
+            },
+          },
+        ]
+      );
+    } else {
+      // CASE 2: < 70% → Warn about data loss
+      Alert.alert(
+        "Incomplete Session",
+        `You have only completed ${totalAnswersCount} of ${total} questions (${Math.round((totalAnswersCount / total) * 100)}%). If you exit now, your progress will NOT be saved.`,
+        [
+          {
+            text: "Continue Studying",
+            style: "cancel",
+            onPress: () => console.log("[HomophoneGroupsScreen] Continue session"),
+          },
+          {
+            text: "Exit",
+            style: "destructive",
+            onPress: async () => {
+              try {
+                console.log("[HomophoneGroupsScreen] Deleting incomplete session");
+                await deleteHomophoneGroupsSession(sessionId, userId);
+                console.log("[HomophoneGroupsScreen] Session deleted, setting exit flag");
+                isIntentionalExitRef.current = true; // Mark as intentional exit
+                navigation.goBack();
+              } catch (err) {
+                console.warn("[HomophoneGroupsScreen] Error deleting session:", err);
+                isIntentionalExitRef.current = true; // Still exit even on error
+                navigation.goBack();
+              }
+            },
+          },
+        ]
+      );
+    }
+  };
 
   const animateIn = () => {
     fadeAnim.setValue(0);
@@ -150,10 +254,20 @@ export default function HomophoneGroupsScreen({ navigation }) {
         setCorrectAnswersCount(newCorrectAnswers);
       }
 
-      // Check if reached question limit
+      // AUTO-COMPLETE: Check if finished all questions (MANDATORY)
       if (newTotalAnswers >= selectedQuestionCount) {
-        // Auto transition to results after 1.5 seconds
-        setTimeout(() => {
+        console.log(`[HomophoneGroupsScreen] ✅ All ${selectedQuestionCount} questions answered - AUTO COMPLETING`);
+        
+        // Wait 1.5s for visual feedback, then auto-complete
+        setTimeout(async () => {
+          try {
+            await completeHomophoneGroupsSession(sessionId, userId);
+            console.log("[HomophoneGroupsScreen] Session auto-completed");
+          } catch (err) {
+            console.error("[HomophoneGroupsScreen] Auto-complete error:", err);
+          }
+          
+          // Navigate to RESULTS
           setState(STATES.RESULTS);
           animateIn();
         }, 1500);
@@ -167,14 +281,28 @@ export default function HomophoneGroupsScreen({ navigation }) {
   const handleCompleteSession = async () => {
     try {
       if (sessionId) {
-        await completeHomophoneGroupsSession(sessionId, userId);
-        console.log("[HomophoneGroupsScreen] Session completed");
+        // Session likely already completed by auto-complete
+        // But re-confirm completion (idempotent - MongoDB won't double-save completed sessions)
+        try {
+          await completeHomophoneGroupsSession(sessionId, userId);
+          console.log("[HomophoneGroupsScreen] Session completion confirmed");
+        } catch (err) {
+          // May be already completed, ignore
+          console.warn("[HomophoneGroupsScreen] Completion error (may already be completed):", err.message);
+        }
       }
       navigation.goBack();
     } catch (err) {
       console.error("[HomophoneGroupsScreen] Error completing session:", err);
       navigation.goBack();
     }
+  };
+
+  /**
+   * Handle End button press - show confirm dialog
+   */
+  const handleEndPress = () => {
+    handleConfirmExit();
   };
 
   const handleRestart = () => {
@@ -462,6 +590,17 @@ export default function HomophoneGroupsScreen({ navigation }) {
           </TouchableOpacity>
         )}
 
+        {/* Finish Button (shown during session) */}
+        {(state === STATES.LISTENING || state === STATES.ANSWERED) && (
+          <TouchableOpacity 
+            style={styles.finishBtn} 
+            onPress={handleEndPress}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.finishBtnText}>Finish</Text>
+          </TouchableOpacity>
+        )}
+
       </Animated.View>
     </ScrollView>
   );
@@ -548,6 +687,30 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary, borderRadius: 16, paddingVertical: 16, ...SHADOWS.medium
   },
   nextBtnText: { fontSize: 17, fontWeight: "700", color: "#fff" },
+
+  // Finish Button
+  finishBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    backgroundColor: "#DC2626",
+    borderRadius: 12,
+    paddingVertical: 13,
+    paddingHorizontal: 30,
+    marginTop: 14,
+    marginBottom: 20,
+    borderWidth: 0,
+    alignSelf: "center",
+    minWidth: 140,
+    ...SHADOWS.small,
+  },
+  finishBtnText: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    letterSpacing: 0.3,
+  },
 
   // Error / loading
   loadingText: { marginTop: 12, fontSize: 15, color: "#9CA3AF" },

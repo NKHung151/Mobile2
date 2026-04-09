@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Animated,
+  Alert,
 } from "react-native";
 import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +16,7 @@ import {
   startListeningSession,
   submitListeningAnswer,
   completeListeningPart2Session,
+  deleteListeningPart2Session,
 } from "../services/api";
 import { COLORS, SHADOWS } from "../constants/config";
 
@@ -59,6 +61,9 @@ export default function ListeningPart2Screen({ navigation }) {
   const sessionStartTimeRef = useRef(null);
   const questionsSummaryRef = useRef([]);
 
+  // Flag to prevent navigation loop when intentionally exiting
+  const isIntentionalExitRef = useRef(false);
+
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
@@ -73,6 +78,106 @@ export default function ListeningPart2Screen({ navigation }) {
       }
     };
   }, []);
+
+  /**
+   * Exit handling (HYBRID 70% rule)
+   * Show confirmation dialog when user tries to exit
+   */
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      // If user intentionally exiting (after confirming), allow navigation
+      if (isIntentionalExitRef.current) {
+        console.log('[ListeningPart2Screen] Allowing intentional exit');
+        isIntentionalExitRef.current = false; // Reset flag
+        return;
+      }
+
+      // Only handle if session is in progress
+      if (!sessionId || state === STATES.SETUP || state === STATES.RESULTS) {
+        return; // Allow normal navigation
+      }
+
+      // Prevent navigation and show dialog instead
+      e.preventDefault();
+      handleConfirmExit();
+    });
+
+    return unsubscribe;
+  }, [navigation, sessionId, state, questionNumber, totalQuestions, userId]);
+
+  /**
+   * Confirm exit dialog with HYBRID 70% rule
+   */
+  const handleConfirmExit = () => {
+    const total = selectedQuestionCount || 0;
+    const answered = questionNumber - 1; // Current is not answered yet
+    const threshold = total * 0.7;
+    const isEnough = answered >= threshold;
+
+    console.log(`[ListeningPart2Screen] Confirm exit - answered: ${answered}/${total} (threshold: ${threshold}, isEnough: ${isEnough})`);
+
+    if (isEnough) {
+      // CASE 1: ≥ 70% → Offer to save session
+      Alert.alert(
+        "Confirm Exit",
+        `You have completed ${answered} of ${total} questions (${Math.round((answered / total) * 100)}%). Do you want to save your progress?`,
+        [
+          {
+            text: "Continue",
+            style: "cancel",
+            onPress: () => console.log("[ListeningPart2Screen] Continue session"),
+          },
+          {
+            text: "End",
+            style: "default",
+            onPress: async () => {
+              try {
+                console.log("[ListeningPart2Screen] Completing session before exit");
+                await completeListeningPart2Session(sessionId, userId);
+                console.log("[ListeningPart2Screen] Session completed, setting exit flag");
+                isIntentionalExitRef.current = true; // Mark as intentional exit
+                navigation.goBack();
+              } catch (err) {
+                console.error("[ListeningPart2Screen] Error completing session:", err);
+                isIntentionalExitRef.current = true; // Still exit even on error
+                navigation.goBack();
+              }
+            },
+          },
+        ]
+      );
+    } else {
+      // CASE 2: < 70% → Warn about data loss
+      Alert.alert(
+        "Incomplete Session",
+        `You have only completed ${answered} of ${total} questions (${Math.round((answered / total) * 100)}%). If you exit now, your progress will NOT be saved.`,
+        [
+          {
+            text: "Continue Studying",
+            style: "cancel",
+            onPress: () => console.log("[ListeningPart2Screen] Continue session"),
+          },
+          {
+            text: "Exit",
+            style: "destructive",
+            onPress: async () => {
+              try {
+                console.log("[ListeningPart2Screen] Deleting incomplete session");
+                await deleteListeningPart2Session(sessionId, userId);
+                console.log("[ListeningPart2Screen] Session deleted, setting exit flag");
+                isIntentionalExitRef.current = true; // Mark as intentional exit
+                navigation.goBack();
+              } catch (err) {
+                console.warn("[ListeningPart2Screen] Error deleting session:", err);
+                isIntentionalExitRef.current = true; // Still exit even on error
+                navigation.goBack();
+              }
+            },
+          },
+        ]
+      );
+    }
+  };
 
   const animateIn = () => {
     fadeAnim.setValue(0);
@@ -170,6 +275,13 @@ export default function ListeningPart2Screen({ navigation }) {
     if (question && question.audioUrl) {
       await playAudio(question.audioUrl);
     }
+  };
+
+  /**
+   * Handle Finish button press - show confirm dialog
+   */
+  const handleEndPress = () => {
+    handleConfirmExit();
   };
 
   // Just highlight the selected option — does NOT submit yet
@@ -501,9 +613,19 @@ export default function ListeningPart2Screen({ navigation }) {
           disabled={selectedOptionIndex === null}
           activeOpacity={0.85}
         >
-          <Ionicons name="checkmark-circle" size={20} color="#fff" />
           <Text style={styles.checkAnswerButtonText}>Check Answer</Text>
         </TouchableOpacity>
+
+        {/* Finish Button */}
+        {(state === STATES.QUESTION || state === STATES.FEEDBACK) && ( 
+          <TouchableOpacity 
+            style={styles.finishBtn} 
+            onPress={handleEndPress}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.finishBtnText}>Finish</Text>
+          </TouchableOpacity>
+        )}
       </Animated.ScrollView>
     );
   }
@@ -1025,20 +1147,44 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: COLORS.primary,
-    borderRadius: 14,
-    paddingVertical: 16,
-    marginTop: 20,
-    marginHorizontal: 20,
+    borderRadius: 12,
+    paddingVertical: 13,
+    paddingHorizontal: 30,
+    marginTop: 14,
+    marginBottom: 8,
     gap: 8,
+    alignSelf: "center",
+    minWidth: 140,
+    borderWidth: 0,
+    ...SHADOWS.small,
   },
   checkAnswerButtonDisabled: {
     backgroundColor: "#374151",
     opacity: 0.5,
   },
   checkAnswerButtonText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "700",
     color: "#FFFFFF",
+    letterSpacing: 0.3,
+  },
+
+  finishBtn: {
+    backgroundColor: "#DC2626", // Nền đỏ đậm
+    borderRadius: 12,
+    paddingVertical: 12,        // Độ cao vừa vặn
+    paddingHorizontal: 30,      // Độ rộng vừa đủ để chữ "Finish" trông cân đối
+    marginTop: 20,
+    alignSelf: "center",        // Căn giữa màn hình và co nút theo nội dung
+    ...SHADOWS.small,
+    minWidth: 140,              // Đảm bảo nút đủ lớn để dễ bấm
+  },
+  finishBtnText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",           // Chữ trắng
+    textAlign: "center",
+    letterSpacing: 0.5,
   },
 
   // NEXT / VIEW RESULTS BUTTON (FEEDBACK state)
