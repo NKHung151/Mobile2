@@ -95,49 +95,105 @@ export default function ProgressReport({ statistics, sessions }) {
     return 0;
   };
 
-  const getAccuracyTrendData = () => {
+  /**
+   * Build Last 7 Days — from 6 days ago to today
+   * Each day = sum of all completed sessions that day
+   * Accuracy = weighted average: totalCorrect / totalQuestions * 100
+   */
+  const buildLast7Days = () => {
     if (!sessions || sessions.length === 0) {
-      return { labels: ["No data"], datasets: [{ data: [0] }] };
+      return [];
     }
 
-    const recent = sessions.slice(-7).reverse();
-    const labels = recent.map((s, i) => {
-      // prefer a date label if available
-      const ts = s.created_at || s.createdAt || s.timestamp || s.date;
-      if (ts) {
-        try {
-          const d = new Date(ts);
-          if (!isNaN(d)) return `${d.getMonth() + 1}/${d.getDate()}`;
-        } catch (e) {}
+    // Create 7 days array from 6 days ago to today
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - i);
+      days.push(d);
+    }
+
+    // Filter only completed sessions
+    const completed = sessions.filter((s) => s.status === "completed");
+
+    // Group sessions by day and calculate weighted accuracy
+    return days.map((day) => {
+      const nextDay = new Date(day);
+      nextDay.setDate(nextDay.getDate() + 1);
+
+      const daySessions = completed.filter((s) => {
+        const ts = new Date(s.created_at || s.createdAt || s.timestamp || s.date);
+        return ts >= day && ts < nextDay;
+      });
+
+      // Label: M/D format
+      const label = `${day.getMonth() + 1}/${day.getDate()}`;
+
+      if (daySessions.length === 0) {
+        return { label, accuracy: 0, hasData: false };
       }
-      return `Day ${i + 1}`;
+
+      // Weighted average: total correct / total questions * 100
+      const totalQuestions = daySessions.reduce(
+        (sum, s) => sum + (s.questions_answered || s.questionsAnswered || s.questions || 0),
+        0
+      );
+      const totalCorrect = daySessions.reduce(
+        (sum, s) => sum + (s.correct_answers || s.correctAnswers || s.correct || 0),
+        0
+      );
+
+      const accuracy =
+        totalQuestions > 0
+          ? Math.round((totalCorrect / totalQuestions) * 100)
+          : 0;
+
+      return { label, accuracy, hasData: true, sessionCount: daySessions.length };
     });
-
-    const data = recent.map((s) => getAccuracyFromSession(s));
-
-    return { labels, datasets: [{ data: data.length > 0 ? data : [0] }] };
   };
 
-  const accuracyData = getAccuracyTrendData();
-
-  // Debug: print labels and data arrays for easier inspection
-  try {
-    console.log("[ProgressReport] accuracy labels:", accuracyData.labels);
-    console.log(
-      "[ProgressReport] accuracy values:",
-      accuracyData.datasets[0].data,
-    );
-  } catch (e) {}
+  const last7Days = buildLast7Days();
+  const labels = last7Days.map((d) => d.label);
+  const data = last7Days.map((d) => d.accuracy);
 
   const chartConfig = {
     backgroundGradientFrom: COLORS.card,
     backgroundGradientFromOpacity: 1,
     backgroundGradientTo: COLORS.card,
     backgroundGradientToOpacity: 1,
-    color: (opacity = 1) => `rgba(255, 107, 107, ${opacity})`,
+    color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
     strokeWidth: 2,
     barPercentage: 0.5,
+    decimalPlaces: 0,
+    fromZero: true,
+    segments: 5,
   };
+
+  // Build chart data with ghost dataset to force Y-axis max to 100%
+  const accuracyData = {
+    labels,
+    datasets: [
+      {
+        data: data.length > 0 ? data : [0],
+        color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
+        strokeWidth: 2,
+      },
+      {
+        // Ghost dataset to force Y-max = 100
+        data: [100],
+        color: () => "transparent",
+        strokeWidth: 0,
+        withDots: false,
+      },
+    ],
+  };
+
+  // Debug: print labels and data arrays for easier inspection
+  try {
+    console.log("[ProgressReport] last 7 days labels:", labels);
+    console.log("[ProgressReport] last 7 days accuracy values:", data);
+  } catch (e) {}
 
   // If `statistics` is not provided, derive basic stats from `sessions`
   // Use the robust extractor `getAccuracyFromSession` to compute per-session accuracy
@@ -158,13 +214,14 @@ export default function ProgressReport({ statistics, sessions }) {
     current_study_streak: 0,
   };
 
-  // Prefer server-provided overall_accuracy, but if it's 0 or missing
-  // fall back to the computedAverage derived from session records.
+  // Prefer server-provided overall_accuracy, but if missing (null/undefined)
+  // fall back to the computedAverage. Note: 0 is a valid value and should not fallback.
   const overallAccuracy =
-    statsData.overall_accuracy_percentage ||
-    statsData.average_accuracy ||
-    computedAverage ||
-    0;
+    statsData.overall_accuracy_percentage != null
+      ? statsData.overall_accuracy_percentage
+      : statsData.average_accuracy != null
+      ? statsData.average_accuracy
+      : computedAverage || 0;
 
   console.log("[ProgressReport] Statistics data:", statsData);
   console.log("[ProgressReport] Overall accuracy:", overallAccuracy);
@@ -197,10 +254,10 @@ export default function ProgressReport({ statistics, sessions }) {
         <Text style={styles.sectionTitle}>📊 Key Statistic</Text>
         <View style={[styles.quizSummary, { alignItems: "flex-start" }]}>
           <Text style={[styles.quizSummaryText, { fontSize: 18 }]}>
-            Total Sessions
+            Completed Sessions
           </Text>
           <Text style={[styles.statValue, { marginTop: 8 }]}>
-            {statsData.total_sessions || 0}
+            {sessions ? sessions.length : 0}
           </Text>
         </View>
       </View>

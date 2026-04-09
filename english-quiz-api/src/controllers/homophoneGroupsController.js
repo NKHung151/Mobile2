@@ -190,4 +190,47 @@ async function completeSession(req, res, next) {
   }
 }
 
-module.exports = { start, startSession, answer, completeSession };
+/**
+ * DELETE /api/homophone-groups/session/:session_id
+ * Delete an incomplete learning session (HYBRID 70% rule)
+ * Body: { user_id }
+ */
+async function deleteSession(req, res, next) {
+  try {
+    const { session_id } = req.params;
+    const { user_id } = req.body;
+
+    if (!session_id || !user_id) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: session_id (param), user_id (body)'
+      });
+    }
+
+    const session = await LearningHistory.findOne({ session_id, user_id });
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        error: 'Learning session not found'
+      });
+    }
+
+    // Delete session
+    await LearningHistory.deleteOne({ session_id, user_id });
+
+    logger.info(
+      `[HomophoneGroups] Session deleted (incomplete): session=${session_id}, user=${user_id}, answered=${session.questions_answered}`
+    );
+
+    res.json({
+      success: true,
+      message: 'Incomplete session deleted',
+      deleted_session_id: session_id,
+      questions_answered: session.questions_answered
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { start, startSession, answer, completeSession, deleteSession };

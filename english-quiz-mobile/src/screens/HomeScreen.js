@@ -163,21 +163,7 @@ export default function HomeScreen({ navigation }) {
             <View style={[styles.cardDecoration, styles.chatDecoration]} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.actionCard, styles.transcribeCard]} onPress={() => handleNavigate("Transcribe")} activeOpacity={0.9}>
-            <View style={styles.actionContent}>
-              <View style={[styles.actionIconWrapper, { backgroundColor: "rgba(255,255,255,0.18)" }]}>
-                <Ionicons name="mic" size={28} color="#fff" />
-              </View>
-              <View style={styles.actionTextContainer}>
-                <Text style={styles.actionTitle}>Transcribe</Text>
-                <Text style={styles.actionDescription}>Listen and type what you hear</Text>
-              </View>
-            </View>
-            <View style={styles.actionArrow}>
-              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.8)" />
-            </View>
-            <View style={styles.cardDecoration} />
-          </TouchableOpacity>
+          {/* Transcribe card hidden */}
 
           <TouchableOpacity style={[styles.actionCard, styles.libraryCard]} onPress={() => handleNavigate("Library")} activeOpacity={0.9}>
             <View style={styles.actionContent}>

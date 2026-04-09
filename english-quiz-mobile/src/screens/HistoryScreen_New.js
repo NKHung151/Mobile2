@@ -62,6 +62,17 @@ export default function HistoryScreen({ navigation }) {
     }
   };
 
+  // Helper function to get mode label
+  const getModeLabel = (mode) => {
+    const modeMap = {
+      quiz: "Quiz",
+      chat: "Chat",
+      homophone_groups: "Listening",
+      listening_part2: "Listening",
+    };
+    return modeMap[mode] || mode;
+  };
+
   const fetchAllData = async () => {
     try {
       setLoading(true);
@@ -76,9 +87,14 @@ export default function HistoryScreen({ navigation }) {
         return;
       }
 
-      // Fetch learning history
-      console.log("[History] Fetching learning history...");
-      const historyResponse = await getLearningHistory(userId);
+      // Fetch all data in parallel using Promise.all() for performance
+      console.log("[History] Fetching learning data (parallel)...");
+      const [historyResponse, statsResponse, dashboardResponse] = await Promise.all([
+        getLearningHistory(userId, { status: 'completed' }),
+        getLearningStatistics(userId),
+        getLearningDashboard(userId),
+      ]);
+
       console.log("[History] History Response:", historyResponse);
       console.log(
         "[History] Sessions count:",
@@ -86,15 +102,9 @@ export default function HistoryScreen({ navigation }) {
       );
       setSessions(historyResponse.sessions || []);
 
-      // Fetch statistics
-      console.log("[History] Fetching statistics...");
-      const statsResponse = await getLearningStatistics(userId);
       console.log("[History] Statistics Response:", statsResponse);
       setStatistics(statsResponse.statistics);
 
-      // Fetch dashboard
-      console.log("[History] Fetching dashboard...");
-      const dashboardResponse = await getLearningDashboard(userId);
       console.log("[History] Dashboard Response:", dashboardResponse);
       setDashboard(dashboardResponse.dashboard);
 
@@ -119,13 +129,20 @@ export default function HistoryScreen({ navigation }) {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "Unknown";
 
-    const now = new Date();
-    const diff = now - date;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    // So sánh theo calendar day (00:00 → 23:59 mỗi ngày)
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
 
-    if (days === 0) return "Today";
-    if (days === 1) return "Yesterday";
-    if (days < 7) return `${days}d ago`;
+    const sessionDayStart = new Date(date);
+    sessionDayStart.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.round(
+      (todayStart - sessionDayStart) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays}d ago`;
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -172,21 +189,16 @@ export default function HistoryScreen({ navigation }) {
             </View>
             <View style={styles.statCard}>
               <Text style={styles.statValue}>
-                {today.questions_answered > 0
-                  ? Math.round(
-                      (today.correct_answers / today.questions_answered) * 100,
-                    )
-                  : 0}
-                %
+                {today.accuracy_percentage ?? 0}%
               </Text>
               <Text style={styles.statLabel}>Accuracy</Text>
             </View>
           </View>
         </View>
 
-        {/* This Week */}
+        {/* Last 7 Days */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📊 This Week</Text>
+          <Text style={styles.sectionTitle}>📈 Last 7 Days</Text>
           <View style={styles.weekCard}>
             <View style={styles.weekStat}>
               <Ionicons name="book" size={24} color={COLORS.primary} />
@@ -216,39 +228,6 @@ export default function HistoryScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Top Topics */}
-        {topics_overview && topics_overview.top_topics.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🎯 Top Topics</Text>
-            {topics_overview.top_topics.map((topic, index) => (
-              <View key={index} style={styles.topicCard}>
-                <View style={styles.topicInfo}>
-                  <Text style={styles.topicName}>{topic.topic_title}</Text>
-                  <Text style={styles.topicStats}>
-                    {topic.sessions_completed} sessions •{" "}
-                    {topic.mastery_percentage}% mastery
-                  </Text>
-                  <View
-                    style={[styles.progressBar, styles.progressBarContainer]}
-                  >
-                    <View
-                      style={[
-                        styles.progressBar,
-                        {
-                          width: `${topic.mastery_percentage}%`,
-                          backgroundColor: COLORS.primary,
-                        },
-                      ]}
-                    />
-                  </View>
-                </View>
-                <View style={styles.levelBadge}>
-                  <Text style={styles.levelText}>{topic.current_level}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        )}
         {/* Recommendations Preview */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>💡 AI Recommendations</Text>
@@ -321,12 +300,9 @@ export default function HistoryScreen({ navigation }) {
           <View style={styles.historyTitle}>
             <Text style={styles.historyTitleText}> {item.topic_title}</Text>
             <Text style={styles.historyMode}>
-              {item.mode === "quiz" ? "📝 Quiz" : "💬 Chat"}
+              {getModeLabel(item.mode)}
             </Text>
           </View>
-          <Text style={styles.statusIcon}>
-            {statusIcons[item.status] || "•"}
-          </Text>
         </View>
 
         <View style={styles.historyDetails}>

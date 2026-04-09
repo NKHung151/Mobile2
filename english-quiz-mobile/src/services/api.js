@@ -386,6 +386,18 @@ export const completeHomophoneGroupsSession = async (sessionId, userId) => {
   return response.data;
 };
 
+/**
+ * Delete an incomplete homophone groups session (HYBRID 70% rule)
+ */
+export const deleteHomophoneGroupsSession = async (sessionId, userId) => {
+  const response = await api.delete(`/api/homophone-groups/session/${sessionId}`, {
+    data: {
+      user_id: userId,
+    },
+  });
+  return response.data;
+};
+
 // ==================== LISTENING PART 2 API ====================
 
 /**
@@ -422,7 +434,17 @@ export const completeListeningPart2Session = async (sessionId, userId) => {
   return response.data;
 };
 
-
+/**
+ * Delete an incomplete listening part 2 session (HYBRID 70% rule)
+ */
+export const deleteListeningPart2Session = async (sessionId, userId) => {
+  const response = await api.delete(`/api/listening-part2/session/${sessionId}`, {
+    data: {
+      user_id: userId,
+    },
+  });
+  return response.data;
+};
 
 export const clearAuthToken = async () => {
   await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
