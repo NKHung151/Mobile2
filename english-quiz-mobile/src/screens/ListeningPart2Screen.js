@@ -172,32 +172,41 @@ export default function ListeningPart2Screen({ navigation }) {
     }
   };
 
-  const handleSelectOption = async (optionIndex) => {
-    if (state !== STATES.QUESTION || isPlaying) return;
-
+  // Just highlight the selected option — does NOT submit yet
+  const handleSelectOption = (optionIndex) => {
+    if (state !== STATES.QUESTION) return;
     setSelectedOptionIndex(optionIndex);
+  };
+
+  // Stop audio + submit the selected answer
+  const handleCheckAnswer = async () => {
+    if (selectedOptionIndex === null || state !== STATES.QUESTION) return;
+
+    // Stop audio immediately
+    setIsPlaying(false);
+    if (soundRef.current) {
+      try { await soundRef.current.stopAsync(); } catch (_) {}
+    }
 
     try {
       setState(STATES.LOADING);
-      const response = await submitListeningAnswer(sessionId, userId, optionIndex);
-      
+      const response = await submitListeningAnswer(sessionId, userId, selectedOptionIndex);
+
       setResult(response);
       setState(STATES.FEEDBACK);
-      
+
       if (response.is_correct) {
         setCorrectCount(correctCount + 1);
       }
 
-      // Track this question in the summary
       const newCorrectCount = response.is_correct ? correctCount + 1 : correctCount;
       questionsSummaryRef.current.push({
         question_id: response.question_id || `q_${questionNumber}`,
         is_correct: response.is_correct,
-        user_answer: OPTION_LABELS[optionIndex],
+        user_answer: OPTION_LABELS[selectedOptionIndex],
         correct_answer: OPTION_LABELS[response.correct_index],
       });
 
-      // Show next button instead of auto-advancing
       setNextQuestionData({
         isComplete: response.session_complete,
         nextQuestion: response.next_question,
@@ -207,7 +216,7 @@ export default function ListeningPart2Screen({ navigation }) {
       });
       setShowNextButton(true);
     } catch (err) {
-      console.error("[ListeningPart2] Error submitting answer:", err);
+      console.error("[ListeningPart2] Error checking answer:", err);
       setError(err.message);
       setState(STATES.ERROR);
     }
@@ -218,6 +227,11 @@ export default function ListeningPart2Screen({ navigation }) {
 
     try {
       if (nextQuestionData.isComplete) {
+        // Stop audio before going to results
+        setIsPlaying(false);
+        if (soundRef.current) {
+          try { await soundRef.current.stopAsync(); } catch (_) {}
+        }
         // Complete session (same pattern as HomophoneGroups)
         await completeListeningPart2Session(sessionId, userId);
         setState(STATES.RESULTS);
@@ -250,6 +264,11 @@ export default function ListeningPart2Screen({ navigation }) {
   };
 
   const handleRestart = () => {
+    // Stop and unload audio before going back to setup
+    setIsPlaying(false);
+    if (soundRef.current) {
+      soundRef.current.unloadAsync();
+    }
     setSelectedQuestionCount(null);
     setState(STATES.SETUP);
     setSessionId(null);
@@ -262,12 +281,12 @@ export default function ListeningPart2Screen({ navigation }) {
     setError(null);
     setAudioProgress(0);
     setAudioDuration(0);
-    setIsPlaying(false);
     setShowNextButton(false);
     setNextQuestionData(null);
     sessionStartTimeRef.current = null;
     questionsSummaryRef.current = [];
-    animateIn();
+    // Delay animateIn so React re-renders SETUP first, then fade-in plays
+    setTimeout(() => animateIn(), 50);
   };
 
   const handleHome = () => {
@@ -471,6 +490,20 @@ export default function ListeningPart2Screen({ navigation }) {
             <Text style={styles.loadingText}>Loading options...</Text>
           </View>
         )}
+
+        {/* Check Answer Button */}
+        <TouchableOpacity
+          style={[
+            styles.checkAnswerButton,
+            selectedOptionIndex === null && styles.checkAnswerButtonDisabled,
+          ]}
+          onPress={handleCheckAnswer}
+          disabled={selectedOptionIndex === null}
+          activeOpacity={0.85}
+        >
+          <Ionicons name="checkmark-circle" size={20} color="#fff" />
+          <Text style={styles.checkAnswerButtonText}>Check Answer</Text>
+        </TouchableOpacity>
       </Animated.ScrollView>
     );
   }
@@ -570,14 +603,18 @@ export default function ListeningPart2Screen({ navigation }) {
           </View>
         )}
 
-        {/* Next Button */}
+        {/* Next / View Results Button */}
         {showNextButton && (
           <TouchableOpacity
-            style={[styles.button, styles.buttonPrimary, { marginTop: 20 }]}
+            style={[
+              styles.nextButton,
+              nextQuestionData?.isComplete && styles.nextButtonFinish,
+            ]}
             onPress={handleNextQuestion}
+            activeOpacity={0.85}
           >
             <Ionicons name="arrow-forward" size={20} color="#fff" />
-            <Text style={styles.buttonText}>
+            <Text style={styles.nextButtonText}>
               {nextQuestionData?.isComplete ? "View Results" : "Next Question"}
             </Text>
           </TouchableOpacity>
@@ -588,12 +625,27 @@ export default function ListeningPart2Screen({ navigation }) {
 
   // ── RESULTS ──────────────────────────────────────────────
   if (state === STATES.RESULTS) {
-    const percentage = Math.round((correctCount / totalQuestions) * 100);
-    const getGrade = () => {
-      if (percentage >= 80) return "Excellent!";
-      if (percentage >= 60) return "Good!";
-      if (percentage >= 40) return "Fair";
-      return "Keep Practicing";
+    const accuracy = totalQuestions > 0
+      ? Math.round((correctCount / totalQuestions) * 100)
+      : 0;
+
+    const getTitle = () => {
+      if (accuracy >= 90) return "Perfect! 🏆";
+      if (accuracy >= 70) return "Great Job! 🎉";
+      if (accuracy >= 50) return "Good Effort! 💪";
+      return "Keep Practicing! 📚";
+    };
+
+    const getFeedbackTitle = () => {
+      if (accuracy >= 90) return "Outstanding! 🌟";
+      if (accuracy >= 70) return "Excellent! 💪";
+      return "Good effort! 📚";
+    };
+
+    const getFeedbackText = () => {
+      if (accuracy >= 90) return "You're mastering TOEIC Listening Part 2!";
+      if (accuracy >= 70) return "Keep practicing to reach perfection!";
+      return "Keep practicing, you'll improve!";
     };
 
     return (
@@ -605,37 +657,58 @@ export default function ListeningPart2Screen({ navigation }) {
         contentContainerStyle={styles.resultsContent}
       >
         <View style={styles.resultsCard}>
-          <Text style={styles.resultsTitle}>Quiz Complete!</Text>
-
-          <View style={styles.scoreBox}>
-            <Text style={styles.scoreValue}>
-              {correctCount} / {totalQuestions}
+          {/* Icon */}
+          <View style={styles.resultsIconContainer}>
+            <Text style={styles.resultsEmoji}>
+              {accuracy >= 70 ? "🎉" : "👏"}
             </Text>
-            <Text style={styles.scoreLabel}>Correct</Text>
           </View>
 
-          <View style={styles.accuracyBox}>
-            <Text style={styles.accuracyPercentage}>{percentage}%</Text>
-            <Text style={styles.accuracyGrade}>{getGrade()}</Text>
+          {/* Dynamic Title */}
+          <Text style={styles.resultsTitle}>{getTitle()}</Text>
+          <Text style={styles.resultsSubtitle}>Quiz Completed</Text>
+
+          {/* Score Card */}
+          <View style={styles.scoreCardRow}>
+            <View style={styles.scoreCardItem}>
+              <Text style={styles.scoreCardLabel}>ACCURACY</Text>
+              <Text style={[styles.scoreCardValue, { color: accuracy >= 70 ? COLORS.success : COLORS.error }]}>
+                {accuracy}%
+              </Text>
+            </View>
+            <View style={styles.scoreCardDivider} />
+            <View style={styles.scoreCardItem}>
+              <Text style={styles.scoreCardLabel}>CORRECT</Text>
+              <Text style={styles.scoreCardValue}>
+                {correctCount}/{totalQuestions}
+              </Text>
+            </View>
           </View>
 
-          <View style={styles.resultsButtonContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonPrimary]}
-              onPress={handleRestart}
-            >
-              <Ionicons name="play-circle" size={20} color="#fff" />
-              <Text style={styles.buttonText}>Play Again</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button, styles.buttonSecondary]}
-              onPress={handleHome}
-            >
-              <Ionicons name="home" size={20} color={COLORS.primary} />
-              <Text style={styles.buttonTextSecondary}>Home</Text>
-            </TouchableOpacity>
+          {/* Feedback Card */}
+          <View style={styles.feedbackCard}>
+            <Text style={styles.feedbackCardTitle}>{getFeedbackTitle()}</Text>
+            <Text style={styles.feedbackCardText}>{getFeedbackText()}</Text>
           </View>
+
+          {/* Buttons */}
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={handleRestart}
+            activeOpacity={0.9}
+          >
+            <Ionicons name="reload" size={20} color="#fff" />
+            <Text style={styles.retryButtonText}>Try Again</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.homeButton}
+            onPress={handleHome}
+            activeOpacity={0.9}
+          >
+            <Ionicons name="home" size={20} color={COLORS.primary} />
+            <Text style={styles.homeButtonText}>Home</Text>
+          </TouchableOpacity>
         </View>
       </Animated.ScrollView>
     );
@@ -946,6 +1019,48 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
 
+  // CHECK ANSWER BUTTON (QUESTION state)
+  checkAnswerButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.primary,
+    borderRadius: 14,
+    paddingVertical: 16,
+    marginTop: 20,
+    marginHorizontal: 20,
+    gap: 8,
+  },
+  checkAnswerButtonDisabled: {
+    backgroundColor: "#374151",
+    opacity: 0.5,
+  },
+  checkAnswerButtonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+
+  // NEXT / VIEW RESULTS BUTTON (FEEDBACK state)
+  nextButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3B82F6",
+    borderRadius: 14,
+    paddingVertical: 15,
+    marginTop: 20,
+    gap: 8,
+  },
+  nextButtonFinish: {
+    backgroundColor: COLORS.primary,
+  },
+  nextButtonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+
   // RESULTS
   resultsContent: {
     paddingVertical: 40,
@@ -958,67 +1073,111 @@ const styles = StyleSheet.create({
     alignItems: "center",
     ...SHADOWS.small,
   },
+  resultsIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#111827",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  resultsEmoji: {
+    fontSize: 40,
+  },
   resultsTitle: {
     fontSize: 28,
     fontWeight: "700",
     color: "#FFFFFF",
+    marginBottom: 4,
+    textAlign: "center",
+  },
+  resultsSubtitle: {
+    fontSize: 14,
+    color: "#9CA3AF",
     marginBottom: 24,
   },
-  scoreBox: {
+  scoreCardRow: {
+    flexDirection: "row",
+    backgroundColor: "#111827",
+    borderRadius: 12,
+    padding: 16,
+    width: "100%",
+    marginBottom: 16,
+  },
+  scoreCardItem: {
+    flex: 1,
     alignItems: "center",
-    marginBottom: 24,
   },
-  scoreValue: {
-    fontSize: 48,
+  scoreCardDivider: {
+    width: 1,
+    backgroundColor: "#374151",
+    marginHorizontal: 8,
+  },
+  scoreCardLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#6B7280",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 6,
+  },
+  scoreCardValue: {
+    fontSize: 26,
     fontWeight: "700",
     color: "#60A5FA",
   },
-  scoreLabel: {
-    fontSize: 14,
-    color: "#9CA3AF",
-    marginTop: 8,
-  },
-  accuracyBox: {
-    alignItems: "center",
-    marginBottom: 32,
-  },
-  accuracyPercentage: {
-    fontSize: 36,
-    fontWeight: "700",
-    color: "#10B981",
-  },
-  accuracyGrade: {
-    fontSize: 16,
-    color: "#D1D5DB",
-    marginTop: 8,
-  },
-  resultsButtonContainer: {
+  feedbackCard: {
+    backgroundColor: "#111827",
+    borderRadius: 12,
+    padding: 16,
     width: "100%",
-    gap: 12,
+    marginBottom: 24,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.primary,
   },
-  button: {
+  feedbackCardTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 4,
+  },
+  feedbackCardText: {
+    fontSize: 13,
+    color: "#9CA3AF",
+  },
+  retryButton: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: COLORS.primary,
+    borderRadius: 12,
     paddingVertical: 14,
-    borderRadius: 10,
+    width: "100%",
     gap: 8,
+    marginBottom: 12,
   },
-  buttonPrimary: {
-    backgroundColor: "#60A5FA",
-  },
-  buttonSecondary: {
-    backgroundColor: "#374151",
-  },
-  buttonText: {
+  retryButtonText: {
     fontSize: 16,
     fontWeight: "700",
     color: "#FFFFFF",
   },
-  buttonTextSecondary: {
+  homeButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#111827",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    paddingVertical: 14,
+    width: "100%",
+    gap: 8,
+  },
+  homeButtonText: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#60A5FA",
+    color: COLORS.primary,
   },
 
   // ERROR

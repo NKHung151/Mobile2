@@ -276,7 +276,9 @@ export default function HomophoneGroupsScreen({ navigation }) {
               <Text style={styles.resultsEmoji}>{accuracy >= 70 ? "🎉" : "👏"}</Text>
             </View>
             
-            <Text style={styles.resultsTitle}>Great Job!</Text>
+            <Text style={styles.resultsTitle}>
+                {accuracy >= 90 ? "Perfect! 🏆" : accuracy >= 70 ? "Great Job! 🎉" : accuracy >= 50 ? "Good Effort! 💪" : "Keep Practicing! 📚"}
+              </Text>
             <Text style={styles.resultsSubtitle}>Quiz Completed</Text>
 
             {/* Score Card */}
