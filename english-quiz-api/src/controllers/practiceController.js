@@ -27,15 +27,15 @@ const getTopicsForPractice = async (req, res, next) => {
 
 /**
  * POST /api/practice/start
- * Body: { user_id, topic_id, level }
+ * Body: { user_id, topic_id, level, exercise_id }
  */
 const startSession = async (req, res, next) => {
   try {
-    const { user_id, topic_id, level } = req.body;
-    if (!user_id || !topic_id || !level) {
-      return res.status(400).json({ success: false, message: "user_id, topic_id, level required" });
+    const { user_id, topic_id, level, exercise_id } = req.body;
+    if (!user_id || !topic_id || !level || !exercise_id) {
+      return res.status(400).json({ success: false, message: "user_id, topic_id, level, exercise_id required" });
     }
-    const data = await startPracticeSession(user_id, topic_id, level);
+    const data = await startPracticeSession(user_id, topic_id, level, exercise_id);
     res.json({ success: true, ...data });
   } catch (err) {
     next(err);

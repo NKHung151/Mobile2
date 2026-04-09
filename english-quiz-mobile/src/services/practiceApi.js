@@ -13,11 +13,12 @@ export const getPracticeTopics = (userId) =>
 /**
  * Start a new practice session
  */
-export const startPractice = (userId, topicId, level) =>
+export const startPractice = (userId, topicId, level, exerciseId) =>
   api.post("/api/practice/start", {
     user_id: userId,
     topic_id: topicId,
     level,
+    exercise_id: exerciseId
   });
 
 /**

@@ -1,6 +1,7 @@
 // english-quiz-api/src/scripts/seedPracticeQuestions.js
 // Run: node src/scripts/seedPracticeQuestions.js
-require("dotenv").config({ path: '../../.env' });
+const path = require('path');
+require("dotenv").config({ path: path.join(__dirname, '../../.env') });
 const mongoose = require("mongoose");
 const PracticeQuestion = require("../models/PracticeQuestion");
 const TopicLevel = require("../models/TopicLevel");
@@ -143,9 +144,13 @@ const SAMPLE_QUESTIONS = [
   },
 ];
 
+const PracticeExercise = require("../models/PracticeExercise");
+
 async function seed() {
   await mongoose.connect(process.env.MONGODB_URI);
   console.log("Connected to MongoDB");
+
+  let typeCounters = {};
 
   for (const q of SAMPLE_QUESTIONS) {
     // Find matching topic
@@ -158,24 +163,38 @@ async function seed() {
       continue;
     }
 
-    const { topicTitle, ...questionData } = q;
-    await PracticeQuestion.findOneAndUpdate(
-      { topic_id: topic._id, level: q.level, type: q.type, question: q.question },
-      { ...questionData, topic_id: topic._id },
-      { upsert: true }
-    );
-
     // Ensure TopicLevel config exists
     const LEVELS = ["beginner", "intermediate", "pre-toeic"];
     for (let i = 0; i < LEVELS.length; i++) {
       await TopicLevel.findOneAndUpdate(
         { topic_id: topic._id, level: LEVELS[i] },
-        { unlock_threshold: 5, order: i },
+        { unlock_threshold: 1, order: i }, // unlock threshold can be left 1
         { upsert: true }
       );
     }
 
-    console.log(`✅  Seeded: ${q.topicTitle} [${q.level}] (${q.type})`);
+    // Distribute into Exercise 1 and Exercise 2 in alternating fashion
+    const counterKey = `${topic._id}-${q.level}`;
+    if (!typeCounters[counterKey]) {
+        typeCounters[counterKey] = 0;
+    }
+    const exerciseOrder = (typeCounters[counterKey] % 2) + 1;
+    typeCounters[counterKey]++;
+
+    const exercise = await PracticeExercise.findOneAndUpdate(
+        { topic_id: topic._id, level: q.level, order: exerciseOrder },
+        { title: `Exercise ${exerciseOrder}` },
+        { upsert: true, new: true }
+    );
+
+    const { topicTitle, ...questionData } = q;
+    await PracticeQuestion.findOneAndUpdate(
+      { topic_id: topic._id, level: q.level, type: q.type, question: q.question },
+      { ...questionData, topic_id: topic._id, exercise_id: exercise._id },
+      { upsert: true }
+    );
+
+    console.log(`✅  Seeded: ${q.topicTitle} [${q.level}] (${q.type}) into Exercise ${exerciseOrder}`);
   }
 
   console.log("Seeding complete.");

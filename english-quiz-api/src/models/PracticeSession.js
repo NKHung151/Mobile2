@@ -14,6 +14,11 @@ const practiceSessionSchema = new mongoose.Schema(
       enum: ["beginner", "intermediate", "pre-toeic"],
       required: true,
     },
+    exercise_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PracticeExercise",
+      required: true,
+    },
     question_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: "PracticeQuestion" }],
     current_index: { type: Number, default: 0 },
     answers: [

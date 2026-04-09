@@ -3,6 +3,7 @@ const PracticeQuestion = require("../models/PracticeQuestion");
 const PracticeSession = require("../models/PracticeSession");
 const UserPracticeProgress = require("../models/UserPracticeProgress");
 const TopicLevel = require("../models/TopicLevel");
+const PracticeExercise = require("../models/PracticeExercise");
 
 const LEVELS = ["beginner", "intermediate", "pre-toeic"];
 const QUESTIONS_PER_SESSION = 10;
@@ -42,6 +43,29 @@ const getTopicsWithProgress = async (userId, topics) => {
       let config = await TopicLevel.findOne({ topic_id: topic._id, level });
       const threshold = config?.unlock_threshold || UNLOCK_THRESHOLD;
 
+      // Get all exercises for this topic and level
+      const exercises = await PracticeExercise.find({ topic_id: topic._id, level }).sort({ order: 1 }).lean();
+      
+      const mappedExercises = exercises.map((ex, index) => {
+        let isExUnlocked = false;
+        if (progress.is_unlocked) {
+            if (index === 0) {
+                isExUnlocked = true;
+            } else {
+                const prevExId = exercises[index - 1]._id.toString();
+                isExUnlocked = progress.completed_exercises?.some(id => id.toString() === prevExId) || false;
+            }
+        }
+        
+        const isCompleted = progress.completed_exercises?.some(id => id.toString() === ex._id.toString()) || false;
+
+        return {
+            ...ex,
+            is_unlocked: isExUnlocked,
+            is_completed: isCompleted,
+        };
+      });
+
       levelsData.push({
         level,
         is_unlocked: progress.is_unlocked,
@@ -49,6 +73,7 @@ const getTopicsWithProgress = async (userId, topics) => {
         total_attempted: progress.total_attempted,
         unlock_threshold: threshold,
         last_practiced: progress.last_practiced,
+        exercises: mappedExercises,
       });
     }
 
@@ -64,7 +89,7 @@ const getTopicsWithProgress = async (userId, topics) => {
 /**
  * Start a new practice session
  */
-const startPracticeSession = async (userId, topicId, level) => {
+const startPracticeSession = async (userId, topicId, level, exerciseId) => {
   // Verify level is unlocked
   let progress = await UserPracticeProgress.findOne({
     user_id: userId,
@@ -84,6 +109,20 @@ const startPracticeSession = async (userId, topicId, level) => {
 
   if (!progress.is_unlocked) {
     throw new Error(`Level ${level} is locked. Complete previous level first.`);
+  }
+
+  // Verify exercise unlocks
+  const exercises = await PracticeExercise.find({ topic_id: topicId, level }).sort({ order: 1 }).lean();
+  const exerciseIndex = exercises.findIndex(ex => ex._id.toString() === exerciseId.toString());
+  if (exerciseIndex === -1) {
+      throw new Error(`Exercise not found.`);
+  }
+  if (exerciseIndex > 0) {
+      const prevExId = exercises[exerciseIndex - 1]._id.toString();
+      const isPrevCompleted = progress.completed_exercises?.some(id => id.toString() === prevExId);
+      if (!isPrevCompleted) {
+          throw new Error(`Exercise is locked. Complete previous exercise first.`);
+      }
   }
 
   // Abandon any active sessions for this user/topic/level
@@ -107,6 +146,7 @@ const startPracticeSession = async (userId, topicId, level) => {
     const typeQs = await PracticeQuestion.find({
       topic_id: topicId,
       level,
+      exercise_id: exerciseId,
       type,
     })
       .limit(4)
@@ -128,6 +168,7 @@ const startPracticeSession = async (userId, topicId, level) => {
     user_id: userId,
     topic_id: topicId,
     level,
+    exercise_id: exerciseId,
     question_ids: questions.map((q) => q._id),
     total: questions.length,
     current_index: 0,
@@ -183,7 +224,7 @@ const submitPracticeAnswer = async (userId, sessionId, userAnswer, timeSpentMs =
     await session.save();
 
     // Update user progress
-    await updateUserProgress(userId, session.topic_id, session.level, session.score, session.total);
+    await updateUserProgress(userId, session.topic_id, session.level, session.score, session.total, session.exercise_id);
 
     const finalResults = buildFinalResults(session);
     return {
@@ -264,6 +305,7 @@ function evaluateAnswer(question, userAnswer) {
       is_correct = got === expected;
       break;
 
+
     case "error_detection":
       is_correct = parseInt(userAnswer) === question.error_index;
       break;
@@ -311,9 +353,9 @@ function sanitizeQuestion(q) {
     case "fill_in_blank":
       return base; // question already has blank
     case "reorder":
-      // Shuffle words for the user
-      const shuffledWords = [...q.words].sort(() => Math.random() - 0.5);
-      return { ...base, words: shuffledWords };
+      // Words are already jumbled in DB or expected to be unshuffled by frontend 
+      // Shuffling them here breaks the index mapping used in evaluateAnswer
+      return { ...base, words: q.words };
     case "error_detection":
       return { ...base, sentence_parts: q.sentence_parts };
     default:
@@ -340,23 +382,40 @@ function buildFinalResults(session) {
   };
 }
 
-async function updateUserProgress(userId, topicId, level, score, total) {
+async function updateUserProgress(userId, topicId, level, score, total, exerciseId) {
+  const isPerfect = score === total;
+  const updateData = {
+    $inc: { correct_count: score, total_attempted: total },
+    last_practiced: new Date(),
+  };
+
   const progress = await UserPracticeProgress.findOneAndUpdate(
     { user_id: userId, topic_id: topicId, level },
-    {
-      $inc: { correct_count: score, total_attempted: total },
-      last_practiced: new Date(),
-    },
+    updateData,
     { new: true, upsert: true }
   );
+  
+  if (isPerfect && exerciseId) {
+      if (!progress.completed_exercises) {
+          progress.completed_exercises = [];
+      }
+      const hasId = progress.completed_exercises.some(id => id.toString() === exerciseId.toString());
+      if (!hasId) {
+          progress.completed_exercises.push(exerciseId);
+          await progress.save();
+      }
+  }
 
   // Check if next level should be unlocked
   const levelIndex = LEVELS.indexOf(level);
   if (levelIndex < LEVELS.length - 1) {
-    const config = await TopicLevel.findOne({ topic_id: topicId, level });
-    const threshold = config?.unlock_threshold || UNLOCK_THRESHOLD;
+    // Level unlocks if ALL exercises in current level are completed
+    const allExercises = await PracticeExercise.find({ topic_id: topicId, level }).lean();
+    const allCompleted = allExercises.length > 0 && allExercises.every(ex => 
+        progress.completed_exercises && progress.completed_exercises.some(id => id.toString() === ex._id.toString())
+    );
 
-    if (progress.correct_count >= threshold) {
+    if (allCompleted) {
       const nextLevel = LEVELS[levelIndex + 1];
       await UserPracticeProgress.findOneAndUpdate(
         { user_id: userId, topic_id: topicId, level: nextLevel },
