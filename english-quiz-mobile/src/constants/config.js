@@ -2,7 +2,7 @@
 // For emulator/mobile devices, use the machine's IP instead of localhost
 
 // export const API_BASE_URL = "http://localhost:3000";
-export const API_BASE_URL = "http://192.168.1.46:3000";
+export const API_BASE_URL = "http://192.168.1.88:3000";
 
 
 // App Configuration
