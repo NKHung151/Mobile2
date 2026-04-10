@@ -8,6 +8,11 @@ const practiceQuestionSchema = new mongoose.Schema(
       ref: "Topic",
       required: true,
     },
+    exercise_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PracticeExercise",
+      required: true,
+    },
     level: {
       type: String,
       enum: ["beginner", "intermediate", "pre-toeic"],

@@ -20,7 +20,8 @@ const userPracticeProgressSchema = new mongoose.Schema(
     // beginner is always unlocked
     unlocked_at: Date,
     last_practiced: Date,
-  },
+    completed_exercises: [{ type: mongoose.Schema.Types.ObjectId, ref: "PracticeExercise" }],
+},
   { timestamps: true }
 );
 

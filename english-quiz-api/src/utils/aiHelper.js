@@ -104,7 +104,10 @@ async function generateWithFallbacks(prompt) {
   // Get available models from API (or fallback list)
   let candidates = [];
   try {
-    const availableModels = await getAvailableGenerativeModels();
+    const candidates = [
+      config.gemini.model,
+      ...getFallbackModels(),
+    ];
 
     // Prefer config model first if it's in available list
     if (base && availableModels.includes(base)) {

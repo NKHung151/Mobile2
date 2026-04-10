@@ -71,6 +71,7 @@ export default function PracticeScreen({ navigation }) {
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [selectedExercise, setSelectedExercise] = useState(null);
   const [showTopicPicker, setShowTopicPicker] = useState(false);
   const [loadingTopics, setLoadingTopics] = useState(true);
 
@@ -127,18 +128,18 @@ export default function PracticeScreen({ navigation }) {
   };
 
   const handleStartPractice = async () => {
-    if (!selectedTopic || !selectedLevel) {
+    if (!selectedTopic || !selectedLevel || !selectedExercise) {
       if (Platform.OS === 'web') {
-        window.alert("Please select a topic and level.");
+        window.alert("Please select a topic, level and exercise.");
       } else {
-        Alert.alert("Missing info", "Please select a topic and level.");
+        Alert.alert("Missing info", "Please select a topic, level and exercise.");
       }
       return;
     }
     try {
       setPracticeState(STATES.LOADING);
       setError(null);
-      const res = await startPractice(userId, selectedTopic._id, selectedLevel.key);
+      const res = await startPractice(userId, selectedTopic._id, selectedLevel.key, selectedExercise._id);
       const data = res.data;
       setSessionId(data.session_id);
       setTotalQuestions(data.total_questions);
@@ -332,7 +333,12 @@ export default function PracticeScreen({ navigation }) {
                         isSelected && { borderColor: lvl.color, borderWidth: 2 },
                         !isUnlocked && styles.levelLocked,
                       ]}
-                      onPress={() => isUnlocked && setSelectedLevel(lvl)}
+                      onPress={() => {
+                        if (isUnlocked) {
+                          setSelectedLevel(lvl);
+                          setSelectedExercise(null);
+                        }
+                      }}
                       activeOpacity={isUnlocked ? 0.8 : 1}
                     >
                       <View style={[styles.levelIconBg, { backgroundColor: lvl.color + "22" }]}>
@@ -378,6 +384,54 @@ export default function PracticeScreen({ navigation }) {
             </>
           )}
 
+          {/* Exercise selection */}
+          {selectedTopic && selectedLevel && (
+            <>
+              <Text style={[styles.label, { marginTop: 24 }]}>Select Exercise</Text>
+              <View style={styles.levelsContainer}>
+                {selectedTopic.levels?.find(l => l.level === selectedLevel.key)?.exercises?.map((ex) => {
+                  const isUnlocked = ex.is_unlocked;
+                  const isSelected = selectedExercise?._id === ex._id;
+                  const isCompleted = ex.is_completed;
+
+                  return (
+                    <TouchableOpacity
+                      key={ex._id}
+                      style={[
+                        styles.levelCard,
+                        isSelected && { borderColor: COLORS.primary, borderWidth: 2 },
+                        !isUnlocked && styles.levelLocked,
+                      ]}
+                      onPress={() => isUnlocked && setSelectedExercise(ex)}
+                      activeOpacity={isUnlocked ? 0.8 : 1}
+                    >
+                      <View style={[styles.levelIconBg, { backgroundColor: COLORS.primary + "22" }]}>
+                        <Ionicons name={isCompleted ? "checkmark-circle" : "document-text"} size={24} color={COLORS.primary} />
+                      </View>
+                      <View style={{ flex: 1, marginLeft: 12 }}>
+                        <Text style={[styles.levelLabel, !isUnlocked && { color: COLORS.textMuted }]}>
+                          {ex.title}
+                        </Text>
+                        <Text style={styles.levelDesc}>
+                          {isCompleted ? "Completed" : (isUnlocked ? "Ready to practice" : "Locked")}
+                        </Text>
+                      </View>
+                      {isUnlocked ? (
+                        isSelected ? (
+                          <View style={[styles.checkBadge, { backgroundColor: COLORS.primary }]}>
+                            <Ionicons name="checkmark" size={16} color="#fff" />
+                          </View>
+                        ) : null
+                      ) : (
+                        <Ionicons name="lock-closed" size={20} color={COLORS.textMuted} />
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </>
+          )}
+
           {error && (
             <View style={styles.errorBox}>
               <Ionicons name="alert-circle" size={16} color={COLORS.error} />
@@ -388,10 +442,10 @@ export default function PracticeScreen({ navigation }) {
           <TouchableOpacity
             style={[
               styles.startButton,
-              (!selectedTopic || !selectedLevel) && styles.startButtonDisabled,
+              (!selectedTopic || !selectedLevel || !selectedExercise) && styles.startButtonDisabled,
             ]}
             onPress={handleStartPractice}
-            disabled={!selectedTopic || !selectedLevel}
+            disabled={!selectedTopic || !selectedLevel || !selectedExercise}
             activeOpacity={0.9}
           >
             <Text style={styles.startButtonText}>Start Practice</Text>
@@ -429,6 +483,7 @@ export default function PracticeScreen({ navigation }) {
                       onPress={() => {
                         setSelectedTopic(topic);
                         setSelectedLevel(null);
+                        setSelectedExercise(null);
                         setShowTopicPicker(false);
                       }}
                       activeOpacity={0.8}
