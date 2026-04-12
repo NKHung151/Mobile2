@@ -14,6 +14,10 @@ const homophoneGroupSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  meanings: {
+    type: [String],
+    default: []  // Nghĩa tiếng Việt, parallel với words[]
+  },
   category: {
     type: String,
     default: null // e.g. "voiced-unvoiced", "vowel-length"

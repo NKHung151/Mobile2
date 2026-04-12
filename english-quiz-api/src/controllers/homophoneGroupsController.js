@@ -152,7 +152,8 @@ async function answer(req, res, next) {
       success: true,
       is_correct: result.is_correct,
       correct_answer: result.correct_answer,
-      correct_phonetic: result.correct_phonetic
+      correct_phonetic: result.correct_phonetic,
+      correct_meaning: result.correct_meaning || null
     });
   } catch (error) {
     next(error);

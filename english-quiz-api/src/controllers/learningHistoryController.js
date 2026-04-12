@@ -705,25 +705,122 @@ async function getRecommendations(req, res, next) {
     const aiEnabled = config?.gemini?.apiKey ? true : false;
     if (aiEnabled) {
       try {
-        // Build comprehensive topic summary
+        // ── Constants ──────────────────────────────────────────────────
+        const ALLOWED_MODES = ["quiz", "homophone_groups", "listening_part2", "practice"];
+
+        const modeLabels = {
+          quiz:             "Quiz (ôn nội dung bài học)",
+          homophone_groups: "Homophone Groups (từ đồng âm)",
+          listening_part2:  "Listening Part 2",
+          practice:         "Practice",
+        };
+
+        const getAccuracyLevel = (accuracy) => {
+          if (accuracy >= 85) return { label: "Tốt",       emoji: "🟢", note: "có thể chuyển topic mới"   };
+          if (accuracy >= 70) return { label: "Khá",        emoji: "🟡", note: "cần củng cố thêm"          };
+          if (accuracy >= 50) return { label: "Trung bình", emoji: "🟠", note: "cần luyện tập nhiều hơn"   };
+          return               { label: "Yếu",              emoji: "🔴", note: "cần ưu tiên ôn lại từ đầu" };
+        };
+
+        const WEAK_THRESHOLD = 70;
+
+        // ── Build enriched topic summary text ─────────────────────────
         const topicSummaryText = topicSummaries
-          .slice(0, 5) // Top 5 weakest topics
-          .map(
-            (t, i) =>
-              `${i + 1}. ${t.topic_title}: ${t.average_accuracy}% (${t.session_count} sessions)`,
-          )
+          .slice(0, 8)
+          .map((t, i) => {
+            const modeStr = t.modes
+              .filter(m => ALLOWED_MODES.includes(m))
+              .map(m => modeLabels[m])
+              .join(", ");
+            const level = getAccuracyLevel(t.average_accuracy);
+            return `${i + 1}. "${t.topic_title}": ${t.average_accuracy}% — ${level.emoji} ${level.label} (${level.note}) | ${t.session_count} session(s) [${modeStr}]`;
+          })
           .join("\n");
 
-        const prompt =
-          `User learning progress summary:\n\n` +
-          `Topics studied (sorted by accuracy):\n${topicSummaryText}\n\n` +
-          `Weakest area: ${weakest?.topic_title || "Not determined"} (${weakest?.average_accuracy || 0}%)\n` +
-          `Total completed sessions: ${topicSummaries.reduce((sum, t) => sum + t.session_count, 0)}\n\n` +
-          `Based on this comprehensive progress data, provide:\n` +
-          `1. A personalized encouragement message (1-2 sentences)\n` +
-          `2. Three specific study recommendations prioritizing weakest areas\n` +
-          `3. Suggested learning path or next topics to focus on\n` +
-          `Keep it concise and motivating.`;
+        const levelCounts = {
+          tot:       topicSummaries.filter(t => t.average_accuracy >= 85).length,
+          kha:       topicSummaries.filter(t => t.average_accuracy >= 70 && t.average_accuracy < 85).length,
+          trungBinh: topicSummaries.filter(t => t.average_accuracy >= 50 && t.average_accuracy < 70).length,
+          yeu:       topicSummaries.filter(t => t.average_accuracy < 50).length,
+        };
+
+        const allWeak = topicSummaries.length > 0 &&
+          topicSummaries.every(t => t.average_accuracy < WEAK_THRESHOLD);
+
+        const totalSessions = topicSummaries.reduce((sum, t) => sum + t.session_count, 0);
+
+        // ── 3-branch prompt ───────────────────────────────────────────
+        let prompt;
+
+        if (topicSummaries.length === 0) {
+          prompt = `
+You are a friendly English learning coach for Vietnamese learners at A2-B1 level.
+This learner is just getting started with the app.
+In Vietnamese, welcome them warmly and suggest:
+1. Which feature to try first (recommend Quiz or Listening Part 2)
+2. A simple goal for their first week (e.g., complete 3 sessions)
+Keep it under 100 words and encouraging.
+          `.trim();
+
+        } else if (allWeak) {
+          prompt = `
+You are a friendly English learning coach for Vietnamese learners at A2-B1 level.
+
+The learner is still building their foundation. All topics currently need more practice:
+${topicSummaryText}
+
+Total completed sessions: ${totalSessions}
+
+Please respond in Vietnamese, structured as:
+
+1. 💪 Động lực (1-2 câu — nhấn mạnh đây là giai đoạn đầu bình thường, không nản)
+
+2. 📚 Ưu tiên học (chỉ chọn 2 topic có session_count cao nhất để tạo momentum,
+   KHÔNG liệt kê hết tất cả):
+   - Nêu tên topic và hoạt động cụ thể nên làm
+
+3. 🗺️ Kế hoạch tuần này:
+   - Tập trung 1-2 topic thôi, không dàn trải
+   - Đặt mục tiêu cụ thể: ví dụ "đạt 70% ở topic X trước khi sang topic khác"
+
+Giữ response dưới 200 từ. Tông điệu: động viên mạnh, không gây choáng ngợp.
+          `.trim();
+
+        } else {
+          prompt = `
+You are a friendly English learning coach for Vietnamese learners at A2-B1 level.
+
+Learner's overall performance overview:
+🟢 Tốt (≥85%): ${levelCounts.tot} topic(s)
+🟡 Khá (70-84%): ${levelCounts.kha} topic(s)
+🟠 Trung bình (50-69%): ${levelCounts.trungBinh} topic(s)
+🔴 Yếu (<50%): ${levelCounts.yeu} topic(s)
+
+Topic details (sorted weakest first):
+${topicSummaryText}
+
+Weakest area: "${weakest?.topic_title}" — ${weakest?.average_accuracy}%
+Total completed sessions: ${totalSessions}
+
+Please respond in Vietnamese, structured as:
+
+1. 💪 Nhận xét tổng quan (1-2 câu dựa trên phân bố thực tế):
+   - Nếu nhiều 🔴🟠: nhấn mạnh cần củng cố nền tảng
+   - Nếu nhiều 🟢🟡: khen ngợi và khuyến khích mở rộng
+   - Nếu mix đều: ghi nhận và định hướng rõ ràng
+
+2. 📚 3 Gợi ý học tập (ưu tiên 🔴 trước, rồi 🟠):
+   - Topic 🔴: gợi ý ôn lại từ đầu, tập trung mode đang dùng
+   - Topic 🟠: gợi ý luyện thêm, thử mode khác nếu có
+   - Topic 🟡: gợi ý củng cố trước khi chuyển topic mới
+
+3. 🗺️ Kế hoạch tuần này (2-3 bước thực tế):
+   - Topic 🟢 → review nhanh hoặc bỏ qua
+   - Dành thời gian chính cho 🔴 và 🟠
+
+Giữ response dưới 200 từ. Thân thiện, cụ thể, không gây áp lực.
+          `.trim();
+        }
 
         ai_advice = await generateWithFallbacks(prompt);
       } catch (err) {

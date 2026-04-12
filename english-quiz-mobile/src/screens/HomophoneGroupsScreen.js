@@ -449,11 +449,12 @@ export default function HomophoneGroupsScreen({ navigation }) {
             </TouchableOpacity>
 
             <TouchableOpacity 
-              style={styles.exitButtonAlt}
+              style={styles.homeBtn}
               onPress={handleCompleteSession}
               activeOpacity={0.9}
             >
-              <Text style={styles.exitButtonAltText}>Finish & Save</Text>
+              <Ionicons name="home" size={20} color={COLORS.primary} />
+              <Text style={styles.homeBtnText}>Home</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
@@ -550,6 +551,10 @@ export default function HomophoneGroupsScreen({ navigation }) {
                 {choice.phonetic && (
                   <Text style={styles.phoneticText}>{choice.phonetic}</Text>
                 )}
+                {/* Hiển thị nghĩa tiếng Việt khi đã trả lời */}
+                {state === STATES.ANSWERED && choice.meaning && (
+                  <Text style={styles.meaningText}>{choice.meaning}</Text>
+                )}
                 {state === STATES.ANSWERED && choice.word === result?.correct_answer && (
                   <Ionicons name="checkmark-circle" size={20} color="#00B894" style={styles.choiceIcon} />
                 )}
@@ -576,6 +581,12 @@ export default function HomophoneGroupsScreen({ navigation }) {
                 <Text style={styles.resultSub}>
                   The answer is <Text style={styles.resultWord}>{result.correct_answer}</Text>
                   {result.correct_phonetic ? ` ${result.correct_phonetic}` : ""}
+                </Text>
+              )}
+              {/* Nghĩa tiếng Việt của đáp án đúng */}
+              {result.correct_meaning && (
+                <Text style={styles.resultMeaning}>
+                  Nghĩa: {result.correct_meaning}
                 </Text>
               )}
             </View>
@@ -666,6 +677,7 @@ const styles = StyleSheet.create({
   choiceTextWrong: { color: COLORS.error },
   choiceTextDim: { color: "#6B7280" },
   phoneticText: { fontSize: 12, color: "#9CA3AF", marginTop: 4 },
+  meaningText:  { fontSize: 11, color: "#6EE7B7", marginTop: 3, fontStyle: "italic", textAlign: "center" },
   choiceIcon: { position: "absolute", top: 8, right: 8 },
 
   // Result
@@ -680,6 +692,7 @@ const styles = StyleSheet.create({
   resultTitle: { fontSize: 18, fontWeight: "700", color: "#FFFFFF" },
   resultSub: { fontSize: 14, color: "#D1D5DB", marginTop: 2 },
   resultWord: { fontWeight: "700", color: "#FFFFFF" },
+  resultMeaning: { fontSize: 13, color: "#6EE7B7", marginTop: 5, fontStyle: "italic" },
 
   // Next
   nextBtn: {
@@ -755,9 +768,17 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary, borderRadius: 16, paddingVertical: 16, marginBottom: 12, ...SHADOWS.medium
   },
   retryButtonText: { fontSize: 17, fontWeight: "700", color: "#fff" },
-  exitButtonAlt: {
-    width: "100%", alignItems: "center", justifyContent: "center",
-    backgroundColor: "#1F2937", borderRadius: 16, paddingVertical: 16, borderWidth: 2, borderColor: "#374151"
+  homeBtn: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: "transparent",
+    borderRadius: 16,
+    paddingVertical: 15,
+    borderWidth: 1.5,
+    borderColor: COLORS.primary,
   },
-  exitButtonAltText: { fontSize: 17, fontWeight: "700", color: "#FFFFFF" },
+  homeBtnText: { fontSize: 17, fontWeight: "700", color: COLORS.primary },
 });

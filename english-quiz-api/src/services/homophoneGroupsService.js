@@ -291,13 +291,16 @@ async function generateQuestion(homophoneGroup) {
     logger.info(`[HomophoneGroups] Fallback to template for "${correctWord}": "${sentence}"`);
   }
 
-  // Build choices array with phonetics attached
+  // Build choices array with phonetics + meanings
   const choices = shuffle(
     homophoneGroup.words.map((word, i) => ({
       word,
-      phonetic: homophoneGroup.phonetics[i] || null
+      phonetic: homophoneGroup.phonetics[i] || null,
+      meaning:  homophoneGroup.meanings[i]  || null
     }))
   );
+
+  const correctMeaning = homophoneGroup.meanings[correctIndex] || null;
 
   const question_id = uuidv4();
   const question = {
@@ -307,6 +310,7 @@ async function generateQuestion(homophoneGroup) {
     sentence,
     correct_answer: correctWord,
     correct_phonetic: correctPhonetic,
+    correct_meaning: correctMeaning,
     choices,
     created_at: Date.now()
   };
@@ -325,7 +329,7 @@ async function generateQuestion(homophoneGroup) {
     source_type: 'homophone_groups',
     sentence,
     correctAnswerForAudio: correctWord, // ONLY for audio pronunciation, not to show
-    choices // [{word, phonetic}]
+    choices // [{word, phonetic, meaning}]
   };
 }
 
@@ -351,6 +355,7 @@ function checkAnswerWithData(question_id, user_answer) {
     is_correct,
     correct_answer: question.correct_answer,
     correct_phonetic: question.correct_phonetic,
+    correct_meaning: question.correct_meaning || null,
     source_id: question.source_id,
     sentence: question.sentence,
     choices: question.choices,
