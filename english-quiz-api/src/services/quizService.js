@@ -532,6 +532,11 @@ async function submitAnswer(userId, topicId, userAnswer) {
       question_number: conversation.current_question,
       total_questions: conversation.total_questions,
       your_answer: userAnswer,
+      // Data for saving to SessionAnswer
+      question_id: `quiz_${conversation._id.toString()}_q${conversation.current_question}`,
+      question_text: lastQuestion.content,
+      correct_answer: evaluation.feedback,
+      is_correct: evaluation.is_correct,
       evaluation: {
         score: evaluation.score,
         max_score: MAX_SCORE,
@@ -572,6 +577,11 @@ async function submitAnswer(userId, topicId, userAnswer) {
     question_number: conversation.current_question,
     total_questions: conversation.total_questions,
     your_answer: userAnswer,
+    // Data for saving to SessionAnswer
+    question_id: `quiz_${conversation._id.toString()}_q${conversation.current_question - 1}`,
+    question_text: lastQuestion.content,
+    correct_answer: evaluation.feedback,
+    is_correct: evaluation.is_correct,
     evaluation: {
       score: evaluation.score,
       max_score: MAX_SCORE,

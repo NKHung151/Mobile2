@@ -219,8 +219,8 @@ export default function HomeScreen({ navigation }) {
                 <Ionicons name="headset" size={28} color="#fff" />
               </View>
               <View style={styles.actionTextContainer}>
-                <Text style={styles.actionTitle}>Listening Part 2</Text>
-                <Text style={styles.actionDescription}>TOEIC listening practice</Text>
+                <Text style={styles.actionTitle}>Question - Response</Text>
+                <Text style={styles.actionDescription}>Listen and choose the right response</Text>
               </View>
             </View>
             <View style={styles.actionArrow}>

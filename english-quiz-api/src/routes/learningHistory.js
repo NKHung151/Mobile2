@@ -10,6 +10,8 @@ const {
   getLearningDashboard,
   deleteLearningHistory,
   getRecommendations,
+  getSessionAnswers,
+  saveSessionAnswer,
 } = require("../controllers/learningHistoryController");
 const { validate } = require("../middleware/validateRequest");
 
@@ -36,6 +38,12 @@ router.get("/dashboard", getLearningDashboard);
 
 // GET /api/learning/recommendations?user_id=xxx&ai=true - Get study recommendations
 router.get("/recommendations", getRecommendations);
+
+// GET /api/learning/session/:session_id/answers?user_id=xxx - Get detailed answers for a session
+router.get("/session/:session_id/answers", getSessionAnswers);
+
+// POST /api/learning/session/:session_id/answer - Save an answer for a session
+router.post("/session/:session_id/answer", saveSessionAnswer);
 
 // DELETE /api/learning/history?user_id=xxx - Delete learning history
 router.delete("/history", deleteLearningHistory);
