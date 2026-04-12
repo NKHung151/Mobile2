@@ -85,7 +85,7 @@ function RootNavigator() {
             <Stack.Screen name="History" component={HistoryScreen} options={{ title: "My History" }} />
             <Stack.Screen name="Transcribe" component={TranscribeScreen} options={{ title: "Transcribe" }} />
             <Stack.Screen name="HomophoneGroups" component={HomophoneGroupsScreen} options={{ title: "Homophone Groups" }} />
-            <Stack.Screen name="ListeningPart2" component={ListeningPart2Screen} options={{ title: "Listening Part 2" }} />
+            <Stack.Screen name="ListeningPart2" component={ListeningPart2Screen} options={{ title: "Question - Response" }} />
             <Stack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: "My Profile" }} />
             <Stack.Screen name="Library" component={LibraryScreen} options={{ title: "Flashcards" }} />
             <Stack.Screen name="CourseDetail" component={CourseDetailScreen} options={{ headerShown: false }} />

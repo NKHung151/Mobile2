@@ -169,3 +169,32 @@ export const deleteAllLearningHistory = async (userId) => {
   });
   return response.data;
 };
+
+/**
+ * Get detailed answers for a specific session
+ * Returns all questions, user answers, correct answers, and results
+ */
+export const getSessionAnswers = async (sessionId, userId) => {
+  const response = await learningApi.get(
+    `/api/learning/session/${sessionId}/answers`,
+    {
+      params: { user_id: userId },
+    }
+  );
+  return response.data;
+};
+
+/**
+ * Save an answer during a session
+ * Called after each question is answered
+ */
+export const saveSessionAnswer = async (sessionId, userId, answerData) => {
+  const response = await learningApi.post(
+    `/api/learning/session/${sessionId}/answer`,
+    {
+      user_id: userId,
+      ...answerData,
+    }
+  );
+  return response.data;
+};

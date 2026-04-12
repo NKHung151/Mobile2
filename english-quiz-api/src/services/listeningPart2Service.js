@@ -80,7 +80,7 @@ function stripCorrectAnswers(question) {
 }
 
 /**
- * Submit answer for current question
+ * Submit answer for current question - with full data for saving
  */
 function submitAnswer(session_id, selected_option_index) {
   try {
@@ -104,11 +104,19 @@ function submitAnswer(session_id, selected_option_index) {
       session.correct_count++;
     }
 
+    // Build full result with data for saving answers
     const result = {
       is_correct,
       correct_index: correctIndex,
       transcript: currentQuestion.content.transcript,
-      translation: currentQuestion.content.translation
+      translation: currentQuestion.content.translation,
+      // Data for saving to SessionAnswer
+      question_id: currentQuestion._id ? currentQuestion._id.toString() : `listening_${session.current_index}`,
+      question_text: currentQuestion.content.transcript,
+      user_answer_index: selected_option_index,
+      user_answer: currentQuestion.options[selected_option_index]?.text || `Option ${selected_option_index + 1}`,
+      correct_answer: currentQuestion.options[correctIndex]?.text || `Option ${correctIndex + 1}`,
+      all_options: currentQuestion.options.map(opt => opt.text),
     };
 
     session.current_index++;

@@ -690,26 +690,18 @@ const styles = StyleSheet.create({
 
   // Finish Button
   finishBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    backgroundColor: "#DC2626",
-    borderRadius: 12,
-    paddingVertical: 13,
-    paddingHorizontal: 30,
-    marginTop: 14,
-    marginBottom: 20,
-    borderWidth: 0,
     alignSelf: "center",
-    minWidth: 140,
-    ...SHADOWS.small,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    marginTop: 10,
+    marginBottom: 20,
   },
   finishBtnText: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#FFFFFF",
-    letterSpacing: 0.3,
+    fontSize: 13,
+    fontWeight: "500",
+    color: "#6B7280",
+    textDecorationLine: "underline",
+    textDecorationColor: "#4B5563",
   },
 
   // Error / loading

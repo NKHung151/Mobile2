@@ -1,4 +1,5 @@
 const { startQuiz, submitAnswer, submitAnswerStream, getQuizStatus } = require('../services/quizService');
+const { saveQuizAnswer } = require('../services/sessionAnswerService');
 const logger = require('../utils/logger');
 
 async function start(req, res, next) {
@@ -17,6 +18,24 @@ async function answer(req, res, next) {
     const { user_id, topic_id, answer: userAnswer } = req.body;
     logger.info(`Quiz answer: user=${user_id}, topic=${topic_id}`);
     const result = await submitAnswer(user_id, topic_id, userAnswer);
+
+    // Save answer details to SessionAnswer for historical review
+    if (result.session_id && user_id) {
+      try {
+        await saveQuizAnswer(
+          result.session_id,
+          user_id,
+          result.question_id,
+          result.question_text,
+          result.your_answer,
+          result.correct_answer,
+          result.is_correct
+        );
+      } catch (saveErr) {
+        logger.warn(`[Quiz] Failed to save answer: ${saveErr.message}`);
+      }
+    }
+
     res.json({ success: true, ...result });
   } catch (error) {
     next(error);

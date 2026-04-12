@@ -125,6 +125,12 @@ export const updateLearningProgress = async (
 
 /**
  * Complete a learning session
+ * @param {string} userId
+ * @param {string} topicId
+ * @param {string} mode
+ * @param {number} finalScore
+ * @param {number} maxScore
+ * @param {string|null} knownSessionId - fallback if AsyncStorage is empty
  */
 export const completeLearningSessionLocally = async (
   userId,
@@ -132,20 +138,28 @@ export const completeLearningSessionLocally = async (
   mode,
   finalScore,
   maxScore,
+  knownSessionId = null,
 ) => {
   try {
-    // Get current session
+    // Get current session from AsyncStorage
     const sessionData = await AsyncStorage.getItem(
       `${STORAGE_KEY_PREFIX}${topicId}_${mode}`,
     );
 
-    if (!sessionData) {
-      console.warn("[LearningTracker] No active session found");
-      return null;
-    }
+    let sessionId = knownSessionId; // fallback
 
-    const session = JSON.parse(sessionData);
-    const sessionId = session.sessionId;
+    if (!sessionData) {
+      if (!sessionId) {
+        console.warn("[LearningTracker] No active session found and no knownSessionId provided");
+        return null;
+      }
+      console.warn(
+        `[LearningTracker] AsyncStorage empty, using knownSessionId: ${sessionId}`,
+      );
+    } else {
+      const session = JSON.parse(sessionData);
+      sessionId = session.sessionId; // prefer stored session id
+    }
 
     // Mark as completed on backend
     const response = await completeLearningSession(sessionId, userId);

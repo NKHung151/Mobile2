@@ -25,6 +25,7 @@ import {
 import { LineChart, BarChart, PieChart } from "react-native-chart-kit";
 import { COLORS, SHADOWS } from "../constants/config";
 import ProgressReport from "../components/ProgressReport";
+import SessionDetailsModal from "../components/SessionDetailsModal";
 
 export default function HistoryScreen({ navigation }) {
   const { userId } = useUser();
@@ -35,6 +36,7 @@ export default function HistoryScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [selectedModeFilter, setSelectedModeFilter] = useState("all"); // Add mode filter
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -50,6 +52,15 @@ export default function HistoryScreen({ navigation }) {
   const [recommendations, setRecommendations] = useState(null);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
+  // Session Details Modal state
+  const [sessionDetailsVisible, setSessionDetailsVisible] = useState(false);
+  const [selectedSession, setSelectedSession] = useState(null);
+
+  const handleViewSessionDetails = (session) => {
+    setSelectedSession(session);
+    setSessionDetailsVisible(true);
+  };
+
   const fetchRecommendations = async () => {
     try {
       setLoadingRecommendations(true);
@@ -62,15 +73,51 @@ export default function HistoryScreen({ navigation }) {
     }
   };
 
-  // Helper function to get mode label
+  // Map mode values to display labels
   const getModeLabel = (mode) => {
     const modeMap = {
       quiz: "Quiz",
+      practice: "Practice",
+      homophone_groups: "Homophone",
+      listening_part2: "Q&R",
+      transcribe: "Transcribe",
       chat: "Chat",
-      homophone_groups: "Listening",
-      listening_part2: "Listening",
     };
     return modeMap[mode] || mode;
+  };
+
+  // Get filtered sessions based on selected mode
+  const getFilteredSessions = () => {
+    if (selectedModeFilter === "all") {
+      return sessions;
+    }
+    return sessions.filter(session => session.mode === selectedModeFilter);
+  };
+
+  // Emoji per mode
+  const getModeEmoji = (mode) => {
+    const emojiMap = {
+      quiz: "🎯",
+      practice: "📚",
+      homophone_groups: "🗣️",
+      listening_part2: "🎧",
+      transcribe: "🎤",
+      chat: "💬",
+    };
+    return emojiMap[mode] || "📖";
+  };
+
+  // Badge color per mode
+  const getModeBadgeColor = (mode) => {
+    const colorMap = {
+      quiz: COLORS.primary,
+      practice: COLORS.success,
+      homophone_groups: COLORS.warning,
+      listening_part2: COLORS.info || "#0984e3",
+      transcribe: "#636e72",
+      chat: "#74b9ff",
+    };
+    return colorMap[mode] || COLORS.textSecondary;
   };
 
   const fetchAllData = async () => {
@@ -100,7 +147,9 @@ export default function HistoryScreen({ navigation }) {
         "[History] Sessions count:",
         historyResponse.sessions?.length || 0,
       );
-      setSessions(historyResponse.sessions || []);
+      // Filter out chat & transcribe — not tracked in History
+      const rawSessions = historyResponse.sessions || [];
+      setSessions(rawSessions.filter(s => s.mode !== 'chat' && s.mode !== 'transcribe'));
 
       console.log("[History] Statistics Response:", statsResponse);
       setStatistics(statsResponse.statistics);
@@ -150,12 +199,11 @@ export default function HistoryScreen({ navigation }) {
   };
 
   const formatDuration = (minutes) => {
-    if (minutes < 60) {
-      return `${minutes}m`;
-    }
+    if (!minutes || minutes < 1) return "< 1m";
+    if (minutes < 60) return `${minutes}m`;
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
+    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
   };
 
   const renderDashboardCard = () => {
@@ -277,18 +325,26 @@ export default function HistoryScreen({ navigation }) {
   };
 
   const renderHistoryCard = ({ item }) => {
-    const statusIcons = {
-      completed: "✅",
-      in_progress: "⏳",
-      abandoned: "❌",
-    };
+    const badgeColor = getModeBadgeColor(item.mode);
+    const emoji = getModeEmoji(item.mode);
+    const modeLabel = getModeLabel(item.mode);
+
+    // Override legacy topic_title for listening_part2 records (old DB records still say "Listening Part 2")
+    const displayTitle = (item.mode === 'listening_part2' && item.topic_title === 'Listening Part 2')
+      ? 'Question - Response'
+      : item.topic_title;
+
+    // Practice: show level · exercise from learning_tags
+    const sublabel = item.mode === 'practice' && item.learning_tags?.length > 0
+      ? item.learning_tags.join(' · ')
+      : null;
 
     return (
       <TouchableOpacity
         style={styles.historyCard}
         activeOpacity={0.7}
         onPress={() => {
-          const message = `Mode: ${item.mode}\nStatus: ${item.status}\nScore: ${item.total_score}/${item.max_score}\nAccuracy: ${item.accuracy_percentage}%\nDuration: ${item.duration_minutes} minutes`;
+          const message = `Mode: ${item.mode}\nStatus: ${item.status}\nCorrect: ${item.correct_answers ?? 0}/${item.questions_answered ?? 0}\nAccuracy: ${item.accuracy_percentage}%\nDuration: ${formatDuration(item.duration_minutes)}`;
           if (Platform.OS === 'web') {
             window.alert(`${item.topic_title}\n\n${message}`);
           } else {
@@ -296,50 +352,60 @@ export default function HistoryScreen({ navigation }) {
           }
         }}
       >
+        {/* Header row: emoji + title + mode badge */}
         <View style={styles.historyHeader}>
+          <Text style={styles.historyEmoji}>{emoji}</Text>
           <View style={styles.historyTitle}>
-            <Text style={styles.historyTitleText}> {item.topic_title}</Text>
-            <Text style={styles.historyMode}>
-              {getModeLabel(item.mode)}
-            </Text>
+            <Text style={styles.historyTitleText}>{displayTitle}</Text>
+            {sublabel && (
+              <Text style={styles.historySublabel}>{sublabel}</Text>
+            )}
+          </View>
+          <View style={[styles.modeBadge, { backgroundColor: badgeColor + '22' }]}>
+            <Text style={[styles.modeBadgeText, { color: badgeColor }]}>{modeLabel}</Text>
           </View>
         </View>
 
+        {/* Stats row: accuracy + duration + review button */}
         <View style={styles.historyDetails}>
           <View style={styles.historyDetail}>
-            <Ionicons name="star" size={16} color={COLORS.warning} />
+            <Ionicons name="checkmark-circle" size={16} color={COLORS.success} />
             <Text style={styles.historyDetailText}>
-              {item.total_score}/{item.max_score}
+              {item.accuracy_percentage ?? 0}%
             </Text>
           </View>
           <View style={styles.historyDetail}>
-            <Ionicons
-              name="checkmark-circle"
-              size={16}
-              color={COLORS.success}
-            />
+            <Ionicons name="time" size={16} color={COLORS.info || '#0984e3'} />
             <Text style={styles.historyDetailText}>
-              {item.accuracy_percentage}%
+              {formatDuration(item.duration_minutes)}
             </Text>
           </View>
-          <View style={styles.historyDetail}>
-            <Ionicons name="time" size={16} color={COLORS.info} />
-            <Text style={styles.historyDetailText}>
-              {item.duration_minutes}m
-            </Text>
-          </View>
-        </View>
+          
+          {/* Review Answers button - inline */}
+          {item.status === "completed" && item.questions_answered > 0 && (
+            <TouchableOpacity
+              style={styles.inlineReviewButton}
+              onPress={() => handleViewSessionDetails(item)}
+              activeOpacity={0.6}
+            >
+              <Ionicons name="document-text" size={14} color={COLORS.primary} />
+              <Text style={styles.inlineReviewButtonText}>Review</Text>
+            </TouchableOpacity>
+          )}
 
-        <Text style={styles.historyDate}>{formatDate(item.created_at)}</Text>
+          <Text style={styles.historyDate}>{formatDate(item.created_at)}</Text>
+        </View>
       </TouchableOpacity>
     );
   };
 
   const renderHistoryList = () => {
+    const filteredSessions = getFilteredSessions();
+
     return (
       <FlatList
         key={"history"}
-        data={sessions}
+        data={filteredSessions}
         renderItem={renderHistoryCard}
         keyExtractor={(item) => item.session_id}
         scrollEnabled={true}
@@ -353,11 +419,45 @@ export default function HistoryScreen({ navigation }) {
           </View>
         }
         ListHeaderComponent={
-          <View style={styles.historySectionHeader}>
-            <Text style={styles.sectionTitle}>📖 Learning History</Text>
-            <Text style={styles.historyCount}>
-              {sessions.length} {sessions.length === 1 ? "session" : "sessions"}
-            </Text>
+          <View>
+            {/* Filter Dropdown */}
+            <View style={styles.filterSection}>
+              <Text style={styles.filterLabel}>Filter by Mode:</Text>
+              <View style={styles.filterButtonsContainer}>
+                {[
+                  { key: "all", label: "All" },
+                  { key: "quiz", label: "Quiz" },
+                  { key: "listening_part2", label: "Question - Response" },
+                  { key: "homophone_groups", label: "Homophone" },
+                  { key: "practice", label: "Practice" },
+                ].map(filter => (
+                  <TouchableOpacity
+                    key={filter.key}
+                    style={[
+                      styles.filterButton,
+                      selectedModeFilter === filter.key && styles.filterButtonActive,
+                    ]}
+                    onPress={() => setSelectedModeFilter(filter.key)}
+                  >
+                    <Text
+                      style={[
+                        styles.filterButtonText,
+                        selectedModeFilter === filter.key && styles.filterButtonTextActive,
+                      ]}
+                    >
+                      {filter.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            {/* Section Title */}
+            <View style={styles.historySectionHeader}>
+              <Text style={styles.sectionTitle}>
+                📖 Learning History {selectedModeFilter !== "all" && `(${getModeLabel(selectedModeFilter)})`}
+              </Text>
+            </View>
           </View>
         }
         refreshControl={
@@ -463,6 +563,17 @@ export default function HistoryScreen({ navigation }) {
           <ProgressReport statistics={statistics} sessions={sessions} />
         )}
       </View>
+
+      {/* Session Details Modal */}
+      {selectedSession && (
+        <SessionDetailsModal
+          visible={sessionDetailsVisible}
+          onClose={() => setSessionDetailsVisible(false)}
+          sessionId={selectedSession.session_id}
+          userId={userId}
+          topic_title={selectedSession.topic_title}
+        />
+      )}
     </View>
   );
 }
@@ -694,9 +805,13 @@ const styles = StyleSheet.create({
   },
   historyHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "flex-start",
     marginBottom: 8,
+    gap: 8,
+  },
+  historyEmoji: {
+    fontSize: 22,
+    lineHeight: 26,
   },
   historyTitle: {
     flex: 1,
@@ -705,6 +820,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: COLORS.text,
+  },
+  historySublabel: {
+    fontSize: 11,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+    fontStyle: "italic",
+  },
+  modeBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  modeBadgeText: {
+    fontSize: 11,
+    fontWeight: "700",
   },
   historyMode: {
     fontSize: 12,
@@ -716,8 +846,8 @@ const styles = StyleSheet.create({
   },
   historyDetails: {
     flexDirection: "row",
-    gap: 16,
-    marginVertical: 8,
+    alignItems: "center",
+    gap: 12,
   },
   historyDetail: {
     flexDirection: "row",
@@ -732,7 +862,79 @@ const styles = StyleSheet.create({
   historyDate: {
     fontSize: 11,
     color: COLORS.textSecondary,
-    marginTop: 4,
+    marginLeft: "auto",
+  },
+  viewDetailsButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginTop: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    backgroundColor: COLORS.primary + "12",
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: COLORS.primary,
+  },
+  viewDetailsButtonText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: COLORS.primary,
+  },
+  inlineReviewButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: COLORS.primary + "15",
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.primary + "40",
+  },
+  inlineReviewButtonText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: COLORS.primary,
+  },
+  filterSection: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: COLORS.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  filterLabel: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.textSecondary,
+    marginBottom: 8,
+  },
+  filterButtonsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  filterButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: COLORS.background,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  filterButtonActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
+  },
+  filterButtonText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.text,
+  },
+  filterButtonTextActive: {
+    color: "#fff",
   },
   historySectionHeader: {
     paddingHorizontal: 16,

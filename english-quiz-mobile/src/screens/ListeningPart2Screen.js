@@ -459,8 +459,8 @@ export default function ListeningPart2Screen({ navigation }) {
             <View style={styles.setupIconContainer}>
               <Text style={styles.setupEmoji}>🎧</Text>
             </View>
-            <Text style={styles.setupTitle}>Listening Part 2</Text>
-            <Text style={styles.setupSubtitle}>TOEIC Practice</Text>
+            <Text style={styles.setupTitle}>Question - Response</Text>
+
             <Text style={styles.setupDescription}>
               How many questions do you want?
             </Text>
@@ -590,10 +590,11 @@ export default function ListeningPart2Screen({ navigation }) {
                 disabled={state !== STATES.QUESTION}
                 activeOpacity={0.7}
               >
+                {/* Text is hidden during QUESTION — user must rely on audio */}
                 <Text style={getOptionTextStyle(index)}>
                   {OPTION_LABELS[index]}
                 </Text>
-                <Text style={styles.optionText}>{option.text}</Text>
+                <Text style={styles.optionTextHidden}>Response {OPTION_LABELS[index]}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -603,29 +604,33 @@ export default function ListeningPart2Screen({ navigation }) {
           </View>
         )}
 
-        {/* Check Answer Button */}
-        <TouchableOpacity
-          style={[
-            styles.checkAnswerButton,
-            selectedOptionIndex === null && styles.checkAnswerButtonDisabled,
-          ]}
-          onPress={handleCheckAnswer}
-          disabled={selectedOptionIndex === null}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.checkAnswerButtonText}>Check Answer</Text>
-        </TouchableOpacity>
+        {/* Action Buttons */}
+<View style={styles.actionContainer}>
+  <TouchableOpacity
+    style={[
+      styles.checkAnswerButton,
+      selectedOptionIndex === null && styles.checkAnswerButtonDisabled,
+    ]}
+    onPress={handleCheckAnswer}
+    disabled={selectedOptionIndex === null}
+    activeOpacity={0.85}
+  >
+    <Text style={[
+      styles.checkAnswerButtonText,
+      selectedOptionIndex === null && styles.checkAnswerButtonTextDisabled,
+    ]}>CHECK ANSWER</Text>
+  </TouchableOpacity>
 
-        {/* Finish Button */}
-        {(state === STATES.QUESTION || state === STATES.FEEDBACK) && ( 
-          <TouchableOpacity 
-            style={styles.finishBtn} 
-            onPress={handleEndPress}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.finishBtnText}>Finish</Text>
-          </TouchableOpacity>
-        )}
+  {(state === STATES.QUESTION || state === STATES.FEEDBACK) && (
+    <TouchableOpacity
+      style={styles.finishBtn}
+      onPress={handleEndPress}
+      activeOpacity={0.6}
+    >
+      <Text style={styles.finishBtnText}>Finish</Text>
+    </TouchableOpacity>
+  )}
+</View>
       </Animated.ScrollView>
     );
   }
@@ -765,10 +770,10 @@ export default function ListeningPart2Screen({ navigation }) {
     };
 
     const getFeedbackText = () => {
-      if (accuracy >= 90) return "You're mastering TOEIC Listening Part 2!";
-      if (accuracy >= 70) return "Keep practicing to reach perfection!";
-      return "Keep practicing, you'll improve!";
-    };
+  if (accuracy >= 90) return "Excellent! You're mastering this skill!";
+  if (accuracy >= 70) return "Great job! Keep going to reach perfection!";
+  return "Keep practicing, you're getting better every time!";
+};
 
     return (
       <Animated.ScrollView
@@ -788,7 +793,7 @@ export default function ListeningPart2Screen({ navigation }) {
 
           {/* Dynamic Title */}
           <Text style={styles.resultsTitle}>{getTitle()}</Text>
-          <Text style={styles.resultsSubtitle}>Quiz Completed</Text>
+          <Text style={styles.resultsSubtitle}>Quiz Completed — Question & Response</Text>
 
           {/* Score Card */}
           <View style={styles.scoreCardRow}>
@@ -838,6 +843,18 @@ export default function ListeningPart2Screen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+
+  actionContainer: {
+  marginTop: 24,
+  gap: 12,
+},
+
+  finishText: {
+    textAlign: "center",
+    color: "#6B7280",
+    fontSize: 13,
+    marginTop: 4,
+  },
   container: {
     flex: 1,
     backgroundColor: "#111827",
@@ -1037,6 +1054,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#E5E7EB",
   },
+  // Hidden placeholder shown during QUESTION state (real text revealed in FEEDBACK)
+  optionTextHidden: {
+    flex: 1,
+    fontSize: 13,
+    color: "#4B5563",
+    fontStyle: "italic",
+  },
 
   // FEEDBACK STATE
   feedbackContent: {
@@ -1141,50 +1165,52 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
 
+  // ACTION CONTAINER
+  actionContainer: {
+    marginTop: 28,
+    gap: 4,
+  },
+
   // CHECK ANSWER BUTTON (QUESTION state)
   checkAnswerButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    width: "100%",
     backgroundColor: COLORS.primary,
     borderRadius: 12,
-    paddingVertical: 13,
-    paddingHorizontal: 30,
-    marginTop: 14,
-    marginBottom: 8,
-    gap: 8,
-    alignSelf: "center",
-    minWidth: 140,
-    borderWidth: 0,
+    paddingVertical: 14,
+    alignItems: "center",
+    justifyContent: "center",
     ...SHADOWS.small,
   },
+
   checkAnswerButtonDisabled: {
-    backgroundColor: "#374151",
-    opacity: 0.5,
+    backgroundColor: "#1E2A3A",
+    shadowOpacity: 0,
+    elevation: 0,
   },
+
   checkAnswerButtonText: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "800",
     color: "#FFFFFF",
-    letterSpacing: 0.3,
+    letterSpacing: 0.8,
+  },
+
+  checkAnswerButtonTextDisabled: {
+    color: "#4B5563",
   },
 
   finishBtn: {
-    backgroundColor: "#DC2626", // Nền đỏ đậm
-    borderRadius: 12,
-    paddingVertical: 12,        // Độ cao vừa vặn
-    paddingHorizontal: 30,      // Độ rộng vừa đủ để chữ "Finish" trông cân đối
-    marginTop: 20,
-    alignSelf: "center",        // Căn giữa màn hình và co nút theo nội dung
-    ...SHADOWS.small,
-    minWidth: 140,              // Đảm bảo nút đủ lớn để dễ bấm
+    alignSelf: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
   },
+
   finishBtnText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#FFFFFF",           // Chữ trắng
-    textAlign: "center",
-    letterSpacing: 0.5,
+    fontSize: 13,
+    fontWeight: "500",
+    color: "#6B7280",
+    textDecorationLine: "underline",
+    textDecorationColor: "#4B5563",
   },
 
   // NEXT / VIEW RESULTS BUTTON (FEEDBACK state)

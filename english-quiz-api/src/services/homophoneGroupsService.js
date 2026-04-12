@@ -330,9 +330,9 @@ async function generateQuestion(homophoneGroup) {
 }
 
 /**
- * Validate answer
+ * Validate answer + return full question data for saving
  */
-function checkAnswer(question_id, user_answer) {
+function checkAnswerWithData(question_id, user_answer) {
   cleanExpiredQuestions();
   const question = questionStore.get(question_id);
 
@@ -346,15 +346,34 @@ function checkAnswer(question_id, user_answer) {
     `[HomophoneGroups] Answer: id=${question_id}, user="${user_answer}", correct="${question.correct_answer}", result=${is_correct}`
   );
 
-  // Remove from store after answered
-  questionStore.delete(question_id);
-
-  return {
+  // Return full data for saving (BEFORE deleting from store)
+  const fullData = {
     is_correct,
     correct_answer: question.correct_answer,
     correct_phonetic: question.correct_phonetic,
-    source_id: question.source_id
+    source_id: question.source_id,
+    sentence: question.sentence,
+    choices: question.choices,
+    user_answer,
+  };
+
+  // Remove from store after answered
+  questionStore.delete(question_id);
+
+  return fullData;
+}
+
+/**
+ * Validate answer
+ */
+function checkAnswer(question_id, user_answer) {
+  const data = checkAnswerWithData(question_id, user_answer);
+  return {
+    is_correct: data.is_correct,
+    correct_answer: data.correct_answer,
+    correct_phonetic: data.correct_phonetic,
+    source_id: data.source_id
   };
 }
 
-module.exports = { getRandomHomophoneGroup, generateQuestion, checkAnswer };
+module.exports = { getRandomHomophoneGroup, generateQuestion, checkAnswer, checkAnswerWithData };

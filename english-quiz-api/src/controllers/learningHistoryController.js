@@ -1,6 +1,7 @@
 const LearningHistory = require("../models/LearningHistory");
 const TopicProgress = require("../models/TopicProgress");
 const Conversation = require("../models/Conversation");
+const SessionAnswer = require("../models/SessionAnswer");
 const { v4: uuidv4 } = require("uuid");
 const logger = require("../utils/logger");
 const { generateWithFallbacks } = require("../utils/aiHelper");
@@ -313,11 +314,15 @@ async function getLearningStatistics(req, res, next) {
       });
     }
 
-    // Get all sessions
-    const allSessions = await LearningHistory.find({ user_id });
+    // Get all sessions (exclude chat and transcribe to match History display)
+    const allSessions = await LearningHistory.find({
+      user_id,
+      mode: { $nin: ["chat", "transcribe"] },
+    });
     const completedSessions = await LearningHistory.find({
       user_id,
       status: "completed",
+      mode: { $nin: ["chat", "transcribe"] },
     });
 
     logger.info(
@@ -355,7 +360,7 @@ async function getLearningStatistics(req, res, next) {
 
     // Get top topics from LearningHistory (replaced TopicProgress query)
     const allTopics = await LearningHistory.aggregate([
-      { $match: { user_id, status: "completed" } },
+      { $match: { user_id, status: "completed", mode: { $nin: ["chat", "transcribe"] } } },
       {
         $group: {
           _id: "$topic_id",
@@ -516,6 +521,7 @@ async function getLearningDashboard(req, res, next) {
       user_id,
       created_at: { $gte: today, $lt: tomorrow },
       status: "completed",
+      mode: { $nin: ["chat", "transcribe"] }, // Exclude chat and transcribe to match History display
     });
 
     // Get this week's data — same 7-day window as FE chart (today - 6 days → today)
@@ -526,11 +532,12 @@ async function getLearningDashboard(req, res, next) {
       user_id,
       created_at: { $gte: sixDaysAgo, $lt: tomorrow },
       status: "completed",
+      mode: { $nin: ["chat", "transcribe"] }, // Exclude chat and transcribe to match History display
     });
 
     // Get topics to review from LearningHistory (replaced TopicProgress query)
     const topicsToReview = await LearningHistory.aggregate([
-      { $match: { user_id, status: "completed" } },
+      { $match: { user_id, status: "completed", mode: { $nin: ["chat", "transcribe"] } } },
       {
         $group: {
           _id: "$topic_id",
@@ -783,6 +790,159 @@ async function deleteLearningHistory(req, res, next) {
   }
 }
 
+/**
+ * Get detailed answers for a session
+ * Returns all questions, user answers, correct answers, and result for each question
+ * GET /api/learning/session/:session_id/answers
+ */
+async function getSessionAnswers(req, res, next) {
+  try {
+    const { session_id } = req.params;
+    const { user_id } = req.query;
+
+    if (!session_id || !user_id) {
+      logger.warn(`[SessionAnswers] Missing parameters: session_id=${session_id}, user_id=${user_id}`);
+      return res.status(400).json({
+        success: false,
+        error: "Missing required parameters: session_id, user_id",
+      });
+    }
+
+    logger.info(`[SessionAnswers] Fetching answers for session: ${session_id}, user: ${user_id}`);
+
+    // Get session info
+    const session = await LearningHistory.findOne({ session_id, user_id });
+    if (!session) {
+      logger.warn(`[SessionAnswers] Session not found: ${session_id}`);
+      return res.status(404).json({
+        success: false,
+        error: "Session not found",
+      });
+    }
+
+    logger.info(`[SessionAnswers] Session found - mode: ${session.mode}, topic: ${session.topic_id}`);
+
+    // Get all answers for this session
+    const answers = await SessionAnswer.find({ session_id, user_id })
+      .sort({ created_at: 1 });
+
+    logger.info(`[SessionAnswers] Found ${answers.length} answers for session: ${session_id}`);
+    
+    if (answers.length > 0) {
+      logger.info(`[SessionAnswers] First answer: ${JSON.stringify(answers[0])}`);
+    }
+
+    const response = {
+      success: true,
+      session: {
+        session_id,
+        user_id,
+        topic_id: session.topic_id,
+        topic_title: session.topic_title,
+        mode: session.mode,
+        status: session.status,
+        total_questions: session.total_questions || answers.length,
+        questions_answered: session.questions_answered || answers.length,
+        correct_answers: session.correct_answers,
+        accuracy_percentage: session.accuracy_percentage,
+        duration_minutes: session.duration_minutes,
+        started_at: session.start_time,
+        completed_at: session.end_time,
+      },
+      answers: answers.map((answer, index) => ({
+        question_number: index + 1,
+        question_id: answer.question_id,
+        question_text: answer.question_text,
+        question_type: answer.question_type,
+        user_answer: answer.user_answer,
+        correct_answer: answer.correct_answer,
+        is_correct: answer.is_correct,
+        explanation: answer.explanation,
+        options: answer.options,
+        time_spent_seconds: answer.time_spent_seconds,
+        source_type: answer.source_type,
+      })),
+      summary: {
+        total: answers.length,
+        correct: answers.filter((a) => a.is_correct).length,
+        incorrect: answers.filter((a) => !a.is_correct).length,
+        accuracy: answers.length > 0 
+          ? Math.round((answers.filter((a) => a.is_correct).length / answers.length) * 100)
+          : 0,
+        note: answers.length === 0 ? "No answers recorded yet. Make sure to call saveSessionAnswer after each question." : null,
+      },
+    };
+
+    res.json(response);
+  } catch (error) {
+    logger.error(`[SessionAnswers] Error: ${error.message}`);
+    logger.error(`[SessionAnswers] Stack: ${error.stack}`);
+    next(error);
+  }
+}
+
+/**
+ * Save an answer for a session (called after each question answered)
+ * POST /api/learning/session/:session_id/answer
+ */
+async function saveSessionAnswer(req, res, next) {
+  try {
+    const { session_id } = req.params;
+    const {
+      user_id,
+      question_id,
+      question_text,
+      question_type,
+      user_answer,
+      correct_answer,
+      is_correct,
+      explanation,
+      options,
+      time_spent_seconds,
+      source_id,
+      source_type,
+    } = req.body;
+
+    if (!session_id || !user_id || !question_id || !user_answer || correct_answer === undefined) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing required fields",
+      });
+    }
+
+    logger.info(`[SaveAnswer] Saving answer for session: ${session_id}, question: ${question_id}`);
+
+    const answer = new SessionAnswer({
+      session_id,
+      user_id,
+      question_id,
+      question_text,
+      question_type,
+      user_answer,
+      correct_answer,
+      is_correct,
+      explanation,
+      options,
+      time_spent_seconds,
+      source_id,
+      source_type,
+    });
+
+    await answer.save();
+
+    logger.info(`[SaveAnswer] Answer saved successfully`);
+
+    res.status(201).json({
+      success: true,
+      answer_id: answer._id,
+      message: "Answer saved",
+    });
+  } catch (error) {
+    logger.error(`[SaveAnswer] Error: ${error.message}`);
+    next(error);
+  }
+}
+
 module.exports = {
   startLearningSession,
   updateSessionProgress,
@@ -794,4 +954,6 @@ module.exports = {
   deleteLearningHistory,
   updateTopicProgress,
   getRecommendations,
+  getSessionAnswers,
+  saveSessionAnswer,
 };

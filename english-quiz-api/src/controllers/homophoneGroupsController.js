@@ -1,8 +1,10 @@
 const {
   getRandomHomophoneGroup,
   generateQuestion,
-  checkAnswer
+  checkAnswer,
+  checkAnswerWithData
 } = require('../services/homophoneGroupsService');
+const { saveHomophoneAnswer } = require('../services/sessionAnswerService');
 const LearningHistory = require('../models/LearningHistory');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../utils/logger');
@@ -90,7 +92,27 @@ async function answer(req, res, next) {
       });
     }
 
-    const result = checkAnswer(question_id, user_answer);
+    const result = checkAnswerWithData(question_id, user_answer);
+
+    // Save answer for review later
+    if (session_id && user_id) {
+      try {
+        await saveHomophoneAnswer(
+          session_id,
+          user_id,
+          question_id,
+          result.sentence,
+          user_answer,
+          result.correct_answer,
+          result.is_correct,
+          result.choices
+        );
+        logger.info(`[HomophoneGroups] Answer saved: session=${session_id}, question=${question_id}`);
+      } catch (saveErr) {
+        logger.warn(`[HomophoneGroups] Failed to save answer: ${saveErr.message}`);
+        // Don't fail the response if saving fails
+      }
+    }
 
     // Track in learning history if session_id is provided
     if (session_id && user_id) {
@@ -128,7 +150,9 @@ async function answer(req, res, next) {
 
     res.json({
       success: true,
-      ...result
+      is_correct: result.is_correct,
+      correct_answer: result.correct_answer,
+      correct_phonetic: result.correct_phonetic
     });
   } catch (error) {
     next(error);
@@ -173,6 +197,10 @@ async function completeSession(req, res, next) {
         );
       }
     }
+
+    // Set score fields: correct/total so History card shows X/Y instead of 0/0
+    session.total_score = session.correct_answers || 0;
+    session.max_score = session.questions_answered || 0;
 
     await session.save();
 

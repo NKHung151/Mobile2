@@ -1,4 +1,5 @@
 const { startSession, submitAnswer } = require('../services/listeningPart2Service');
+const { saveListeningAnswer } = require('../services/sessionAnswerService');
 const LearningHistory = require('../models/LearningHistory');
 const logger = require('../utils/logger');
 
@@ -25,7 +26,7 @@ async function startListeningSession(req, res, next) {
       session_id: result.session_id,
       user_id,
       topic_id: 'listening_part2',
-      topic_title: 'Listening Part 2',
+      topic_title: 'Question - Response',
       mode: 'listening_part2',
       status: 'started',
       start_time: new Date(),
@@ -69,6 +70,27 @@ async function submitListeningAnswer(req, res, next) {
 
     logger.info(`[ListeningPart2] Submit answer: session=${session_id}, option=${selected_option_index}`);
     const result = submitAnswer(session_id, selected_option_index);
+    logger.info(`[ListeningPart2] Answer result:`, JSON.stringify(result, null, 2));
+
+    // Save answer details to SessionAnswer for historical review
+    if (session_id && user_id) {
+      try {
+        logger.info(`[ListeningPart2] About to save answer - session_id: ${session_id}, user_id: ${user_id}, question_id: ${result.question_id}`);
+        await saveListeningAnswer(
+          session_id,
+          user_id,
+          result.question_id,
+          result.question_text,
+          selected_option_index,
+          result.all_options,
+          result.correct_index,
+          result.is_correct
+        );
+        logger.info(`[ListeningPart2] Answer saved successfully`);
+      } catch (saveErr) {
+        logger.error(`[ListeningPart2] Failed to save answer: ${saveErr.message}`, saveErr);
+      }
+    }
 
     // Update LearningHistory in-place if user_id provided (same pattern as HomophoneGroups)
     if (session_id && user_id) {
@@ -140,6 +162,10 @@ async function completeListeningSession(req, res, next) {
         );
       }
     }
+
+    // Set score fields: correct/total so History card shows X/Y instead of 0/0
+    session.total_score = session.correct_answers || 0;
+    session.max_score = session.questions_answered || 0;
 
     await session.save();
 

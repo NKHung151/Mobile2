@@ -234,6 +234,13 @@ const submitPracticeAnswer = async (userId, sessionId, userAnswer, timeSpentMs =
       total_questions: session.total,
       feedback,
       final_results: finalResults,
+      // Data for saving to SessionAnswer
+      session_id: session._id.toString(),
+      question_id: currentQId.toString(),
+      question_text: question.question,
+      question_type: question.type,
+      user_answer: JSON.stringify(userAnswer),
+      correct_answer: getCorrectAnswerText(question),
     };
   } else {
     session.current_index += 1;
@@ -254,6 +261,13 @@ const submitPracticeAnswer = async (userId, sessionId, userAnswer, timeSpentMs =
         current_score: session.score,
         answered: session.current_index,
       },
+      // Data for saving to SessionAnswer
+      session_id: session._id.toString(),
+      question_id: currentQId.toString(),
+      question_text: question.question,
+      question_type: question.type,
+      user_answer: JSON.stringify(userAnswer),
+      correct_answer: getCorrectAnswerText(question),
     };
   }
 };
