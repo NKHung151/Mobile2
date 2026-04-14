@@ -21,6 +21,19 @@ async function startLearningSession(req, res, next) {
       });
     }
 
+    // For quiz mode, let quizController handle LH creation to avoid duplicates
+    // This endpoint is mainly for chat and other modes
+    if (mode === "quiz") {
+      logger.info(
+        `[StartSession] Quiz mode - returning dummy session, will be created by quizController`,
+      );
+      return res.json({
+        success: true,
+        session_id: null, // Will be set by quizController.start()
+        message: "Quiz session will be initialized by quiz controller",
+      });
+    }
+
     const session_id = uuidv4();
     const learningSession = new LearningHistory({
       session_id,
@@ -138,22 +151,25 @@ async function completeLearningSession(req, res, next) {
       });
     }
 
-    session.status = "completed";
-    session.end_time = new Date();
+    // Only update end_time and duration if not already completed by quiz controller
+    if (session.status !== "completed") {
+      session.status = "completed";
+      session.end_time = new Date();
 
-    // Calculate duration
-    if (session.end_time && session.start_time) {
-      const durationMs = session.end_time - session.start_time;
-      session.duration_minutes = Math.round(durationMs / 1000 / 60);
+      // Calculate duration
+      if (session.end_time && session.start_time) {
+        const durationMs = session.end_time - session.start_time;
+        session.duration_minutes = Math.round(durationMs / 1000 / 60);
 
-      if (session.questions_answered > 0) {
-        session.time_per_question_seconds = Math.round(
-          durationMs / 1000 / session.questions_answered,
-        );
+        if (session.questions_answered > 0) {
+          session.time_per_question_seconds = Math.round(
+            durationMs / 1000 / session.questions_answered,
+          );
+        }
       }
-    }
 
-    await session.save();
+      await session.save();
+    }
 
     // Update topic progress
     await updateTopicProgress(
@@ -164,7 +180,7 @@ async function completeLearningSession(req, res, next) {
     );
 
     logger.info(
-      `Session completed: session=${session_id}, user=${user_id}, score=${session.score_percentage}%`,
+      `Session completed: session=${session_id}, user=${user_id}, score=${session.accuracy_percentage || 0}%`,
     );
 
     res.json({
@@ -917,17 +933,56 @@ async function getSessionAnswers(req, res, next) {
       });
     }
 
-    logger.info(`[SessionAnswers] Session found - mode: ${session.mode}, topic: ${session.topic_id}`);
+    logger.info(`[SessionAnswers] Session found - mode: ${session.mode}, topic: ${session.topic_id}, status: ${session.status}`);
 
     // Get all answers for this session
-    // Sort by question_number if available (for practice), otherwise by created_at
-    const answers = await SessionAnswer.find({ session_id, user_id })
-      .sort({ question_number: 1, created_at: 1 });
+    // Use strict query to ensure we only get answers from THIS specific session
+    const answers = await SessionAnswer.find({ 
+      session_id: String(session_id), 
+      user_id: String(user_id) 
+    })
+      .sort({ question_number: 1, created_at: 1 })
+      .lean();
 
+    logger.info(`[SessionAnswers] Query: { session_id: "${session_id}", user_id: "${user_id}" }`);
     logger.info(`[SessionAnswers] Found ${answers.length} answers for session: ${session_id}`);
     
-    if (answers.length > 0) {
-      logger.info(`[SessionAnswers] First answer - question_number: ${answers[0].question_number}, type: ${answers[0].question_type}`);
+    // Filter answers to ensure they belong to this session's timeframe
+    // (optional extra validation to prevent stale data)
+    const sessionStartTime = session.start_time ? new Date(session.start_time) : null;
+    const sessionEndTime = session.end_time ? new Date(session.end_time) : null;
+    
+    const filteredAnswers = answers.filter((answer) => {
+      // If we have session times, validate that the answer was created during the session
+      if (sessionStartTime && answer.created_at) {
+        const answerTime = new Date(answer.created_at);
+        if (answerTime < sessionStartTime) {
+          logger.warn(`[SessionAnswers] Filtering out answer created before session start: ${answer._id}`);
+          return false;
+        }
+        // If session is completed, also check end time
+        if (sessionEndTime && answerTime > sessionEndTime) {
+          logger.warn(`[SessionAnswers] Filtering out answer created after session end: ${answer._id}`);
+          return false;
+        }
+      }
+      return true;
+    });
+    
+    if (filteredAnswers.length < answers.length) {
+      logger.warn(`[SessionAnswers] Filtered out ${answers.length - filteredAnswers.length} stale answers`);
+    }
+    
+    if (filteredAnswers.length === 0) {
+      logger.warn(`[SessionAnswers] No answers found - checking SessionAnswer collection stats...`);
+      const totalAnswers = await SessionAnswer.countDocuments({});
+      logger.warn(`[SessionAnswers] Total SessionAnswer records in DB: ${totalAnswers}`);
+      const sessionAnswers = await SessionAnswer.countDocuments({ session_id });
+      logger.warn(`[SessionAnswers] SessionAnswers for this session_id: ${sessionAnswers}`);
+    }
+    
+    if (filteredAnswers.length > 0) {
+      logger.info(`[SessionAnswers] First answer - question_number: ${filteredAnswers[0].question_number}, type: ${filteredAnswers[0].question_type}`);
     }
 
     const response = {
@@ -939,15 +994,16 @@ async function getSessionAnswers(req, res, next) {
         topic_title: session.topic_title,
         mode: session.mode,
         status: session.status,
-        total_questions: session.total_questions || answers.length,
-        questions_answered: session.questions_answered || answers.length,
+        total_questions: session.total_questions || filteredAnswers.length,
+        questions_answered: session.questions_answered || filteredAnswers.length,
         correct_answers: session.correct_answers,
         accuracy_percentage: session.accuracy_percentage,
         duration_minutes: session.duration_minutes,
         started_at: session.start_time,
         completed_at: session.end_time,
       },
-      answers: answers.map((answer) => ({
+      answers: filteredAnswers.map((answer) => ({
+        answer_id: answer._id.toString(),
         question_number: answer.question_number || 0,
         question_id: answer.question_id,
         question_text: answer.question_text,
@@ -961,13 +1017,13 @@ async function getSessionAnswers(req, res, next) {
         source_type: answer.source_type,
       })),
       summary: {
-        total: answers.length,
-        correct: answers.filter((a) => a.is_correct).length,
-        incorrect: answers.filter((a) => !a.is_correct).length,
-        accuracy: answers.length > 0 
-          ? Math.round((answers.filter((a) => a.is_correct).length / answers.length) * 100)
+        total: filteredAnswers.length,
+        correct: filteredAnswers.filter((a) => a.is_correct).length,
+        incorrect: filteredAnswers.filter((a) => !a.is_correct).length,
+        accuracy: filteredAnswers.length > 0 
+          ? Math.round((filteredAnswers.filter((a) => a.is_correct).length / filteredAnswers.length) * 100)
           : 0,
-        note: answers.length === 0 ? "No answers recorded yet. Make sure to call saveSessionAnswer after each question." : null,
+        note: filteredAnswers.length === 0 ? "No answers recorded yet. Make sure to call saveSessionAnswer after each question." : null,
       },
     };
 

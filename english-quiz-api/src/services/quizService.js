@@ -366,6 +366,7 @@ function generateFinalSummary(conversation) {
   return {
     total_score: conversation.total_score,
     max_possible_score: conversation.max_possible_score,
+    total_questions: conversation.total_questions,
     percentage,
     grade: gradeInfo.grade,
     grade_label: gradeInfo.label,
@@ -482,6 +483,9 @@ async function submitAnswer(userId, topicId, userAnswer) {
     .pop();
   if (!lastQuestion) throw new Error("No question to answer.");
 
+  // Track the question number that's being answered (before any increments)
+  const answeredQuestionNumber = conversation.current_question;
+
   // Get relevant chunks for evaluation
   const relevantChunks = await getTopicChunks(topicId, lastQuestion.content);
   const context = relevantChunks.map((c) => c.content).join("\n\n---\n\n");
@@ -491,7 +495,7 @@ async function submitAnswer(userId, topicId, userAnswer) {
     role: "user",
     type: "answer",
     content: userAnswer,
-    question_number: conversation.current_question,
+    question_number: answeredQuestionNumber,
     timestamp: new Date(),
   });
 
@@ -529,11 +533,11 @@ async function submitAnswer(userId, topicId, userAnswer) {
       session_id: conversation._id.toString(),
       topic_id: topicId,
       topic_title: topic.title,
-      question_number: conversation.current_question,
+      question_number: answeredQuestionNumber,
       total_questions: conversation.total_questions,
       your_answer: userAnswer,
       // Data for saving to SessionAnswer
-      question_id: `quiz_${conversation._id.toString()}_q${conversation.current_question}`,
+      question_id: `quiz_${conversation._id.toString()}_q${answeredQuestionNumber}`,
       question_text: lastQuestion.content,
       correct_answer: evaluation.feedback.correct_answer || "See explanation",
       is_correct: evaluation.is_correct,
@@ -574,11 +578,11 @@ async function submitAnswer(userId, topicId, userAnswer) {
     session_id: conversation._id.toString(),
     topic_id: topicId,
     topic_title: topic.title,
-    question_number: conversation.current_question,
+    question_number: answeredQuestionNumber,
     total_questions: conversation.total_questions,
     your_answer: userAnswer,
     // Data for saving to SessionAnswer
-    question_id: `quiz_${conversation._id.toString()}_q${conversation.current_question - 1}`,
+    question_id: `quiz_${conversation._id.toString()}_q${answeredQuestionNumber}`,
     question_text: lastQuestion.content,
     correct_answer: evaluation.feedback.correct_answer || "See explanation",
     is_correct: evaluation.is_correct,

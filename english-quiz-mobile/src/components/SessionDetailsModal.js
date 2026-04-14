@@ -360,7 +360,7 @@ export default function SessionDetailsModal({ visible, onClose, sessionId, userI
               <ScrollView style={styles.answersList} showsVerticalScrollIndicator={false}>
                 <View>
                   {Array.isArray(answers) && answers.map((answer, idx) => (
-                    <View key={`answer-${answer.question_id || idx}-${idx}`}>
+                    <View key={`${answer.answer_id || answer.question_id || idx}`}>
                       {renderAnswerCard(answer)}
                     </View>
                   ))}
