@@ -29,7 +29,9 @@ async function answer(req, res, next) {
           result.question_text,
           result.your_answer,
           result.correct_answer,
-          result.is_correct
+          result.is_correct,
+          null,
+          result.question_number
         );
       } catch (saveErr) {
         logger.warn(`[Quiz] Failed to save answer: ${saveErr.message}`);

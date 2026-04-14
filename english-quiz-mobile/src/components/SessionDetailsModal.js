@@ -93,15 +93,40 @@ export default function SessionDetailsModal({ visible, onClose, sessionId, userI
     const statusIcon = answer.is_correct ? "checkmark-circle" : "close-circle";
     const statusColor = answer.is_correct ? COLORS.success : COLORS.error;
 
+    // Helper: Safely parse JSON if string is JSON-encoded
+    const safelyParse = (value) => {
+      if (typeof value !== 'string') return value;
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        return value;
+      }
+    };
+
+    // Helper: Convert answer to readable string
+    const formatAnswer = (value, questionType = "") => {
+      const parsed = safelyParse(value);
+      
+      if (Array.isArray(parsed)) {
+        return parsed.join(", ");
+      }
+      
+      if (typeof parsed === "object") {
+        return JSON.stringify(parsed);
+      }
+      
+      return String(parsed || "[No answer]");
+    };
+
     const renderQuestionContent = () => {
       const questionText = String(answer.question_text || "");
-      const userAnswer = String(answer.user_answer || "[No answer]");
-      const correctAnswer = String(answer.correct_answer || "[No correct answer]");
+      const userAnswerFormatted = formatAnswer(answer.user_answer, answer.question_type);
+      const correctAnswerFormatted = formatAnswer(answer.correct_answer, answer.question_type);
       
       // Homophone groups: show sentence with blank filled
       if (answer.question_type === "homophone_groups") {
-        const sentenceWithAnswer = questionText.replace(/_____|<blank>|\[blank\]/gi, userAnswer);
-        const sentenceWithCorrect = questionText.replace(/_____|<blank>|\[blank\]/gi, correctAnswer);
+        const sentenceWithAnswer = questionText.replace(/_____|<blank>|\[blank\]/gi, userAnswerFormatted);
+        const sentenceWithCorrect = questionText.replace(/_____|<blank>|\[blank\]/gi, correctAnswerFormatted);
 
         return (
           <View>
@@ -114,7 +139,7 @@ export default function SessionDetailsModal({ visible, onClose, sessionId, userI
               <Text style={styles.answerLabel}>Your Answer:</Text>
               <View style={[styles.answerBox, { borderColor: answer.is_correct ? COLORS.success : COLORS.error }]}>
                 <Text style={[styles.answerText, { color: answer.is_correct ? COLORS.success : COLORS.error }]}>
-                  {userAnswer.substring(0, 150)}
+                  {userAnswerFormatted.substring(0, 150)}
                 </Text>
               </View>
               <Text style={styles.smallText}>{sentenceWithAnswer.substring(0, 200)}</Text>
@@ -125,7 +150,7 @@ export default function SessionDetailsModal({ visible, onClose, sessionId, userI
                 <Text style={styles.correctLabel}>✓ Correct Answer:</Text>
                 <View style={[styles.answerBox, { borderColor: COLORS.success, backgroundColor: "#E8F5E9" }]}>
                   <Text style={[styles.answerText, { color: COLORS.success }]}>
-                    {correctAnswer.substring(0, 150)}
+                    {correctAnswerFormatted.substring(0, 150)}
                   </Text>
                 </View>
                 <Text style={styles.smallText}>{sentenceWithCorrect.substring(0, 200)}</Text>
@@ -151,20 +176,21 @@ export default function SessionDetailsModal({ visible, onClose, sessionId, userI
         );
       }
 
-      // Practice: show based on question type
-      if (answer.question_type === "practice" || (answer.question_type && answer.question_type.includes("_choice"))) {
+      // Practice: multiple_choice, fill_in_blank, reorder, error_detection
+      const practiceTypes = ["multiple_choice", "fill_in_blank", "reorder", "error_detection"];
+      if (practiceTypes.includes(answer.question_type)) {
         return (
           <View>
             <View style={styles.questionSection}>
               <Text style={styles.questionLabel}>Question:</Text>
-              <Text style={styles.questionText}>{questionText.substring(0, 200)}</Text>
+              <Text style={styles.questionText}>{questionText.substring(0, 300)}</Text>
             </View>
 
             <View style={styles.answerSection}>
               <Text style={styles.answerLabel}>Your Answer:</Text>
               <View style={[styles.answerBox, { borderColor: answer.is_correct ? COLORS.success : COLORS.error }]}>
                 <Text style={[styles.answerText, { color: answer.is_correct ? COLORS.success : COLORS.error }]}>
-                  {userAnswer.substring(0, 150)}
+                  {userAnswerFormatted.substring(0, 150)}
                 </Text>
               </View>
             </View>
@@ -174,8 +200,24 @@ export default function SessionDetailsModal({ visible, onClose, sessionId, userI
                 <Text style={styles.correctLabel}>✓ Correct Answer:</Text>
                 <View style={[styles.answerBox, { borderColor: COLORS.success, backgroundColor: "#E8F5E9" }]}>
                   <Text style={[styles.answerText, { color: COLORS.success }]}>
-                    {correctAnswer.substring(0, 150)}
+                    {correctAnswerFormatted.substring(0, 150)}
                   </Text>
+                </View>
+              </View>
+            )}
+
+            {answer.options && Array.isArray(answer.options) && answer.options.length > 0 && (
+              <View style={styles.optionsSection}>
+                <Text style={styles.optionsLabel}>Options:</Text>
+                <View>
+                  {answer.options.map((opt, idx) => {
+                    const optText = String(typeof opt === 'string' ? opt : (typeof opt === 'object' ? JSON.stringify(opt) : opt || ""));
+                    return (
+                      <Text key={`opt-${idx}`} style={styles.optionText}>
+                        {idx + 1}. {optText.substring(0, 100)}
+                      </Text>
+                    );
+                  })}
                 </View>
               </View>
             )}
@@ -183,33 +225,33 @@ export default function SessionDetailsModal({ visible, onClose, sessionId, userI
         );
       }
 
-      // Listening/Default: show simple Q&A
+      // Quiz and Listening/Default: show simple Q&A
       return (
         <View>
           <View style={styles.questionSection}>
             <Text style={styles.questionLabel}>Question:</Text>
-            <Text style={styles.questionText}>{questionText.substring(0, 200)}</Text>
+            <Text style={styles.questionText}>{questionText.substring(0, 300)}</Text>
           </View>
 
           <View style={styles.answerSection}>
             <Text style={styles.answerLabel}>Your Answer:</Text>
             <View style={[styles.answerBox, { borderColor: answer.is_correct ? COLORS.success : COLORS.error }]}>
               <Text style={[styles.answerText, { color: answer.is_correct ? COLORS.success : COLORS.error }]}>
-                {userAnswer.substring(0, 150)}
+                {userAnswerFormatted.substring(0, 150)}
               </Text>
             </View>
           </View>
 
           {!answer.is_correct && (
-            <View style={styles.answerSection}>
-              <Text style={styles.correctLabel}>✓ Correct Answer:</Text>
-              <View style={[styles.answerBox, { borderColor: COLORS.success, backgroundColor: "#E8F5E9" }]}>
-                <Text style={[styles.answerText, { color: COLORS.success }]}>
-                  {correctAnswer.substring(0, 150)}
-                </Text>
+              <View style={styles.answerSection}>
+                <Text style={styles.correctLabel}>✓ Correct Answer:</Text>
+                <View style={[styles.answerBox, { borderColor: COLORS.success, backgroundColor: "#E8F5E9" }]}>
+                  <Text style={[styles.answerText, { color: COLORS.success }]}>
+                    {correctAnswerFormatted.substring(0, 150)}
+                  </Text>
+                </View>
               </View>
-            </View>
-          )}
+            )}
 
           {answer.options && Array.isArray(answer.options) && answer.options.length > 0 && (
             <View style={styles.optionsSection}>

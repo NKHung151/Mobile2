@@ -21,7 +21,7 @@ const sessionAnswerSchema = new mongoose.Schema(
     },
     question_type: {
       type: String,
-      enum: ["quiz", "multiple_choice", "fillup", "listening", "homophone_groups"],
+      enum: ["quiz", "multiple_choice", "fill_in_blank", "fillup", "listening", "homophone_groups", "error_detection", "reorder"],
       default: "quiz",
     },
     // User's answer
@@ -50,6 +50,11 @@ const sessionAnswerSchema = new mongoose.Schema(
     // Metadata
     source_id: String, // e.g. quiz_id, topic_id, homophone_group_id
     source_type: String, // e.g. "quiz", "homophone_groups", "listening_part2"
+    // Question sequence number (for ordering in review)
+    question_number: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: {

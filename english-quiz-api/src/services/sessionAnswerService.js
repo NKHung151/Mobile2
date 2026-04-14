@@ -8,7 +8,7 @@ const logger = require("../utils/logger");
 /**
  * Save answer for QUIZ mode
  */
-async function saveQuizAnswer(sessionId, userId, questionId, questionText, userAnswer, correctAnswer, isCorrect, options = null) {
+async function saveQuizAnswer(sessionId, userId, questionId, questionText, userAnswer, correctAnswer, isCorrect, options = null, questionNumber = 0) {
   try {
     const answer = new SessionAnswer({
       session_id: sessionId,
@@ -22,9 +22,10 @@ async function saveQuizAnswer(sessionId, userId, questionId, questionText, userA
       explanation: null,
       options: options,
       source_type: "quiz",
+      question_number: questionNumber,
     });
     await answer.save();
-    logger.info(`[SaveAnswer] Quiz answer saved: session=${sessionId}, question=${questionId}`);
+    logger.info(`[SaveAnswer] Quiz answer saved: session=${sessionId}, question=${questionId}, question_number=${questionNumber}`);
     return answer;
   } catch (err) {
     logger.error(`[SaveAnswer] Quiz save error: ${err.message}`);
@@ -35,23 +36,25 @@ async function saveQuizAnswer(sessionId, userId, questionId, questionText, userA
 /**
  * Save answer for PRACTICE mode
  */
-async function savePracticeAnswer(sessionId, userId, exerciseId, questionText, questionType, userAnswer, correctAnswer, isCorrect, timeSpent = 0) {
+async function savePracticeAnswer(sessionId, userId, exerciseId, questionText, questionType, userAnswer, correctAnswer, isCorrect, timeSpent = 0, questionNumber = 0) {
   try {
+    // userAnswer and correctAnswer are already formatted as readable text strings from practiceService
     const answer = new SessionAnswer({
       session_id: sessionId,
       user_id: userId,
       question_id: exerciseId || `practice_${Date.now()}`,
       question_text: questionText,
       question_type: questionType, // "multiple_choice", "fill_in_blank", "reorder", "error_detection"
-      user_answer: JSON.stringify(userAnswer), // Practice answers may be complex (arrays, etc)
-      correct_answer: JSON.stringify(correctAnswer),
+      user_answer: String(userAnswer),
+      correct_answer: String(correctAnswer),
       is_correct: isCorrect,
       explanation: null,
       time_spent_seconds: timeSpent,
       source_type: "practice",
+      question_number: questionNumber,
     });
     await answer.save();
-    logger.info(`[SaveAnswer] Practice answer saved: session=${sessionId}, type=${questionType}`);
+    logger.info(`[SaveAnswer] Practice answer saved: session=${sessionId}, type=${questionType}, question_number=${questionNumber}`);
     return answer;
   } catch (err) {
     logger.error(`[SaveAnswer] Practice save error: ${err.message}`);

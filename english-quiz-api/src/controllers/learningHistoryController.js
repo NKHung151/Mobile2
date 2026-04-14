@@ -920,13 +920,14 @@ async function getSessionAnswers(req, res, next) {
     logger.info(`[SessionAnswers] Session found - mode: ${session.mode}, topic: ${session.topic_id}`);
 
     // Get all answers for this session
+    // Sort by question_number if available (for practice), otherwise by created_at
     const answers = await SessionAnswer.find({ session_id, user_id })
-      .sort({ created_at: 1 });
+      .sort({ question_number: 1, created_at: 1 });
 
     logger.info(`[SessionAnswers] Found ${answers.length} answers for session: ${session_id}`);
     
     if (answers.length > 0) {
-      logger.info(`[SessionAnswers] First answer: ${JSON.stringify(answers[0])}`);
+      logger.info(`[SessionAnswers] First answer - question_number: ${answers[0].question_number}, type: ${answers[0].question_type}`);
     }
 
     const response = {
@@ -946,8 +947,8 @@ async function getSessionAnswers(req, res, next) {
         started_at: session.start_time,
         completed_at: session.end_time,
       },
-      answers: answers.map((answer, index) => ({
-        question_number: index + 1,
+      answers: answers.map((answer) => ({
+        question_number: answer.question_number || 0,
         question_id: answer.question_id,
         question_text: answer.question_text,
         question_type: answer.question_type,

@@ -198,6 +198,9 @@ const submitPracticeAnswer = async (userId, sessionId, userAnswer, timeSpentMs =
 
   if (!session) throw new Error("Active session not found.");
 
+  // Calculate question number BEFORE any modifications
+  const questionNumberBeforeIncrement = session.current_index + 1;
+
   const currentQId = session.question_ids[session.current_index];
   const question = await PracticeQuestion.findById(currentQId).lean();
 
@@ -227,10 +230,13 @@ const submitPracticeAnswer = async (userId, sessionId, userAnswer, timeSpentMs =
     await updateUserProgress(userId, session.topic_id, session.level, session.score, session.total, session.exercise_id);
 
     const finalResults = buildFinalResults(session);
+    const formattedUserAnswer = getUserAnswerText(question, userAnswer);
+    const formattedCorrectAnswer = getCorrectAnswerText(question);
+    
     return {
       status: "completed",
       is_correct,
-      question_number: session.current_index + 1,
+      question_number: questionNumberBeforeIncrement,
       total_questions: session.total,
       feedback,
       final_results: finalResults,
@@ -239,8 +245,10 @@ const submitPracticeAnswer = async (userId, sessionId, userAnswer, timeSpentMs =
       question_id: currentQId.toString(),
       question_text: question.question,
       question_type: question.type,
-      user_answer: JSON.stringify(userAnswer),
-      correct_answer: getCorrectAnswerText(question),
+      user_answer: formattedUserAnswer,
+      correct_answer: formattedCorrectAnswer,
+      question_number: questionNumberBeforeIncrement,
+      options: question.type === "multiple_choice" ? question.options : (question.type === "reorder" ? question.words : null),
     };
   } else {
     session.current_index += 1;
@@ -249,10 +257,13 @@ const submitPracticeAnswer = async (userId, sessionId, userAnswer, timeSpentMs =
     const nextQId = session.question_ids[session.current_index];
     const nextQuestion = await PracticeQuestion.findById(nextQId).lean();
 
+    const formattedUserAnswer = getUserAnswerText(question, userAnswer);
+    const formattedCorrectAnswer = getCorrectAnswerText(question);
+
     return {
       status: "ongoing",
       is_correct,
-      question_number: session.current_index, // already incremented
+      question_number: questionNumberBeforeIncrement,
       next_question_number: session.current_index + 1,
       total_questions: session.total,
       feedback,
@@ -266,8 +277,10 @@ const submitPracticeAnswer = async (userId, sessionId, userAnswer, timeSpentMs =
       question_id: currentQId.toString(),
       question_text: question.question,
       question_type: question.type,
-      user_answer: JSON.stringify(userAnswer),
-      correct_answer: getCorrectAnswerText(question),
+      user_answer: formattedUserAnswer,
+      correct_answer: formattedCorrectAnswer,
+      question_number: questionNumberBeforeIncrement,
+      options: question.type === "multiple_choice" ? question.options : (question.type === "reorder" ? question.words : null),
     };
   }
 };
@@ -352,7 +365,30 @@ function getCorrectAnswerText(question) {
       return "";
   }
 }
-
+function getUserAnswerText(question, userAnswer) {
+  if (!userAnswer && userAnswer !== 0) return "[No answer]";
+  
+  switch (question.type) {
+    case "multiple_choice":
+      const idx = parseInt(userAnswer);
+      return question.options?.[idx] || `Option ${idx + 1}`;
+    case "fill_in_blank":
+      return String(userAnswer);
+    case "reorder":
+      try {
+        const parsed = Array.isArray(userAnswer) ? userAnswer : JSON.parse(userAnswer);
+        const ordered = [...question.words];
+        return parsed.map((i) => ordered[i]).join(" ");
+      } catch (e) {
+        return String(userAnswer);
+      }
+    case "error_detection":
+      const partIdx = parseInt(userAnswer);
+      return `Part ${partIdx + 1}: "${question.sentence_parts?.[partIdx]}"`;
+    default:
+      return String(userAnswer);
+  }
+}
 function sanitizeQuestion(q) {
   if (!q) return null;
   const base = {
