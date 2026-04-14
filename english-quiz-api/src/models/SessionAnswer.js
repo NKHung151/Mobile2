@@ -21,7 +21,7 @@ const sessionAnswerSchema = new mongoose.Schema(
     },
     question_type: {
       type: String,
-      enum: ["quiz", "multiple_choice", "fillup", "listening", "homophone_groups"],
+      enum: ["quiz", "multiple_choice","fill_in_blank","reorder","error_detection", "fillup", "listening", "homophone_groups"],
       default: "quiz",
     },
     // User's answer
@@ -31,7 +31,7 @@ const sessionAnswerSchema = new mongoose.Schema(
     },
     // Correct answer
     correct_answer: {
-      type: String,
+      type: Object,
       required: true,
     },
     // Answer details
