@@ -31,7 +31,7 @@ const sessionAnswerSchema = new mongoose.Schema(
     },
     // Correct answer
     correct_answer: {
-      type: String,
+      type: Object,
       required: true,
     },
     // Answer details

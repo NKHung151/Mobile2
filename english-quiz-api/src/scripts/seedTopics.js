@@ -80,7 +80,7 @@ A simple sentence can also have a compound predicate.
 Example: She sings and dances. One subject has two verbs.
 
 00:01:25.000 --> 00:01:30.000
-A simple sentence cannot have two independent clauses.
+A simple sentence cannot have two independent clauses joined without punctuation.
 
 00:01:30.000 --> 00:01:35.000
 Adding a second independent clause without a conjunction creates a run-on sentence.
@@ -122,7 +122,7 @@ Example: Open the window. Sit down. Please be quiet.
 The subject "you" is implied in imperative sentences.
 
 00:02:35.000 --> 00:02:40.000
-Exclamatory simple sentences express strong emotion.
+Exclamatory sentences express strong emotion.
 
 00:02:40.000 --> 00:02:45.000
 Example: What a beautiful day! How fast she runs!
@@ -134,13 +134,13 @@ Interrogative simple sentences ask questions.
 Example: Does she run? Did he read the book?
 
 00:02:55.000 --> 00:03:00.000
-Negative simple sentences use "not" or auxiliary verbs to negate.
+Negative simple sentences use "not" or auxiliary verbs.
 
 00:03:00.000 --> 00:03:05.000
 Example: She does not run. He did not read the book.
 
 00:03:05.000 --> 00:03:10.000
-Contractions are commonly used in negative sentences: doesn't, didn't, can't.
+Contractions are common in negative sentences: doesn't, didn't, can't, won't.
 
 00:03:10.000 --> 00:03:15.000
 Transitive verbs require a direct object: She kicked the ball.
@@ -155,58 +155,46 @@ Linking verbs connect the subject to a subject complement.
 Common linking verbs: be, seem, appear, become, feel, look, smell, taste, sound.
 
 00:03:30.000 --> 00:03:35.000
-Example: She seems happy. The soup tastes delicious.
+After a linking verb, use an adjective, not an adverb.
 
 00:03:35.000 --> 00:03:40.000
-A subject complement can be a noun or adjective after a linking verb.
+Example: She looks happy. NOT: She looks happily.
 
 00:03:40.000 --> 00:03:45.000
-Example: He is a doctor. (noun complement) She looks tired. (adjective complement)
-
-00:03:45.000 --> 00:03:50.000
-Noun phrases can serve as subjects: The old man in the park feeds birds.
-
-00:03:50.000 --> 00:03:55.000
 Gerunds (verb + -ing) can be subjects of simple sentences.
 
-00:03:55.000 --> 00:04:00.000
+00:03:45.000 --> 00:03:50.000
 Example: Swimming is good exercise. Reading improves vocabulary.
 
-00:04:00.000 --> 00:04:05.000
+00:03:50.000 --> 00:03:55.000
 Infinitives (to + verb) can also function as subjects.
 
+00:03:55.000 --> 00:04:00.000
+Example: To learn English takes time.
+
+00:04:00.000 --> 00:04:05.000
+Appositives rename the subject and are set off by commas.
+
 00:04:05.000 --> 00:04:10.000
-Example: To learn English takes time. To win is the goal.
-
-00:04:10.000 --> 00:04:15.000
-Appositives rename or re-identify the subject.
-
-00:04:15.000 --> 00:04:20.000
 Example: My brother, a doctor, works at the hospital.
 
+00:04:10.000 --> 00:04:15.000
+Collective nouns like "team" or "committee" are usually treated as singular.
+
+00:04:15.000 --> 00:04:20.000
+Example: The team is ready. The committee has decided.
+
 00:04:20.000 --> 00:04:25.000
-Participial phrases can add detail but must be attached to a simple sentence correctly.
+"The number of" takes a singular verb; "a number of" takes a plural verb.
 
 00:04:25.000 --> 00:04:30.000
-Example: Excited about the trip, she packed her bags.
+Example: The number of students is increasing. A number of students are absent.
 
 00:04:30.000 --> 00:04:35.000
-A dangling modifier occurs when the participial phrase is incorrectly placed.
-
-00:04:35.000 --> 00:04:40.000
-Incorrect: Running to school, the rain started. (Who was running? Not the rain.)
-
-00:04:40.000 --> 00:04:45.000
-Correct: Running to school, she got caught in the rain.
-
-00:04:45.000 --> 00:04:50.000
 Simple sentences are the foundation of all English grammar.
 
-00:04:50.000 --> 00:04:55.000
-Mastering simple sentences helps you build compound and complex sentences later.
-
-00:04:55.000 --> 00:05:00.000
-Practice identifying subjects and verbs in every sentence you read.`,
+00:04:35.000 --> 00:04:40.000
+Mastering simple sentences helps you build compound and complex sentences.`,
       },
     ],
   },
@@ -222,13 +210,13 @@ Practice identifying subjects and verbs in every sentence you read.`,
 Tenses indicate the time of an action: past, present, or future.
 
 00:00:05.000 --> 00:00:10.000
-English has 12 main tenses, divided into simple, continuous, perfect, and perfect continuous.
+English has 12 main tenses divided into simple, continuous, perfect, and perfect continuous.
 
 00:00:10.000 --> 00:00:15.000
-The Simple Present tense describes habits, routines, and facts.
+The Simple Present tense describes habits, routines, and general facts.
 
 00:00:15.000 --> 00:00:20.000
-Formula: Subject + base verb (add -s/-es for he/she/it).
+Formula: Subject + base verb. Add -s or -es for he, she, it.
 
 00:00:20.000 --> 00:00:25.000
 Example: She eats breakfast every day. The sun rises in the east.
@@ -237,7 +225,7 @@ Example: She eats breakfast every day. The sun rises in the east.
 Time signals for Simple Present: always, usually, often, sometimes, never, every day.
 
 00:00:30.000 --> 00:00:35.000
-The Present Continuous tense describes actions happening right now or temporary situations.
+The Present Continuous tense describes actions happening right now.
 
 00:00:35.000 --> 00:00:40.000
 Formula: Subject + am/is/are + verb-ing.
@@ -246,7 +234,7 @@ Formula: Subject + am/is/are + verb-ing.
 Example: She is eating lunch right now. They are playing football.
 
 00:00:45.000 --> 00:00:50.000
-Time signals for Present Continuous: now, at the moment, currently, today, this week.
+Time signals for Present Continuous: now, at the moment, currently, right now, look, listen.
 
 00:00:50.000 --> 00:00:55.000
 Some verbs are not used in continuous tenses. These are called stative verbs.
@@ -270,132 +258,114 @@ Example: She has visited Paris. They have finished the project.
 Time signals for Present Perfect: just, already, yet, ever, never, since, for, recently.
 
 00:01:25.000 --> 00:01:30.000
-The Present Perfect Continuous emphasizes the duration of an ongoing activity.
+"Since" is used with a starting point: She has lived here since 2015.
 
 00:01:30.000 --> 00:01:35.000
-Formula: Subject + have/has + been + verb-ing.
+"For" is used with a duration: She has lived here for five years.
 
 00:01:35.000 --> 00:01:40.000
-Example: She has been studying for three hours. It has been raining since morning.
+Never use Present Perfect with specific finished time expressions.
 
 00:01:40.000 --> 00:01:45.000
-The Simple Past tense describes completed actions at a specific time in the past.
-
-00:01:45.000 --> 00:01:50.000
-Formula: Subject + past tense verb (regular: add -ed; irregular: special form).
-
-00:01:50.000 --> 00:01:55.000
-Example: She ate breakfast. They played football yesterday.
-
-00:01:55.000 --> 00:02:00.000
-Time signals for Simple Past: yesterday, last week, in 2010, ago, when.
-
-00:02:00.000 --> 00:02:05.000
-Common irregular verbs: go→went, eat→ate, see→saw, take→took, write→wrote.
-
-00:02:05.000 --> 00:02:10.000
-The Past Continuous tense describes an action in progress at a specific moment in the past.
-
-00:02:10.000 --> 00:02:15.000
-Formula: Subject + was/were + verb-ing.
-
-00:02:15.000 --> 00:02:20.000
-Example: She was reading when the phone rang.
-
-00:02:20.000 --> 00:02:25.000
-The Past Continuous is often used with the Simple Past for interrupted actions.
-
-00:02:25.000 --> 00:02:30.000
-Example: I was cooking dinner when she arrived.
-
-00:02:30.000 --> 00:02:35.000
-The Past Perfect tense describes an action completed before another past action.
-
-00:02:35.000 --> 00:02:40.000
-Formula: Subject + had + past participle.
-
-00:02:40.000 --> 00:02:45.000
-Example: By the time she arrived, they had already eaten.
-
-00:02:45.000 --> 00:02:50.000
-The Past Perfect Continuous emphasizes the duration of an action before a past event.
-
-00:02:50.000 --> 00:02:55.000
-Formula: Subject + had + been + verb-ing.
-
-00:02:55.000 --> 00:03:00.000
-Example: She had been waiting for two hours before the doctor arrived.
-
-00:03:00.000 --> 00:03:05.000
-The Simple Future tense describes actions that will happen in the future.
-
-00:03:05.000 --> 00:03:10.000
-Formula with "will": Subject + will + base verb.
-
-00:03:10.000 --> 00:03:15.000
-Example: She will travel to London next year.
-
-00:03:15.000 --> 00:03:20.000
-Formula with "be going to": Subject + am/is/are + going to + base verb.
-
-00:03:20.000 --> 00:03:25.000
-Example: She is going to study medicine. We use this for plans and intentions.
-
-00:03:25.000 --> 00:03:30.000
-"Will" is used for spontaneous decisions and predictions without evidence.
-
-00:03:30.000 --> 00:03:35.000
-"Be going to" is used for planned decisions and predictions with evidence.
-
-00:03:35.000 --> 00:03:40.000
-Time signals for Simple Future: tomorrow, next week, soon, in the future, later.
-
-00:03:40.000 --> 00:03:45.000
-The Future Continuous describes an action in progress at a specific future time.
-
-00:03:45.000 --> 00:03:50.000
-Formula: Subject + will be + verb-ing.
-
-00:03:50.000 --> 00:03:55.000
-Example: This time tomorrow, she will be flying to Paris.
-
-00:03:55.000 --> 00:04:00.000
-The Future Perfect describes an action that will be completed before a future point.
-
-00:04:00.000 --> 00:04:05.000
-Formula: Subject + will have + past participle.
-
-00:04:05.000 --> 00:04:10.000
-Example: By 2030, she will have graduated from university.
-
-00:04:10.000 --> 00:04:15.000
-The Future Perfect Continuous describes the duration of an action up to a future point.
-
-00:04:15.000 --> 00:04:20.000
-Formula: Subject + will have been + verb-ing.
-
-00:04:20.000 --> 00:04:25.000
-Example: By next month, she will have been working here for ten years.
-
-00:04:25.000 --> 00:04:30.000
-Never use Present Perfect with specific past time expressions like "yesterday" or "last year."
-
-00:04:30.000 --> 00:04:35.000
 Incorrect: I have seen him yesterday. Correct: I saw him yesterday.
 
-00:04:35.000 --> 00:04:40.000
-"Since" refers to a starting point: She has lived here since 2010.
+00:01:45.000 --> 00:01:50.000
+The Present Perfect Continuous emphasizes how long an activity has been going on.
 
-00:04:40.000 --> 00:04:45.000
-"For" refers to a duration: She has lived here for ten years.
+00:01:50.000 --> 00:01:55.000
+Formula: Subject + have/has + been + verb-ing.
 
-00:04:45.000 --> 00:04:50.000
-In time and conditional clauses, use present tense for future meaning.
+00:01:55.000 --> 00:02:00.000
+Example: She has been studying for three hours. It has been raining since morning.
 
-00:04:50.000 --> 00:04:55.000
-Example: When she arrives, we will start. (NOT: When she will arrive)
+00:02:00.000 --> 00:02:05.000
+The Simple Past tense describes completed actions at a specific time in the past.
 
-00:04:55.000 --> 00:05:00.000
+00:02:05.000 --> 00:02:10.000
+Formula: Subject + past tense verb. Regular verbs add -ed. Irregular verbs change form.
+
+00:02:10.000 --> 00:02:15.000
+Example: She ate breakfast. They played football yesterday.
+
+00:02:15.000 --> 00:02:20.000
+Time signals for Simple Past: yesterday, last week, in 2010, ago, when.
+
+00:02:20.000 --> 00:02:25.000
+Common irregular verbs: go went, eat ate, see saw, take took, write wrote, come came.
+
+00:02:25.000 --> 00:02:30.000
+The Past Continuous describes an action in progress at a specific past moment.
+
+00:02:30.000 --> 00:02:35.000
+Formula: Subject + was/were + verb-ing.
+
+00:02:35.000 --> 00:02:40.000
+Example: She was reading when the phone rang.
+
+00:02:40.000 --> 00:02:45.000
+Use Past Continuous with Simple Past for an interrupted action.
+
+00:02:45.000 --> 00:02:50.000
+Example: I was cooking dinner when she arrived.
+
+00:02:50.000 --> 00:02:55.000
+The Past Perfect describes an action completed before another past action.
+
+00:02:55.000 --> 00:03:00.000
+Formula: Subject + had + past participle.
+
+00:03:00.000 --> 00:03:05.000
+Example: By the time she arrived, they had already eaten.
+
+00:03:05.000 --> 00:03:10.000
+The Past Perfect Continuous shows the duration of an activity before a past event.
+
+00:03:10.000 --> 00:03:15.000
+Formula: Subject + had been + verb-ing.
+
+00:03:15.000 --> 00:03:20.000
+Example: She had been waiting for two hours before the doctor arrived.
+
+00:03:20.000 --> 00:03:25.000
+The Simple Future with "will": Subject + will + base verb.
+
+00:03:25.000 --> 00:03:30.000
+Example: She will travel to London next year.
+
+00:03:30.000 --> 00:03:35.000
+"Be going to" expresses plans and intentions: Subject + am/is/are + going to + base verb.
+
+00:03:35.000 --> 00:03:40.000
+Example: She is going to study medicine.
+
+00:03:40.000 --> 00:03:45.000
+"Will" is used for spontaneous decisions made at the moment of speaking.
+
+00:03:45.000 --> 00:03:50.000
+"Be going to" is used for pre-planned decisions.
+
+00:03:50.000 --> 00:03:55.000
+Time signals for future: tomorrow, next week, soon, later, this evening.
+
+00:03:55.000 --> 00:04:00.000
+The Future Continuous: Subject + will be + verb-ing.
+
+00:04:00.000 --> 00:04:05.000
+Example: This time tomorrow, she will be flying to Paris.
+
+00:04:05.000 --> 00:04:10.000
+The Future Perfect: Subject + will have + past participle.
+
+00:04:10.000 --> 00:04:15.000
+Example: By 2030, she will have graduated from university.
+
+00:04:15.000 --> 00:04:20.000
+In time clauses, use Present tense for future meaning: When she arrives, we will start.
+
+00:04:20.000 --> 00:04:25.000
+Do NOT say: When she will arrive. Use: When she arrives.
+
+00:04:25.000 --> 00:04:30.000
 Understanding all 12 tenses is key to accurate English communication.`,
       },
     ],
@@ -475,429 +445,85 @@ Simple Future Passive: will + be + past participle.
 Example: The results will be announced tomorrow.
 
 00:01:50.000 --> 00:01:55.000
-Future Perfect Passive: will + have been + past participle.
-
-00:01:55.000 --> 00:02:00.000
-Example: The task will have been finished by Friday.
-
-00:02:00.000 --> 00:02:05.000
 Modal Passive: modal + be + past participle.
 
-00:02:05.000 --> 00:02:10.000
+00:01:55.000 --> 00:02:00.000
 Example: The rules must be followed. The problem can be solved.
 
-00:02:10.000 --> 00:02:15.000
+00:02:00.000 --> 00:02:05.000
 The agent (doer) is introduced with "by" in passive sentences.
 
-00:02:15.000 --> 00:02:20.000
+00:02:05.000 --> 00:02:10.000
 The agent is often omitted when it is unknown, unimportant, or obvious.
 
-00:02:20.000 --> 00:02:25.000
-Example: My wallet was stolen. (We don't know who stole it.)
+00:02:10.000 --> 00:02:15.000
+Example: My wallet was stolen. We don't know who stole it.
 
-00:02:25.000 --> 00:02:30.000
+00:02:15.000 --> 00:02:20.000
 Passive voice is commonly used in academic and scientific writing.
 
-00:02:30.000 --> 00:02:35.000
+00:02:20.000 --> 00:02:25.000
 Example: The experiment was conducted under controlled conditions.
 
-00:02:35.000 --> 00:02:40.000
-Passive voice is used in news reports to focus on the event rather than the doer.
+00:02:25.000 --> 00:02:30.000
+Passive voice is used in news reports to focus on the event.
 
-00:02:40.000 --> 00:02:45.000
+00:02:30.000 --> 00:02:35.000
 Example: Three people were injured in the accident.
 
-00:02:45.000 --> 00:02:50.000
+00:02:35.000 --> 00:02:40.000
 Only transitive verbs (verbs that take an object) can be made passive.
 
-00:02:50.000 --> 00:02:55.000
-Intransitive verbs like "arrive," "sleep," "die" cannot be passivized.
+00:02:40.000 --> 00:02:45.000
+Intransitive verbs like "arrive," "sleep," and "die" cannot be passivized.
 
-00:02:55.000 --> 00:03:00.000
-Incorrect: The bed was slept. Correct: He slept in the bed. (active, intransitive)
-
-00:03:00.000 --> 00:03:05.000
+00:02:45.000 --> 00:02:50.000
 Some verbs have two objects: give, send, offer, show, tell, teach, buy.
 
-00:03:05.000 --> 00:03:10.000
+00:02:50.000 --> 00:02:55.000
 Either object can become the subject of a passive sentence.
 
-00:03:10.000 --> 00:03:15.000
+00:02:55.000 --> 00:03:00.000
 Active: She gave him a book. Passive 1: He was given a book. Passive 2: A book was given to him.
 
-00:03:15.000 --> 00:03:20.000
-Causative structures use passive meaning: have/get + object + past participle.
+00:03:00.000 --> 00:03:05.000
+Impersonal passive: It is said that... It is believed that... It is reported that...
 
-00:03:20.000 --> 00:03:25.000
-Example: She had her hair cut. He got his car repaired.
+00:03:05.000 --> 00:03:10.000
+Personal passive: She is said to be an expert. He is known to have won many awards.
 
-00:03:25.000 --> 00:03:30.000
-Reporting verbs with passive: It is said that..., It is believed that...
-
-00:03:30.000 --> 00:03:35.000
-Example: It is reported that the economy is improving.
-
-00:03:35.000 --> 00:03:40.000
-Personal passive with reporting verbs: She is said to be an expert.
-
-00:03:40.000 --> 00:03:45.000
-He is known to have won many awards.
-
-00:03:45.000 --> 00:03:50.000
+00:03:10.000 --> 00:03:15.000
 Passive infinitives: to be + past participle.
 
-00:03:50.000 --> 00:03:55.000
+00:03:15.000 --> 00:03:20.000
 Example: She wants to be promoted. The work needs to be done.
 
-00:03:55.000 --> 00:04:00.000
+00:03:20.000 --> 00:03:25.000
 Passive gerunds: being + past participle.
 
-00:04:00.000 --> 00:04:05.000
+00:03:25.000 --> 00:03:30.000
 Example: She hates being criticized. He enjoys being praised.
 
-00:04:05.000 --> 00:04:10.000
-To convert active to passive: move the object to subject position, add be + past participle, put the original subject after "by."
+00:03:30.000 --> 00:03:35.000
+Causative have: have/get + object + past participle.
 
-00:04:10.000 --> 00:04:15.000
+00:03:35.000 --> 00:03:40.000
+Example: She had her hair cut. He got his car repaired.
+
+00:03:40.000 --> 00:03:45.000
+To convert active to passive: move the object to subject, add be + past participle, put the agent after "by."
+
+00:03:45.000 --> 00:03:50.000
 Active: The teacher corrected the papers. Passive: The papers were corrected by the teacher.
 
-00:04:15.000 --> 00:04:20.000
-Active voice is generally preferred for clear, direct, concise writing.
-
-00:04:20.000 --> 00:04:25.000
-Passive voice should be used deliberately, not out of habit.
-
-00:04:25.000 --> 00:04:30.000
-Understanding voice is crucial for TOEIC, IELTS, and academic English.`,
-      },
-    ],
-  },
-  {
-    topic_id: "conditionals",
-    title: "Conditionals",
-    files: [
-      {
-        filename: "conditionals.vtt",
-        content: `WEBVTT
-
-00:00:00.000 --> 00:00:05.000
-Conditional sentences express a condition and its result.
-
-00:00:05.000 --> 00:00:10.000
-They are also called "if sentences" and have two clauses: the if-clause and the main clause.
-
-00:00:10.000 --> 00:00:15.000
-There are five main types of conditionals in English.
-
-00:00:15.000 --> 00:00:20.000
-Zero Conditional expresses general truths and scientific facts.
-
-00:00:20.000 --> 00:00:25.000
-Formula: If + Simple Present, Simple Present.
-
-00:00:25.000 --> 00:00:30.000
-Example: If you heat water to 100°C, it boils.
-
-00:00:30.000 --> 00:00:35.000
-Example: If it rains, the ground gets wet.
-
-00:00:35.000 --> 00:00:40.000
-"When" can replace "if" in Zero Conditionals without changing the meaning.
-
-00:00:40.000 --> 00:00:45.000
-First Conditional expresses real and possible future situations.
-
-00:00:45.000 --> 00:00:50.000
-Formula: If + Simple Present, will + base verb.
-
-00:00:50.000 --> 00:00:55.000
-Example: If it rains tomorrow, we will cancel the picnic.
-
-00:00:55.000 --> 00:01:00.000
-Example: If she studies hard, she will pass the exam.
-
-00:01:00.000 --> 00:01:05.000
-Other modals can replace "will" in the main clause: can, may, might, should.
-
-00:01:05.000 --> 00:01:10.000
-Example: If he arrives late, he might miss the presentation.
-
-00:01:10.000 --> 00:01:15.000
-Second Conditional expresses imaginary, hypothetical, or unlikely present/future situations.
-
-00:01:15.000 --> 00:01:20.000
-Formula: If + Simple Past, would + base verb.
-
-00:01:20.000 --> 00:01:25.000
-Example: If I had a million dollars, I would travel the world.
-
-00:01:25.000 --> 00:01:30.000
-Example: If she were a bird, she would fly to Paris. (Use "were" for all subjects.)
-
-00:01:30.000 --> 00:01:35.000
-"Were" is preferred for all subjects in formal Second Conditional: If I were you...
-
-00:01:35.000 --> 00:01:40.000
-Could and might can also be used: If I had more time, I could read more books.
-
-00:01:40.000 --> 00:01:45.000
-Third Conditional expresses impossible or hypothetical situations in the past.
-
-00:01:45.000 --> 00:01:50.000
-Formula: If + Past Perfect, would have + past participle.
-
-00:01:50.000 --> 00:01:55.000
-Example: If she had studied harder, she would have passed the exam.
-
-00:01:55.000 --> 00:02:00.000
-Example: If I had known about the party, I would have come.
-
-00:02:00.000 --> 00:02:05.000
-Third Conditional expresses regret about past events that cannot be changed.
-
-00:02:05.000 --> 00:02:10.000
-Could have and might have can replace "would have."
-
-00:02:10.000 --> 00:02:15.000
-Example: If he had trained harder, he could have won the race.
-
-00:02:15.000 --> 00:02:20.000
-Mixed Conditionals combine different time frames.
-
-00:02:20.000 --> 00:02:25.000
-Type 1 Mixed: If + Past Perfect, would + base verb. (Past condition, present result.)
-
-00:02:25.000 --> 00:02:30.000
-Example: If she had taken the job, she would be rich now.
-
-00:02:30.000 --> 00:02:35.000
-Type 2 Mixed: If + Simple Past, would have + past participle. (Present condition, past result.)
-
-00:02:35.000 --> 00:02:40.000
-Example: If I were braver, I would have spoken up at the meeting.
-
-00:02:40.000 --> 00:02:45.000
-Inversion can be used in formal conditionals instead of "if."
-
-00:02:45.000 --> 00:02:50.000
-Second Conditional inversion: Were I in your position, I would reconsider.
-
-00:02:50.000 --> 00:02:55.000
-Third Conditional inversion: Had she known the truth, she would have acted differently.
-
-00:02:55.000 --> 00:03:00.000
-First Conditional inversion: Should you need help, please contact us.
-
-00:03:00.000 --> 00:03:05.000
-"Unless" means "if not" and can start conditional sentences.
-
-00:03:05.000 --> 00:03:10.000
-Example: Unless you hurry, we will be late. = If you don't hurry, we will be late.
-
-00:03:10.000 --> 00:03:15.000
-"As long as," "provided that," and "on condition that" can replace "if."
-
-00:03:15.000 --> 00:03:20.000
-Example: You can go out as long as you finish your homework.
-
-00:03:20.000 --> 00:03:25.000
-"Suppose" and "imagine" can introduce hypothetical conditions.
-
-00:03:25.000 --> 00:03:30.000
-Example: Suppose you won the lottery, what would you do?
-
-00:03:30.000 --> 00:03:35.000
-Wishes are related to conditionals and express desires about unreal situations.
-
-00:03:35.000 --> 00:03:40.000
-Wish + Past Simple for present wishes: I wish I had more time.
-
-00:03:40.000 --> 00:03:45.000
-Wish + Past Perfect for past regrets: I wish I had studied harder.
-
-00:03:45.000 --> 00:03:50.000
-Wish + would for annoyances or desired future changes: I wish he would stop smoking.
-
 00:03:50.000 --> 00:03:55.000
-"If only" is used to express stronger wishes and regrets.
+Active voice is preferred for clear and direct writing.
 
 00:03:55.000 --> 00:04:00.000
-Example: If only I had listened to her advice! If only we had more money!
+Use passive when the agent is unknown, unimportant, or when you want a formal tone.
 
 00:04:00.000 --> 00:04:05.000
-Never use "would" in the if-clause of conditional sentences.
-
-00:04:05.000 --> 00:04:10.000
-Incorrect: If I would have time, I would visit you. Correct: If I had time, I would visit you.
-
-00:04:10.000 --> 00:04:15.000
-The if-clause can come before or after the main clause.
-
-00:04:15.000 --> 00:04:20.000
-When the if-clause comes first, use a comma to separate the two clauses.
-
-00:04:20.000 --> 00:04:25.000
-When the main clause comes first, no comma is needed.
-
-00:04:25.000 --> 00:04:30.000
-Example: We will cancel the picnic if it rains. (no comma)
-
-00:04:30.000 --> 00:04:35.000
-Conditionals are essential for expressing possibility, advice, regret, and hypothetical thinking.
-
-00:04:35.000 --> 00:04:40.000
-Mastering conditionals significantly improves IELTS, TOEFL, and TOEIC scores.`,
-      },
-    ],
-  },
-  {
-    topic_id: "articles",
-    title: "Articles",
-    files: [
-      {
-        filename: "articles.vtt",
-        content: `WEBVTT
-
-00:00:00.000 --> 00:00:05.000
-Articles are words that define a noun as specific or unspecific.
-
-00:00:05.000 --> 00:00:10.000
-There are three articles in English: "a," "an," and "the."
-
-00:00:10.000 --> 00:00:15.000
-"A" and "an" are indefinite articles. "The" is the definite article.
-
-00:00:15.000 --> 00:00:20.000
-Use "a" before words that begin with a consonant sound.
-
-00:00:20.000 --> 00:00:25.000
-Example: a cat, a book, a university (note: "university" starts with a /j/ sound).
-
-00:00:25.000 --> 00:00:30.000
-Use "an" before words that begin with a vowel sound.
-
-00:00:30.000 --> 00:00:35.000
-Example: an apple, an hour (note: "hour" starts with a silent "h"), an umbrella.
-
-00:00:35.000 --> 00:00:40.000
-The rule is based on sound, not spelling: "a university," "an honest man."
-
-00:00:40.000 --> 00:00:45.000
-Use "a/an" when mentioning something for the first time or when it is not specific.
-
-00:00:45.000 --> 00:00:50.000
-Example: I saw a dog in the park. (any dog, not a specific one)
-
-00:00:50.000 --> 00:00:55.000
-Use "the" when the listener knows which specific thing you are referring to.
-
-00:00:55.000 --> 00:01:00.000
-Example: I saw a dog. The dog was barking loudly. (second mention = specific)
-
-00:01:00.000 --> 00:01:05.000
-Use "the" with unique nouns: the sun, the moon, the Earth, the Internet.
-
-00:01:05.000 --> 00:01:10.000
-Use "the" when there is only one of something in context: the president, the manager.
-
-00:01:10.000 --> 00:01:15.000
-Use "the" with superlatives: the best, the most beautiful, the tallest building.
-
-00:01:15.000 --> 00:01:20.000
-Use "the" with ordinal numbers: the first chapter, the second floor.
-
-00:01:20.000 --> 00:01:25.000
-Use "the" with rivers, seas, oceans, mountain ranges, and deserts.
-
-00:01:25.000 --> 00:01:30.000
-Example: the Amazon River, the Pacific Ocean, the Alps, the Sahara Desert.
-
-00:01:30.000 --> 00:01:35.000
-Use "the" with plural country names: the United States, the Philippines, the Netherlands.
-
-00:01:35.000 --> 00:01:40.000
-Use "the" with names that include "of": the Bank of England, the University of London.
-
-00:01:40.000 --> 00:01:45.000
-Do NOT use "the" with most singular country names: France, Japan, Brazil, Vietnam.
-
-00:01:45.000 --> 00:01:50.000
-Do NOT use "the" with languages: She speaks French. He studies English.
-
-00:01:50.000 --> 00:01:55.000
-Do NOT use "the" with most proper nouns: Mount Everest, Lake Victoria, Paris.
-
-00:01:55.000 --> 00:02:00.000
-Do NOT use "the" with meals: I had breakfast at 7. Let's have lunch together.
-
-00:02:00.000 --> 00:02:05.000
-Do NOT use "the" with sports: She plays tennis. They love football.
-
-00:02:05.000 --> 00:02:10.000
-Do NOT use "the" with academic subjects: He studies physics. She teaches mathematics.
-
-00:02:10.000 --> 00:02:15.000
-Zero article (no article) is used with plural and uncountable nouns to make general statements.
-
-00:02:15.000 --> 00:02:20.000
-Example: Dogs are loyal animals. (all dogs in general) Water is essential for life.
-
-00:02:20.000 --> 00:02:25.000
-Compare: The dogs in the park were friendly. (specific dogs)
-
-00:02:25.000 --> 00:02:30.000
-Use "a/an" to describe someone's job or role: She is a doctor. He is an engineer.
-
-00:02:30.000 --> 00:02:35.000
-Use "the" when referring to a specific job title: She is the director of the company.
-
-00:02:35.000 --> 00:02:40.000
-"A/an" is used in expressions of rate: twice a day, 60 km an hour.
-
-00:02:40.000 --> 00:02:45.000
-"The" is used with musical instruments: She plays the piano. He plays the guitar.
-
-00:02:45.000 --> 00:02:50.000
-"The" is used with media: listening to the radio, watching the news.
-
-00:02:50.000 --> 00:02:55.000
-Articles with adjectives: use "a/an" with singular adjective + noun: a beautiful flower.
-
-00:02:55.000 --> 00:03:00.000
-"The" is used with adjective to refer to a group: the rich, the poor, the elderly.
-
-00:03:00.000 --> 00:03:05.000
-"The" is used with nationalities as groups: the French, the Vietnamese, the Japanese.
-
-00:03:05.000 --> 00:03:10.000
-Articles can change meaning significantly: "She is in bed" (sick/sleeping) vs "She is in the bed" (physically inside it).
-
-00:03:10.000 --> 00:03:15.000
-Other examples: go to school (as a student) vs go to the school (physically go there).
-
-00:03:15.000 --> 00:03:20.000
-In prison (as a prisoner) vs at the prison (visiting location).
-
-00:03:20.000 --> 00:03:25.000
-Go to church (for worship) vs go to the church (visit the building).
-
-00:03:25.000 --> 00:03:30.000
-Abstract nouns used in general: Life is beautiful. Love is complicated.
-
-00:03:30.000 --> 00:03:35.000
-But with specificity: The life of a soldier is difficult. The love she felt was real.
-
-00:03:35.000 --> 00:03:40.000
-Articles are among the most common errors for non-native English speakers.
-
-00:03:40.000 --> 00:03:45.000
-The key question: Is the noun specific and identifiable to both speaker and listener?
-
-00:03:45.000 --> 00:03:50.000
-If yes → use "the." If new/unspecific + singular countable → use "a/an." If general plural/uncountable → use no article.
-
-00:03:50.000 --> 00:03:55.000
-Mastering articles will significantly improve your writing and speaking accuracy.`,
+Passive voice is important for TOEIC, IELTS, and academic writing.`,
       },
     ],
   },
@@ -916,22 +542,22 @@ Modal verbs are auxiliary verbs that express ability, possibility, permission, o
 The main modal verbs are: can, could, may, might, must, shall, should, will, would, ought to.
 
 00:00:10.000 --> 00:00:15.000
-Modal verbs are followed by the base form of the verb (infinitive without "to").
+Modal verbs are always followed by the base form of the verb without "to."
 
 00:00:15.000 --> 00:00:20.000
 Example: She can swim. He must leave. They should study.
 
 00:00:20.000 --> 00:00:25.000
-Modal verbs do not add -s for third person singular: He can run. (NOT: He cans run.)
+Modal verbs do not add -s for third person singular: He can run. NOT: He cans run.
 
 00:00:25.000 --> 00:00:30.000
 Modal verbs do not use "do/does/did" in questions or negatives.
 
 00:00:30.000 --> 00:00:35.000
-Question: Can she swim? (NOT: Does she can swim?)
+Question: Can she swim? NOT: Does she can swim?
 
 00:00:35.000 --> 00:00:40.000
-Negative: She cannot swim. / She can't swim.
+Negative: She cannot swim. She can't swim.
 
 00:00:40.000 --> 00:00:45.000
 "Can" expresses present ability: I can speak three languages.
@@ -940,7 +566,7 @@ Negative: She cannot swim. / She can't swim.
 "Can" expresses informal permission: Can I borrow your pen?
 
 00:00:50.000 --> 00:00:55.000
-"Can" expresses possibility: Too much stress can cause health problems.
+"Can" expresses general possibility: Too much stress can cause health problems.
 
 00:00:55.000 --> 00:01:00.000
 "Could" expresses past ability: She could run very fast when she was young.
@@ -949,10 +575,10 @@ Negative: She cannot swim. / She can't swim.
 "Could" expresses polite requests: Could you please help me?
 
 00:01:05.000 --> 00:01:10.000
-"Could" expresses present/future possibility: It could rain later today.
+"Could" expresses present possibility: It could rain later today.
 
 00:01:10.000 --> 00:01:15.000
-"Could have + past participle" expresses past possibility or unrealized ability.
+"Could have + past participle" expresses an unrealized past possibility.
 
 00:01:15.000 --> 00:01:20.000
 Example: She could have been a doctor but chose to be a teacher.
@@ -961,121 +587,109 @@ Example: She could have been a doctor but chose to be a teacher.
 "May" expresses formal permission: May I come in?
 
 00:01:25.000 --> 00:01:30.000
-"May" expresses present or future possibility: It may rain tomorrow.
+"May" expresses possibility: It may rain tomorrow.
 
 00:01:30.000 --> 00:01:35.000
-"Might" expresses less certain possibility than "may": It might rain, but I'm not sure.
+"Might" expresses less certain possibility: It might rain, but I'm not sure.
 
 00:01:35.000 --> 00:01:40.000
-"Might have + past participle" expresses past possibility or speculation.
+"Might have + past participle" expresses speculation about a past event.
 
 00:01:40.000 --> 00:01:45.000
 Example: She might have missed the bus. That's why she's late.
 
 00:01:45.000 --> 00:01:50.000
-"Must" expresses strong obligation or necessity: You must wear a seatbelt.
+"Must" expresses strong obligation: You must wear a seatbelt.
 
 00:01:50.000 --> 00:01:55.000
-"Must" expresses logical deduction (certainty): She must be tired — she's been working all day.
+"Must" expresses logical deduction: She must be tired — she has been working all day.
 
 00:01:55.000 --> 00:02:00.000
 "Must not" (mustn't) expresses prohibition: You must not smoke in this area.
 
 00:02:00.000 --> 00:02:05.000
-"Don't have to" means no obligation (not prohibition): You don't have to come if you're busy.
+"Don't have to" means no obligation: You don't have to come if you're busy.
 
 00:02:05.000 --> 00:02:10.000
-"Must not" ≠ "don't have to": Mustn't = forbidden. Don't have to = optional.
+"Must not" and "don't have to" are very different. Mustn't = forbidden. Don't have to = optional.
 
 00:02:10.000 --> 00:02:15.000
-"Have to" and "need to" also express obligation, but they are not modal verbs.
-
-00:02:15.000 --> 00:02:20.000
 "Should" expresses advice or recommendation: You should see a doctor.
 
+00:02:15.000 --> 00:02:20.000
+"Should have + past participle" expresses regret or criticism about the past.
+
 00:02:20.000 --> 00:02:25.000
-"Should" expresses expectation: The package should arrive tomorrow.
-
-00:02:25.000 --> 00:02:30.000
-"Should have + past participle" expresses criticism or regret about the past.
-
-00:02:30.000 --> 00:02:35.000
 Example: You should have called me. I should have studied more.
 
-00:02:35.000 --> 00:02:40.000
+00:02:25.000 --> 00:02:30.000
 "Ought to" is similar to "should" but slightly more formal.
 
-00:02:40.000 --> 00:02:45.000
+00:02:30.000 --> 00:02:35.000
 Example: You ought to apologize. Children ought to respect their elders.
 
-00:02:45.000 --> 00:02:50.000
+00:02:35.000 --> 00:02:40.000
 "Shall" is used in questions to offer or suggest: Shall we dance? Shall I open the window?
 
-00:02:50.000 --> 00:02:55.000
-"Will" expresses future intention or prediction: She will graduate next year.
+00:02:40.000 --> 00:02:45.000
+"Will" expresses future intention or a spontaneous decision: I'll answer the phone.
 
-00:02:55.000 --> 00:03:00.000
-"Will" expresses spontaneous decisions: I'll answer the phone.
-
-00:03:00.000 --> 00:03:05.000
+00:02:45.000 --> 00:02:50.000
 "Would" expresses polite requests: Would you mind helping me?
 
-00:03:05.000 --> 00:03:10.000
+00:02:50.000 --> 00:02:55.000
 "Would" is used in Second Conditional: If I had more time, I would travel.
 
-00:03:10.000 --> 00:03:15.000
+00:02:55.000 --> 00:03:00.000
 "Would" expresses past habits: When I was young, I would play outside every day.
 
-00:03:15.000 --> 00:03:20.000
-"Would have + past participle" is used in Third Conditional: I would have helped if I had known.
+00:03:00.000 --> 00:03:05.000
+Perfect modals: modal + have + past participle.
 
-00:03:20.000 --> 00:03:25.000
-Perfect modals express modal meaning in the past.
-
-00:03:25.000 --> 00:03:30.000
-Modal + have + past participle: could have, should have, would have, might have, must have.
-
-00:03:30.000 --> 00:03:35.000
+00:03:05.000 --> 00:03:10.000
 "Must have + past participle" expresses certainty about a past action.
 
-00:03:35.000 --> 00:03:40.000
+00:03:10.000 --> 00:03:15.000
 Example: She must have left already — her coat is gone.
 
-00:03:40.000 --> 00:03:45.000
+00:03:15.000 --> 00:03:20.000
 "Can't have + past participle" expresses impossibility about a past action.
 
-00:03:45.000 --> 00:03:50.000
+00:03:20.000 --> 00:03:25.000
 Example: He can't have stolen it — he was with me all day.
 
+00:03:25.000 --> 00:03:30.000
+"Should have + past participle" means something was the right thing to do but wasn't done.
+
+00:03:30.000 --> 00:03:35.000
+Modals of deduction: must (certain), may/might/could (possible), can't (impossible).
+
+00:03:35.000 --> 00:03:40.000
+"Had better + base verb" gives strong advice with an implied warning.
+
+00:03:40.000 --> 00:03:45.000
+Example: You had better leave now or you will miss the train.
+
+00:03:45.000 --> 00:03:50.000
+"Used to + base verb" describes past habits or states that no longer exist.
+
 00:03:50.000 --> 00:03:55.000
-Modals of deduction: must (certainty) > should (expectation) > may/might/could (possibility) > can't (impossibility).
+Example: I used to smoke but I quit. She used to live in London.
 
 00:03:55.000 --> 00:04:00.000
-Semi-modals include: be able to, be allowed to, be supposed to, had better, used to.
+"Be used to + gerund" means being accustomed to something.
 
 00:04:00.000 --> 00:04:05.000
-"Had better" gives strong advice, often with a warning: You had better leave now.
+Example: I am used to waking up early. She is used to working long hours.
 
 00:04:05.000 --> 00:04:10.000
-"Used to" describes past habits or states that no longer exist: I used to smoke but I quit.
-
-00:04:10.000 --> 00:04:15.000
-"Be used to + gerund" means being accustomed to: I am used to waking up early.
-
-00:04:15.000 --> 00:04:20.000
-"Get used to + gerund" means becoming accustomed to: She is getting used to driving on the left.
-
-00:04:20.000 --> 00:04:25.000
 Do not confuse "used to do" (past habit) with "be used to doing" (accustomed to).
 
-00:04:25.000 --> 00:04:30.000
+00:04:10.000 --> 00:04:15.000
 Incorrect: I used to living here. Correct: I am used to living here.
 
-00:04:30.000 --> 00:04:35.000
-Modal verbs appear frequently in IELTS, TOEIC, and TOEFL grammar questions.
-
-00:04:35.000 --> 00:04:40.000
-Understanding the nuances between modals is essential for advanced English proficiency.`,
+00:04:15.000 --> 00:04:20.000
+Modal verbs are very common in TOEIC, IELTS, and TOEFL grammar sections.`,
       },
     ],
   },
@@ -1099,11 +713,8 @@ async function seedTopics() {
 
     // 3. XỬ LÝ TỆP
     for (const file of t.files) {
-      // 👉 sử dụng parser của bạn
       const cleanText = parseVTT(file.content);
-
-      // 👉 văn bản khối
-      const chunks = splitIntoChunks(cleanText, 50); // 50 từ/khối cho demo
+      const chunks = splitIntoChunks(cleanText, 50);
 
       let chunkIndex = 0;
       for (const c of chunks) {
