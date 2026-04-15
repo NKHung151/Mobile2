@@ -27,7 +27,6 @@ const courseSchema = new mongoose.Schema(
     },
     share_code: {
       type: String,
-      default: null,
       unique: true,
       sparse: true,
       index: true,
