@@ -94,9 +94,20 @@ async function answer(req, res, next) {
 
     const result = checkAnswerWithData(question_id, user_answer);
 
+    // Initialize questions_answered if needed for question numbering
+    let currentQuestionNumber = 0;
+    
     // Save answer for review later
     if (session_id && user_id) {
       try {
+        // Get current session to track question number
+        const session = await LearningHistory.findOne({ session_id, user_id });
+        if (session) {
+          currentQuestionNumber = (session.questions_answered || 0) + 1;
+        } else {
+          currentQuestionNumber = 1;
+        }
+        
         await saveHomophoneAnswer(
           session_id,
           user_id,
@@ -105,9 +116,10 @@ async function answer(req, res, next) {
           user_answer,
           result.correct_answer,
           result.is_correct,
-          result.choices
+          result.choices,
+          currentQuestionNumber
         );
-        logger.info(`[HomophoneGroups] Answer saved: session=${session_id}, question=${question_id}`);
+        logger.info(`[HomophoneGroups] Answer saved: session=${session_id}, question=${question_id}, question_number=${currentQuestionNumber}`);
       } catch (saveErr) {
         logger.warn(`[HomophoneGroups] Failed to save answer: ${saveErr.message}`);
         // Don't fail the response if saving fails

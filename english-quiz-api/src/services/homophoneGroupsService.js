@@ -8,77 +8,156 @@ const logger = require('../utils/logger');
 const questionStore = new Map();
 const QUESTION_TTL_MS = 10 * 60 * 1000;
 
-// Homophone-specific fallback sentences (more natural and precise)
-const HOMOPHONE_SPECIFIC_SENTENCES = {
-  'hear/here': [
-    `I can _____ you from here.`,
-    `Did you _____ what I said?`,
-    `Come _____, I want to tell you something.`,
-    `Can you _____ the music?`,
-    `_____ are my keys!`,
+// Per-word deterministic sentence bank
+// Each word has ONLY sentences where THAT word fits correctly
+// No ambiguity, no validation needed
+const HOMOPHONE_SENTENCE_BANK = {
+  hear: [
+    "I can _____ you clearly.",
+    "Did you _____ that sound?",
+    "Can you _____ the music?",
+    "I didn't _____ you come in.",
+    "Can everyone _____ me at the back?",
   ],
-  'there/their': [
-    `They live _____.`,
-    `This is _____ house.`,
-    `Look over _____.`,
-    `_____ friends are coming today.`,
-    `Is anyone _____ right now?`,
+  here: [
+    "Come _____ and sit down.",
+    "I am _____ waiting for you.",
+    "Put the bag _____.",
+    "My friend is _____ now.",
+    "We live _____ in this city.",
   ],
-  'to/too/two': [
-    `I want _____ go home.`,
-    `This coffee is _____ hot.`,
-    `We have _____ cats.`,
-    `Can I come _____?`,
-    `He is _____ tall for that car.`,
+  there: [
+    "They live _____ in the mountains.",
+    "Look over _____.",
+    "Is anyone _____ right now?",
+    "I saw a dog _____ yesterday.",
+    "The tree is _____ by the river.",
   ],
-  'see/sea': [
-    `I can _____ the beach from here.`,
-    `Do you _____ that boat?`,
-    `We love swimming in the _____.`,
-    `I can _____ the mountain in the distance.`,
-    `The _____ is beautiful today.`,
+  their: [
+    "This is _____ house.",
+    "_____ friends are coming today.",
+    "I like _____ ideas.",
+    "Is this _____ car?",
+    "_____ teacher is very kind.",
   ],
-  'right/write': [
-    `Turn _____ at the traffic light.`,
-    `Can you _____ your name here?`,
-    `He is _____ about that.`,
-    `Please _____ the answer on the paper.`,
-    `Is this the _____ way to the station?`,
+  to: [
+    "I want _____ go home.",
+    "She went _____ the store.",
+    "Can I come _____?",
+    "Let's go _____ the beach.",
+    "I'm happy _____ see you.",
   ],
-  'know/no': [
-    `I don't _____ the answer.`,
-    `Say _____ if you disagree.`,
-    `Do you _____ him?`,
-    `_____, I don't want to go.`,
-    `I didn't _____ it was raining.`,
+  too: [
+    "This coffee is _____ hot.",
+    "He is _____ tall for that car.",
+    "That music is _____ loud.",
+    "This is _____ expensive.",
+    "You are _____ kind.",
   ],
-  'sun/son': [
-    `The _____ is shining today.`,
-    `My _____ likes to play soccer.`,
-    `The _____ rises in the east.`,
-    `She has one daughter and one _____.`,
-    `We stayed in the _____ all day.`,
+  two: [
+    "We have _____ cats.",
+    "I have _____ sisters.",
+    "One plus one is _____.",
+    "She has _____ children.",
+    "There are _____ cars in the garage.",
   ],
-  'not/knot': [
-    `This is _____ the right way.`,
-    `There is a _____ in my shoelace.`,
-    `I'm _____ ready yet.`,
-    `She tied a _____ in the rope.`,
-    `That's _____ allowed.`,
+  see: [
+    "I can _____ the beach from here.",
+    "Do you _____ that boat?",
+    "I didn't _____ him at the party.",
+    "Can you _____ the mountain in the distance?",
+    "Let me _____ your drawings.",
   ],
-  'brake/break': [
-    `Please _____ the window.`,
-    `Press the _____ to stop the car.`,
-    `We had a _____ for lunch.`,
-    `Can you _____ this into pieces?`,
-    `Step on the _____ if you need to stop.`,
+  sea: [
+    "We love swimming in the _____.",
+    "The _____ is beautiful today.",
+    "The _____ is very calm this morning.",
+    "Fish live in the _____.",
+    "We went to the _____ for vacation.",
   ],
-  'wear/where': [
-    `_____ are you going?`,
-    `I like to _____ blue shirts.`,
-    `Can you tell me _____ the bathroom is?`,
-    `She always _____ a hat in summer.`,
-    `_____ did you put my keys?`,
+  right: [
+    "Turn _____ at the traffic light.",
+    "He is _____ about that.",
+    "Is this the _____ way to the station?",
+    "You are _____.",
+    "Go _____ and then left.",
+  ],
+  write: [
+    "Can you _____ your name here?",
+    "Please _____ the answer on the paper.",
+    "She likes to _____ in her diary.",
+    "Can I _____ your email address?",
+    "I need to _____ a letter.",
+  ],
+  know: [
+    "I don't _____ the answer.",
+    "Do you _____ him?",
+    "I didn't _____ it was raining.",
+    "Does she _____ how to swim?",
+    "Nobody _____ where he went.",
+  ],
+  no: [
+    "Say _____ if you disagree.",
+    "_____, I don't want to go.",
+    "There is _____ milk in the fridge.",
+    "_____ one was home when I called.",
+    "He said _____ to my invitation.",
+  ],
+  sun: [
+    "The _____ is shining today.",
+    "The _____ rises in the east.",
+    "We stayed in the _____ all day.",
+    "The _____ is very hot today.",
+    "At night, we cannot see the _____.",
+  ],
+  son: [
+    "My _____ likes to play soccer.",
+    "She has one daughter and one _____.",
+    "His _____ is a doctor.",
+    "The _____ and father look alike.",
+    "Her _____ studies at university.",
+  ],
+  not: [
+    "This is _____ the right way.",
+    "I'm _____ ready yet.",
+    "That's _____ allowed.",
+    "He is _____ here today.",
+    "We will _____ forget this day.",
+  ],
+  knot: [
+    "There is a _____ in my shoelace.",
+    "She tied a _____ in the rope.",
+    "Can you untie this _____?",
+    "The _____ was very tight.",
+    "I need to make a _____ here.",
+  ],
+  brake: [
+    "Press the _____ to stop the car.",
+    "Step on the _____ if you need to stop.",
+    "The _____ is not working properly.",
+    "I applied the _____ quickly.",
+    "The car's _____ suddenly failed.",
+  ],
+  break: [
+    "Please _____ the window.",
+    "We had a _____ for lunch.",
+    "Can you _____ this into pieces?",
+    "Don't _____ the glass!",
+    "I hope I don't _____ it.",
+  ],
+  wear: [
+    "I like to _____ blue shirts.",
+    "She always _____ a hat in summer.",
+    "What will you _____ to the party?",
+    "He _____ a suit to the meeting.",
+    "I don't like to _____ dresses.",
+  ],
+  where: [
+    "_____ are you going?",
+    "Can you tell me _____ the bathroom is?",
+    "_____ did you put my keys?",
+    "I don't know _____ he lives.",
+    "Tell me _____ you are from.",
   ],
 };
 
@@ -221,17 +300,16 @@ Return ONLY the sentence with blank, no quotes, no explanation:`;
  * Now uses homophone-specific templates for better accuracy
  */
 function generateFallbackSentence(word, homophoneGroup) {
-  // Try to find homophones-specific templates first
-  for (const [groupKey, sentences] of Object.entries(HOMOPHONE_SPECIFIC_SENTENCES)) {
-    const words = groupKey.split('/').map(w => w.trim().toLowerCase());
-    if (words.includes(word.toLowerCase())) {
-      const sentence = sentences[Math.floor(Math.random() * sentences.length)];
-      logger.info(`[HomophoneGroups] Using homophones-specific fallback for "${word}": "${sentence}"`);
-      return sentence;
-    }
+  // Look up word-specific sentences from per-word deterministic bank
+  const sentences = HOMOPHONE_SENTENCE_BANK[word.toLowerCase()];
+  
+  if (sentences && sentences.length > 0) {
+    const sentence = sentences[Math.floor(Math.random() * sentences.length)];
+    logger.info(`[HomophoneGroups] Using word-specific fallback for "${word}": "${sentence}"`);
+    return sentence;
   }
 
-  // Fallback to generic templates if no specific match found
+  // Fallback to generic templates if word not found in bank
   const genericTemplates = [
     `I can _____ you very clearly.`,
     `They went _____ last summer.`,

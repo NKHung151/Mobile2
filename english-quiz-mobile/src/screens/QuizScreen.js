@@ -132,26 +132,22 @@ export default function QuizScreen({ navigation }) {
       setQuizState(STATES.LOADING);
       setError(null);
 
-      // Initialize learning session tracking
+      // Get response from quiz start (which creates LearningHistory on backend)
       console.log(
-        "[QuizScreen] Initializing learning session for:",
+        "[QuizScreen] Starting quiz for:",
         selectedTopic.topic_id,
       );
-      const sessionId = await initializeLearningSession(
-        userId,
-        selectedTopic.topic_id,
-        selectedTopic.title,
-        "quiz",
-      );
-      setCurrentSessionId(sessionId);
-      setCorrectAnswersCount(0);
-      console.log("[QuizScreen] Learning session initialized:", sessionId);
-
       const response = await startQuiz(
         userId,
         selectedTopic.topic_id,
         questionCount,
       );
+
+      // Use session_id from quiz start as the learning session ID
+      const sessionId = response.session_id;
+      setCurrentSessionId(sessionId);
+      setCorrectAnswersCount(0);
+      console.log("[QuizScreen] Quiz session started:", sessionId);
 
       setCurrentQuestion(response.question);
       setQuestionNumber(response.question_number);
@@ -189,11 +185,13 @@ export default function QuizScreen({ navigation }) {
         setCorrectAnswersCount((prev) => prev + 1);
       }
 
+      // Calculate new score (moved outside conditional for use in completion)
+      const newScore = response.is_correct
+        ? (progress.current_score || 0) + 1
+        : progress.current_score || 0;
+
       // Update learning progress
       if (currentSessionId) {
-        const newScore = response.is_correct
-          ? (progress.current_score || 0) + 1
-          : progress.current_score || 0;
         console.log(
           "[QuizScreen] Updating progress: Q",
           questionNumber,
@@ -231,6 +229,7 @@ export default function QuizScreen({ navigation }) {
             response.final_results?.max_possible_score ||
               response.total_questions ||
               questionCount,
+            currentSessionId, // Pass the session ID from quiz start
           );
         }
       } else {

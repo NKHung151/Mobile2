@@ -72,10 +72,21 @@ async function submitListeningAnswer(req, res, next) {
     const result = submitAnswer(session_id, selected_option_index);
     logger.info(`[ListeningPart2] Answer result:`, JSON.stringify(result, null, 2));
 
+    // Initialize question numbering
+    let currentQuestionNumber = 0;
+
     // Save answer details to SessionAnswer for historical review
     if (session_id && user_id) {
       try {
-        logger.info(`[ListeningPart2] About to save answer - session_id: ${session_id}, user_id: ${user_id}, question_id: ${result.question_id}`);
+        // Get current session to track question number
+        const session = await LearningHistory.findOne({ session_id, user_id });
+        if (session) {
+          currentQuestionNumber = (session.questions_answered || 0) + 1;
+        } else {
+          currentQuestionNumber = 1;
+        }
+        
+        logger.info(`[ListeningPart2] About to save answer - session_id: ${session_id}, user_id: ${user_id}, question_id: ${result.question_id}, question_number: ${currentQuestionNumber}`);
         await saveListeningAnswer(
           session_id,
           user_id,
@@ -84,9 +95,10 @@ async function submitListeningAnswer(req, res, next) {
           selected_option_index,
           result.all_options,
           result.correct_index,
-          result.is_correct
+          result.is_correct,
+          currentQuestionNumber
         );
-        logger.info(`[ListeningPart2] Answer saved successfully`);
+        logger.info(`[ListeningPart2] Answer saved successfully: question_number=${currentQuestionNumber}`);
       } catch (saveErr) {
         logger.error(`[ListeningPart2] Failed to save answer: ${saveErr.message}`, saveErr);
       }

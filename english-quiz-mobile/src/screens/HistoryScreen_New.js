@@ -79,9 +79,7 @@ export default function HistoryScreen({ navigation }) {
       quiz: "Quiz",
       practice: "Practice",
       homophone_groups: "Homophone",
-      listening_part2: "Q&R",
-      transcribe: "Transcribe",
-      chat: "Chat",
+      listening_part2: "Q&R"
     };
     return modeMap[mode] || mode;
   };
@@ -101,8 +99,6 @@ export default function HistoryScreen({ navigation }) {
       practice: "📚",
       homophone_groups: "🗣️",
       listening_part2: "🎧",
-      transcribe: "🎤",
-      chat: "💬",
     };
     return emojiMap[mode] || "📖";
   };
@@ -113,9 +109,7 @@ export default function HistoryScreen({ navigation }) {
       quiz: COLORS.primary,
       practice: COLORS.success,
       homophone_groups: COLORS.warning,
-      listening_part2: COLORS.info || "#0984e3",
-      transcribe: "#636e72",
-      chat: "#74b9ff",
+      "question-response": COLORS.info || "#0984e3",
     };
     return colorMap[mode] || COLORS.textSecondary;
   };

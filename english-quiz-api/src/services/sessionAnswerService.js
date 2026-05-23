@@ -8,8 +8,10 @@ const logger = require("../utils/logger");
 /**
  * Save answer for QUIZ mode
  */
-async function saveQuizAnswer(sessionId, userId, questionId, questionText, userAnswer, correctAnswer, isCorrect, options = null) {
+async function saveQuizAnswer(sessionId, userId, questionId, questionText, userAnswer, correctAnswer, isCorrect, options = null, questionNumber = 0, explanation = null, feedback = null, timeSpent = 0) {
   try {
+    logger.info(`[SaveAnswer] Quiz - sessionId: ${sessionId}, userId: ${userId}, questionId: ${questionId}, questionNumber: ${questionNumber}`);
+    
     const answer = new SessionAnswer({
       session_id: sessionId,
       user_id: userId,
@@ -19,15 +21,18 @@ async function saveQuizAnswer(sessionId, userId, questionId, questionText, userA
       user_answer: userAnswer,
       correct_answer: correctAnswer,
       is_correct: isCorrect,
-      explanation: null,
+      explanation: explanation || (feedback?.feedback_message || null),
       options: options,
       source_type: "quiz",
+      question_number: questionNumber,
+      time_spent_seconds: timeSpent || 0,
     });
     await answer.save();
-    logger.info(`[SaveAnswer] Quiz answer saved: session=${sessionId}, question=${questionId}`);
+    logger.info(`[SaveAnswer] Quiz answer saved successfully: _id=${answer._id}, session=${sessionId}, question_number=${questionNumber}, correct=${isCorrect}`);
     return answer;
   } catch (err) {
     logger.error(`[SaveAnswer] Quiz save error: ${err.message}`);
+    logger.error(`[SaveAnswer] Stack: ${err.stack}`);
     throw err;
   }
 }
@@ -35,23 +40,25 @@ async function saveQuizAnswer(sessionId, userId, questionId, questionText, userA
 /**
  * Save answer for PRACTICE mode
  */
-async function savePracticeAnswer(sessionId, userId, exerciseId, questionText, questionType, userAnswer, correctAnswer, isCorrect, timeSpent = 0) {
+async function savePracticeAnswer(sessionId, userId, exerciseId, questionText, questionType, userAnswer, correctAnswer, isCorrect, timeSpent = 0, questionNumber = 0) {
   try {
+    // userAnswer and correctAnswer are already formatted as readable text strings from practiceService
     const answer = new SessionAnswer({
       session_id: sessionId,
       user_id: userId,
       question_id: exerciseId || `practice_${Date.now()}`,
       question_text: questionText,
       question_type: questionType, // "multiple_choice", "fill_in_blank", "reorder", "error_detection"
-      user_answer: JSON.stringify(userAnswer), // Practice answers may be complex (arrays, etc)
-      correct_answer: JSON.stringify(correctAnswer),
+      user_answer: String(userAnswer),
+      correct_answer: String(correctAnswer),
       is_correct: isCorrect,
       explanation: null,
       time_spent_seconds: timeSpent,
       source_type: "practice",
+      question_number: questionNumber,
     });
     await answer.save();
-    logger.info(`[SaveAnswer] Practice answer saved: session=${sessionId}, type=${questionType}`);
+    logger.info(`[SaveAnswer] Practice answer saved: session=${sessionId}, type=${questionType}, question_number=${questionNumber}`);
     return answer;
   } catch (err) {
     logger.error(`[SaveAnswer] Practice save error: ${err.message}`);
@@ -62,7 +69,7 @@ async function savePracticeAnswer(sessionId, userId, exerciseId, questionText, q
 /**
  * Save answer for HOMOPHONE GROUPS mode
  */
-async function saveHomophoneAnswer(sessionId, userId, questionId, sentence, userAnswer, correctAnswer, isCorrect, choices = null) {
+async function saveHomophoneAnswer(sessionId, userId, questionId, sentence, userAnswer, correctAnswer, isCorrect, choices = null, questionNumber = 0) {
   try {
     const answer = new SessionAnswer({
       session_id: sessionId,
@@ -76,9 +83,10 @@ async function saveHomophoneAnswer(sessionId, userId, questionId, sentence, user
       explanation: null,
       options: choices ? choices.map((c) => c.word) : null, // Extract words from choice objects
       source_type: "homophone_groups",
+      question_number: questionNumber,
     });
     await answer.save();
-    logger.info(`[SaveAnswer] Homophone answer saved: session=${sessionId}, question=${questionId}`);
+    logger.info(`[SaveAnswer] Homophone answer saved: session=${sessionId}, question=${questionId}, question_number=${questionNumber}`);
     return answer;
   } catch (err) {
     logger.error(`[SaveAnswer] Homophone save error: ${err.message}`);
@@ -89,13 +97,13 @@ async function saveHomophoneAnswer(sessionId, userId, questionId, sentence, user
 /**
  * Save answer for LISTENING PART 2 (QUESTION-RESPONSE) mode
  */
-async function saveListeningAnswer(sessionId, userId, questionId, questionText, selectedOptionIndex, options, correctOptionIndex, isCorrect) {
+async function saveListeningAnswer(sessionId, userId, questionId, questionText, selectedOptionIndex, options, correctOptionIndex, isCorrect, questionNumber = 0) {
   try {
     // Convert option index to actual text
     const userAnswer = options[selectedOptionIndex] || `Option ${selectedOptionIndex + 1}`;
     const correctAnswer = options[correctOptionIndex] || `Option ${correctOptionIndex + 1}`;
 
-    logger.info(`[SaveAnswer] Listening - session: ${sessionId}, user: ${userId}, question: ${questionId}`);
+    logger.info(`[SaveAnswer] Listening - session: ${sessionId}, user: ${userId}, question: ${questionId}, question_number: ${questionNumber}`);
     logger.info(`[SaveAnswer] Listening - selectedIndex: ${selectedOptionIndex}, correctIndex: ${correctOptionIndex}`);
     logger.info(`[SaveAnswer] Listening - userAnswer: ${userAnswer}, correctAnswer: ${correctAnswer}`);
     logger.info(`[SaveAnswer] Listening - options: ${JSON.stringify(options)}`);
@@ -112,9 +120,10 @@ async function saveListeningAnswer(sessionId, userId, questionId, questionText, 
       explanation: null,
       options: options, // Store all options
       source_type: "listening_part2",
+      question_number: questionNumber,
     });
     await answer.save();
-    logger.info(`[SaveAnswer] Listening answer saved successfully: answer_id=${answer._id}`);
+    logger.info(`[SaveAnswer] Listening answer saved successfully: answer_id=${answer._id}, question_number=${questionNumber}`);
     return answer;
   } catch (err) {
     logger.error(`[SaveAnswer] Listening save error: ${err.message}`, err);

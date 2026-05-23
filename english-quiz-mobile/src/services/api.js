@@ -446,6 +446,18 @@ export const deleteListeningPart2Session = async (sessionId, userId) => {
   return response.data;
 };
 
+// ==================== VIDEOS API ====================
+
+/**
+ * Lấy danh sách video bài học từ backend, có lọc theo category
+ */
+export const getVideos = async (category = "All") => {
+  const response = await api.get("/api/videos", {
+    params: { category },
+  });
+  return response.data;
+};
+
 export const clearAuthToken = async () => {
   await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
 };

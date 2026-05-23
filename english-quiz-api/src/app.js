@@ -25,6 +25,8 @@ const progressRoutes = require("./routes/progress");
 const settingsRoutes = require("./routes/settings");
 const homophoneGroupsRoutes = require("./routes/homophoneGroups");
 const listeningPart2Routes = require("./routes/listeningPart2");
+const videosRoutes = require("./routes/videos");
+const Video = require("./models/Video");
 
 
 // Middleware
@@ -98,12 +100,14 @@ app.use("/api/learning", learningHistoryRoutes); // Learning history endpoints
 app.use("/api/admin", adminRoutes); // Admin endpoints (API key required)
 app.use("/api/auth", authRoutes); // Authentication endpoints
 app.use("/api/courses", coursesRoutes); // Course CRUD endpoints
+app.use("/api/videos", videosRoutes); // Video learning endpoints (public)
 app.use("/api", vocabulariesRoutes); // Vocabulary CRUD endpoints by course
 app.use("/api", uploadRoutes); // File upload endpoints
 app.use("/api/progress", progressRoutes); // User learning progress endpoints
 app.use("/api/settings", settingsRoutes); // User setting endpoints
 app.use("/api/homophone-groups", homophoneGroupsRoutes); // Homophone groups learning endpoints
 app.use("/api/listening-part2", listeningPart2Routes); // Listening Part 2 practice endpoints
+
 
 
 // Error handling
@@ -114,6 +118,62 @@ const startServer = async () => {
   try {
     await connectDatabase();
     logger.info("Connected to MongoDB");
+
+    // Tự động seed dữ liệu video mẫu nếu bảng Video rỗng
+    try {
+      const videoCount = await Video.countDocuments();
+      if (videoCount === 0) {
+        logger.info("No videos found in database. Seeding default videos...");
+        const defaultVideos = [
+          {
+            videoId: "cfRnccxqoII",
+            youtubeId: "cfRnccxqoII",
+            title: "English Grammar Basics",
+            category: "Grammar",
+            description: "Learn fundamental English grammar rules and sentence structures to build a strong foundation for your English learning journey."
+          },
+          {
+            videoId: "Uha9IrpZQhw",
+            youtubeId: "Uha9IrpZQhw",
+            title: "Grammar Practice Tips",
+            category: "Grammar",
+            description: "Improve your grammar with practical exercises and real-world examples that help you communicate more effectively."
+          },
+          {
+            videoId: "b-_IquFj-CE",
+            youtubeId: "b-_IquFj-CE",
+            title: "Essential Vocabulary",
+            category: "Vocabulary",
+            description: "Build your English vocabulary effectively with proven memorization techniques and contextual learning methods."
+          },
+          {
+            videoId: "OqdLrih2G9A",
+            youtubeId: "OqdLrih2G9A",
+            title: "Vocabulary Booster",
+            category: "Vocabulary",
+            description: "Expand your word bank with daily practice routines and spaced repetition strategies for long-term retention."
+          },
+          {
+            videoId: "tjOEpwXzF_o",
+            youtubeId: "tjOEpwXzF_o",
+            title: "IELTS Preparation Guide",
+            category: "Ielts/Toeic",
+            description: "Prepare for IELTS exam with proven strategies covering all four skills: Listening, Reading, Writing, and Speaking."
+          },
+          {
+            videoId: "UXnIa93cJ5Q",
+            youtubeId: "UXnIa93cJ5Q",
+            title: "TOEIC Listening Skills",
+            category: "Ielts/Toeic",
+            description: "Master TOEIC listening section techniques with tips on note-taking, prediction, and time management."
+          }
+        ];
+        await Video.insertMany(defaultVideos);
+        logger.info("Successfully seeded default videos.");
+      }
+    } catch (seedError) {
+      logger.error("Failed to seed default videos:", seedError);
+    }
 
     app.listen(config.port, () => {
       logger.info(`Server running on port ${config.port} in ${config.nodeEnv} mode`);

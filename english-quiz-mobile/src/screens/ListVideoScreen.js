@@ -8,76 +8,53 @@ import {
   Animated,
   Dimensions,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SHADOWS } from "../constants/config";
+import { getVideos } from "../services/api";
 
 const { width } = Dimensions.get("window");
-
-// Video data organized by category
-const VIDEO_DATA = [
-  {
-    id: "1",
-    videoId: "cfRnccxqoII",
-    title: "English Grammar Basics",
-    category: "Grammar",
-    description: "Learn fundamental English grammar rules",
-  },
-  {
-    id: "2",
-    videoId: "Uha9IrpZQhw",
-    title: "Grammar Practice Tips",
-    category: "Grammar",
-    description: "Improve your grammar with practical exercises",
-  },
-  {
-    id: "3",
-    videoId: "b-_IquFj-CE",
-    title: "Essential Vocabulary",
-    category: "Vocabulary",
-    description: "Build your English vocabulary effectively",
-  },
-  {
-    id: "4",
-    videoId: "OqdLrih2G9A",
-    title: "Vocabulary Booster",
-    category: "Vocabulary",
-    description: "Expand your word bank with daily practice",
-  },
-  {
-    id: "5",
-    videoId: "tjOEpwXzF_o",
-    title: "IELTS Preparation Guide",
-    category: "Ielts/Toeic",
-    description: "Prepare for IELTS exam with proven strategies",
-  },
-  {
-    id: "6",
-    videoId: "UXnIa93cJ5Q",
-    title: "TOEIC Listening Skills",
-    category: "Ielts/Toeic",
-    description: "Master TOEIC listening section techniques",
-  },
-];
 
 const CATEGORIES = ["All", "Grammar", "Vocabulary", "Ielts/Toeic"];
 
 export default function ListVideoScreen({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  // Gọi API lấy dữ liệu khi component được gắn vào màn hình
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 400,
       useNativeDriver: true,
     }).start();
+
+    fetchVideos();
   }, []);
 
+  // Hàm gọi API lấy danh sách video từ backend
+  const fetchVideos = async () => {
+    try {
+      setLoading(true);
+      const res = await getVideos();
+      if (res.success && res.data) {
+        setVideos(res.data);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tải danh sách video từ backend:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Lọc video theo danh mục đã chọn
   const filteredVideos =
     selectedCategory === "All"
-      ? VIDEO_DATA
-      : VIDEO_DATA.filter((v) => v.category === selectedCategory);
+      ? videos
+      : videos.filter((v) => v.category === selectedCategory);
 
   const getCategoryColor = (category) => {
     switch (category) {
@@ -162,24 +139,31 @@ export default function ListVideoScreen({ navigation }) {
         })}
       </View>
 
-      {/* Video List */}
-      <FlatList
-        data={filteredVideos}
-        renderItem={renderVideoItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Ionicons
-              name="videocam-off-outline"
-              size={48}
-              color={COLORS.textMuted}
-            />
-            <Text style={styles.emptyText}>No videos in this category</Text>
-          </View>
-        }
-      />
+      {/* Danh sách Video */}
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text style={styles.loadingText}>Đang tải danh sách bài học...</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredVideos}
+          renderItem={renderVideoItem}
+          keyExtractor={(item) => item._id || item.id}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Ionicons
+                name="videocam-off-outline"
+                size={48}
+                color={COLORS.textMuted}
+              />
+              <Text style={styles.emptyText}>Không có video nào trong danh mục này</Text>
+            </View>
+          }
+        />
+      )}
     </Animated.View>
   );
 }
@@ -284,8 +268,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "700",
   },
-
-  // Empty State
   emptyContainer: {
     alignItems: "center",
     paddingVertical: 60,
@@ -294,6 +276,18 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 15,
     color: COLORS.textMuted,
+    fontWeight: "500",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 100,
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 15,
+    color: COLORS.textSecondary,
     fontWeight: "500",
   },
 });

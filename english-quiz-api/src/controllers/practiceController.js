@@ -97,7 +97,9 @@ const submitAnswer = async (req, res, next) => {
           data.question_type,
           data.user_answer,
           data.correct_answer,
-          data.is_correct
+          data.is_correct,
+          time_spent_ms || 0,
+          data.question_number
         );
       } catch (saveErr) {
         logger.warn(`[Practice] Failed to save answer: ${saveErr.message}`);
