@@ -14,7 +14,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import QuizScreen from "./src/screens/QuizScreen";
 import ChatScreen from "./src/screens/ChatScreen";
-import HistoryScreen from "./src/screens/HistoryScreen_New";
+import HistoryScreen from "./src/screens/HistoryScreen";
 import TranscribeScreen from "./src/screens/TranscribeScreen";
 import PracticeScreen from "./src/screens/PracticeScreen";
 import UserProfileScreen from "./src/screens/UserProfileScreen";
