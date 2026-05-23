@@ -49,7 +49,7 @@ const sessionAnswerSchema = new mongoose.Schema(
     },
     // Metadata
     source_id: String, // e.g. quiz_id, topic_id, homophone_group_id
-    source_type: String, // e.g. "quiz", "homophone_groups", "listening_part2"
+    source_type: String, // e.g. "quiz", "homophone_groups", "question_response"
     // Question sequence number (for ordering in review)
     question_number: {
       type: Number,

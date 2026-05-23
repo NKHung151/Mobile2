@@ -1,13 +1,13 @@
-const { startSession, submitAnswer } = require('../services/listeningPart2Service');
-const { saveListeningAnswer } = require('../services/sessionAnswerService');
+const { startSession, submitAnswer } = require('../services/questionResponseService');
+const { saveQuestionResponseAnswer } = require('../services/sessionAnswerService');
 const LearningHistory = require('../models/LearningHistory');
 const logger = require('../utils/logger');
 
 /**
- * POST /api/listening-part2/session/start
+ * POST /api/question-response/session/start
  * Start a new listening session and create a LearningHistory record
  */
-async function startListeningSession(req, res, next) {
+async function startQuestionResponseSession(req, res, next) {
   try {
     const { user_id, question_count } = req.body;
 
@@ -18,16 +18,16 @@ async function startListeningSession(req, res, next) {
       });
     }
 
-    logger.info(`[ListeningPart2] Start session: user=${user_id}, count=${question_count}`);
+    logger.info(`[QuestionResponse] Start session: user=${user_id}, count=${question_count}`);
     const result = await startSession(user_id, question_count);
 
     // Create LearningHistory record (same pattern as HomophoneGroups)
     const learningSession = new LearningHistory({
       session_id: result.session_id,
       user_id,
-      topic_id: 'listening_part2',
+      topic_id: 'question_response',
       topic_title: 'Question - Response',
-      mode: 'listening_part2',
+      mode: 'question_response',
       status: 'started',
       start_time: new Date(),
       total_questions: result.total_questions,
@@ -35,7 +35,7 @@ async function startListeningSession(req, res, next) {
     });
     await learningSession.save();
 
-    logger.info(`[ListeningPart2] LearningHistory created: session=${result.session_id}`);
+    logger.info(`[QuestionResponse] LearningHistory created: session=${result.session_id}`);
 
     res.status(201).json({
       success: true,
@@ -47,10 +47,10 @@ async function startListeningSession(req, res, next) {
 }
 
 /**
- * POST /api/listening-part2/answer
+ * POST /api/question-response/answer
  * Submit answer and update LearningHistory in-place (same pattern as HomophoneGroups)
  */
-async function submitListeningAnswer(req, res, next) {
+async function submitQuestionResponseAnswer(req, res, next) {
   try {
     const { session_id, selected_option_index, user_id } = req.body;
 
@@ -68,9 +68,9 @@ async function submitListeningAnswer(req, res, next) {
       });
     }
 
-    logger.info(`[ListeningPart2] Submit answer: session=${session_id}, option=${selected_option_index}`);
+    logger.info(`[QuestionResponse] Submit answer: session=${session_id}, option=${selected_option_index}`);
     const result = submitAnswer(session_id, selected_option_index);
-    logger.info(`[ListeningPart2] Answer result:`, JSON.stringify(result, null, 2));
+    logger.info(`[QuestionResponse] Answer result:`, JSON.stringify(result, null, 2));
 
     // Initialize question numbering
     let currentQuestionNumber = 0;
@@ -86,8 +86,8 @@ async function submitListeningAnswer(req, res, next) {
           currentQuestionNumber = 1;
         }
         
-        logger.info(`[ListeningPart2] About to save answer - session_id: ${session_id}, user_id: ${user_id}, question_id: ${result.question_id}, question_number: ${currentQuestionNumber}`);
-        await saveListeningAnswer(
+        logger.info(`[QuestionResponse] About to save answer - session_id: ${session_id}, user_id: ${user_id}, question_id: ${result.question_id}, question_number: ${currentQuestionNumber}`);
+        await saveQuestionResponseAnswer(
           session_id,
           user_id,
           result.question_id,
@@ -98,9 +98,9 @@ async function submitListeningAnswer(req, res, next) {
           result.is_correct,
           currentQuestionNumber
         );
-        logger.info(`[ListeningPart2] Answer saved successfully: question_number=${currentQuestionNumber}`);
+        logger.info(`[QuestionResponse] Answer saved successfully: question_number=${currentQuestionNumber}`);
       } catch (saveErr) {
-        logger.error(`[ListeningPart2] Failed to save answer: ${saveErr.message}`, saveErr);
+        logger.error(`[QuestionResponse] Failed to save answer: ${saveErr.message}`, saveErr);
       }
     }
 
@@ -126,7 +126,7 @@ async function submitListeningAnswer(req, res, next) {
           await session.save();
         }
       } catch (historyErr) {
-        logger.warn(`[ListeningPart2] Could not update LearningHistory: ${historyErr.message}`);
+        logger.warn(`[QuestionResponse] Could not update LearningHistory: ${historyErr.message}`);
       }
     }
 
@@ -140,10 +140,10 @@ async function submitListeningAnswer(req, res, next) {
 }
 
 /**
- * POST /api/listening-part2/session/complete
+ * POST /api/question-response/session/complete
  * Complete the session and finalize LearningHistory (same pattern as HomophoneGroups)
  */
-async function completeListeningSession(req, res, next) {
+async function completeQuestionResponseSession(req, res, next) {
   try {
     const { session_id, user_id } = req.body;
 
@@ -182,7 +182,7 @@ async function completeListeningSession(req, res, next) {
     await session.save();
 
     logger.info(
-      `[ListeningPart2] Session completed: session=${session_id}, accuracy=${session.accuracy_percentage}%`
+      `[QuestionResponse] Session completed: session=${session_id}, accuracy=${session.accuracy_percentage}%`
     );
 
     res.json({
@@ -196,11 +196,11 @@ async function completeListeningSession(req, res, next) {
 }
 
 /**
- * DELETE /api/listening-part2/session/:session_id
+ * DELETE /api/question-response/session/:session_id
  * Delete an incomplete listening session (HYBRID 70% rule)
  * Body: { user_id }
  */
-async function deleteListeningSession(req, res, next) {
+async function deleteQuestionResponseSession(req, res, next) {
   try {
     const { session_id } = req.params;
     const { user_id } = req.body;
@@ -224,7 +224,7 @@ async function deleteListeningSession(req, res, next) {
     await LearningHistory.deleteOne({ session_id, user_id });
 
     logger.info(
-      `[ListeningPart2] Session deleted (incomplete): session=${session_id}, user=${user_id}, answered=${session.questions_answered}`
+      `[QuestionResponse] Session deleted (incomplete): session=${session_id}, user=${user_id}, answered=${session.questions_answered}`
     );
 
     res.json({
@@ -239,8 +239,8 @@ async function deleteListeningSession(req, res, next) {
 }
 
 module.exports = {
-  startListeningSession,
-  submitListeningAnswer,
-  completeListeningSession,
-  deleteListeningSession,
+  startQuestionResponseSession,
+  submitQuestionResponseAnswer,
+  completeQuestionResponseSession,
+  deleteQuestionResponseSession,
 };

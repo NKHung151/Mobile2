@@ -398,13 +398,13 @@ export const deleteHomophoneGroupsSession = async (sessionId, userId) => {
   return response.data;
 };
 
-// ==================== LISTENING PART 2 API ====================
+// ==================== QUESTION RESPONSE API ====================
 
 /**
- * Start a listening part 2 TOEIC learning session
+ * Start a question-response learning session
  */
-export const startListeningSession = async (userId, questionCount = 10) => {
-  const response = await api.post("/api/listening-part2/session/start", {
+export const startQuestionResponseSession = async (userId, questionCount = 10) => {
+  const response = await api.post("/api/question-response/session/start", {
     user_id: userId,
     question_count: questionCount,
   });
@@ -412,10 +412,10 @@ export const startListeningSession = async (userId, questionCount = 10) => {
 };
 
 /**
- * Submit answer to a listening part 2 question
+ * Submit answer to a question-response question
  */
-export const submitListeningAnswer = async (sessionId, userId, selectedOptionIndex) => {
-  const response = await api.post("/api/listening-part2/answer", {
+export const submitQuestionResponseAnswer = async (sessionId, userId, selectedOptionIndex) => {
+  const response = await api.post("/api/question-response/answer", {
     session_id: sessionId,
     user_id: userId,
     selected_option_index: selectedOptionIndex,
@@ -424,10 +424,10 @@ export const submitListeningAnswer = async (sessionId, userId, selectedOptionInd
 };
 
 /**
- * Complete a listening part 2 session (same pattern as HomophoneGroups)
+ * Complete a question-response session
  */
-export const completeListeningPart2Session = async (sessionId, userId) => {
-  const response = await api.post("/api/listening-part2/session/complete", {
+export const completeQuestionResponseSession = async (sessionId, userId) => {
+  const response = await api.post("/api/question-response/session/complete", {
     session_id: sessionId,
     user_id: userId,
   });
@@ -435,10 +435,10 @@ export const completeListeningPart2Session = async (sessionId, userId) => {
 };
 
 /**
- * Delete an incomplete listening part 2 session (HYBRID 70% rule)
+ * Delete an incomplete question-response session (HYBRID 70% rule)
  */
-export const deleteListeningPart2Session = async (sessionId, userId) => {
-  const response = await api.delete(`/api/listening-part2/session/${sessionId}`, {
+export const deleteQuestionResponseSession = async (sessionId, userId) => {
+  const response = await api.delete(`/api/question-response/session/${sessionId}`, {
     data: {
       user_id: userId,
     },
