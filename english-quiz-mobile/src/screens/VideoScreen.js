@@ -8,58 +8,14 @@ import {
   Dimensions,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { COLORS, SHADOWS } from "../constants/config";
+import { getVideos } from "../services/api";
 
 const { width } = Dimensions.get("window");
-
-// Video data (same as ListVideoScreen for related videos)
-const VIDEO_DATA = [
-  {
-    id: "1",
-    videoId: "cfRnccxqoII",
-    title: "English Grammar Basics",
-    category: "Grammar",
-    description: "Learn fundamental English grammar rules and sentence structures to build a strong foundation for your English learning journey.",
-  },
-  {
-    id: "2",
-    videoId: "Uha9IrpZQhw",
-    title: "Grammar Practice Tips",
-    category: "Grammar",
-    description: "Improve your grammar with practical exercises and real-world examples that help you communicate more effectively.",
-  },
-  {
-    id: "3",
-    videoId: "b-_IquFj-CE",
-    title: "Essential Vocabulary",
-    category: "Vocabulary",
-    description: "Build your English vocabulary effectively with proven memorization techniques and contextual learning methods.",
-  },
-  {
-    id: "4",
-    videoId: "OqdLrih2G9A",
-    title: "Vocabulary Booster",
-    category: "Vocabulary",
-    description: "Expand your word bank with daily practice routines and spaced repetition strategies for long-term retention.",
-  },
-  {
-    id: "5",
-    videoId: "tjOEpwXzF_o",
-    title: "IELTS Preparation Guide",
-    category: "Ielts/Toeic",
-    description: "Prepare for IELTS exam with proven strategies covering all four skills: Listening, Reading, Writing, and Speaking.",
-  },
-  {
-    id: "6",
-    videoId: "UXnIa93cJ5Q",
-    title: "TOEIC Listening Skills",
-    category: "Ielts/Toeic",
-    description: "Master TOEIC listening section techniques with tips on note-taking, prediction, and time management.",
-  },
-];
 
 const LEARNING_TIPS = [
   { icon: "bulb-outline", text: "Watch the video multiple times to improve listening comprehension", color: "#FFD93D" },
@@ -84,29 +40,48 @@ const getCategoryColor = (category) => {
 export default function VideoScreen({ route, navigation }) {
   const { videoId, title } = route.params;
   const [playing, setPlaying] = useState(false);
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // Find current video info
-  const currentVideo = VIDEO_DATA.find((v) => v.videoId === videoId);
-  const currentCategory = currentVideo?.category || "Grammar";
-  const currentDescription = currentVideo?.description || "Watch this video to improve your English skills.";
-
-  // Related videos: same category first, then others, exclude current
-  const relatedVideos = VIDEO_DATA
-    .filter((v) => v.videoId !== videoId)
-    .sort((a, b) => {
-      if (a.category === currentCategory && b.category !== currentCategory) return -1;
-      if (a.category !== currentCategory && b.category === currentCategory) return 1;
-      return 0;
-    });
-
+  // Lấy dữ liệu tất cả video để tìm thông tin video hiện tại và video liên quan
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 400,
       useNativeDriver: true,
     }).start();
+
+    fetchVideos();
   }, []);
+
+  const fetchVideos = async () => {
+    try {
+      setLoading(true);
+      const res = await getVideos();
+      if (res.success && res.data) {
+        setVideos(res.data);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tải danh sách video liên quan từ backend:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Tìm thông tin của video hiện tại từ danh sách tải về
+  const currentVideo = videos.find((v) => v.videoId === videoId);
+  const currentCategory = currentVideo?.category || "Grammar";
+  const currentDescription = currentVideo?.description || "Watch this video to improve your English skills.";
+
+  // Tìm các video liên quan (cùng danh mục trước, loại trừ video hiện tại)
+  const relatedVideos = videos
+    .filter((v) => v.videoId !== videoId)
+    .sort((a, b) => {
+      if (a.category === currentCategory && b.category !== currentCategory) return -1;
+      if (a.category !== currentCategory && b.category === currentCategory) return 1;
+      return 0;
+    });
 
   const onStateChange = useCallback((state) => {
     if (state === "ended") {
@@ -119,7 +94,7 @@ export default function VideoScreen({ route, navigation }) {
   }, []);
 
   const handleRelatedVideoPress = (video) => {
-    // Navigate to same screen with new params (replace current)
+    // Điều hướng lại chính màn hình này với tham số mới
     navigation.replace("VideoPlayer", {
       videoId: video.videoId,
       title: video.title,
@@ -247,47 +222,51 @@ export default function VideoScreen({ route, navigation }) {
             <Ionicons name="videocam-outline" size={20} color={COLORS.primary} />
             <Text style={styles.sectionTitle}>Related Videos</Text>
           </View>
-          {relatedVideos.map((video) => {
-            const thumbnailUrl = `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`;
-            const catColor = getCategoryColor(video.category);
-            return (
-              <TouchableOpacity
-                key={video.id}
-                style={styles.relatedCard}
-                activeOpacity={0.85}
-                onPress={() => handleRelatedVideoPress(video)}
-              >
-                <View style={styles.relatedThumbnailContainer}>
-                  <Image
-                    source={{ uri: thumbnailUrl }}
-                    style={styles.relatedThumbnail}
-                    resizeMode="cover"
-                  />
-                  <View style={styles.relatedPlayOverlay}>
-                    <Ionicons name="play-circle" size={30} color="rgba(255,255,255,0.9)" />
+          {loading ? (
+            <ActivityIndicator size="small" color={COLORS.primary} style={{ marginVertical: 20 }} />
+          ) : (
+            relatedVideos.map((video) => {
+              const thumbnailUrl = `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`;
+              const catColor = getCategoryColor(video.category);
+              return (
+                <TouchableOpacity
+                  key={video._id || video.id}
+                  style={styles.relatedCard}
+                  activeOpacity={0.85}
+                  onPress={() => handleRelatedVideoPress(video)}
+                >
+                  <View style={styles.relatedThumbnailContainer}>
+                    <Image
+                      source={{ uri: thumbnailUrl }}
+                      style={styles.relatedThumbnail}
+                      resizeMode="cover"
+                    />
+                    <View style={styles.relatedPlayOverlay}>
+                      <Ionicons name="play-circle" size={30} color="rgba(255,255,255,0.9)" />
+                    </View>
                   </View>
-                </View>
-                <View style={styles.relatedInfo}>
-                  <Text style={styles.relatedTitle} numberOfLines={2}>
-                    {video.title}
-                  </Text>
-                  <Text style={styles.relatedDescription} numberOfLines={2}>
-                    {video.description}
-                  </Text>
-                  <View
-                    style={[
-                      styles.relatedCategoryTag,
-                      { backgroundColor: catColor + "18" },
-                    ]}
-                  >
-                    <Text style={[styles.relatedCategoryText, { color: catColor }]}>
-                      {video.category}
+                  <View style={styles.relatedInfo}>
+                    <Text style={styles.relatedTitle} numberOfLines={2}>
+                      {video.title}
                     </Text>
+                    <Text style={styles.relatedDescription} numberOfLines={2}>
+                      {video.description}
+                    </Text>
+                    <View
+                      style={[
+                        styles.relatedCategoryTag,
+                        { backgroundColor: catColor + "18" },
+                      ]}
+                    >
+                      <Text style={[styles.relatedCategoryText, { color: catColor }]}>
+                        {video.category}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                </TouchableOpacity>
+              );
+            })
+          )}
         </View>
       </ScrollView>
     </Animated.View>
