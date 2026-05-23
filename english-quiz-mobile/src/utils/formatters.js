@@ -28,7 +28,7 @@ export const getModeLabel = (mode) => {
   switch (mode) {
     case 'quiz': return 'Quiz';
     case 'homophone_groups': return 'Homophones';
-    case 'question_response': return 'Question - Response';
+    case 'question_response': return 'Q&R';
     case 'practice': return 'Practice';
     case 'chat': return 'AI Chat';
     case 'transcribe': return 'Transcribe';

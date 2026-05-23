@@ -200,7 +200,7 @@ export default function HistoryScreen({ navigation }) {
       return sessions;
     }
     if (selectedModeFilter === "question_response") {
-      return sessions.filter(session => session.mode === "question_response" || session.mode === "listening_part2");
+      return sessions.filter(session => session.mode === "question_response");
     }
     return sessions.filter(session => session.mode === selectedModeFilter);
   };
@@ -328,8 +328,8 @@ export default function HistoryScreen({ navigation }) {
     const emoji = getModeEmoji(item.mode);
     const modeLabel = getModeLabel(item.mode);
 
-    // Override legacy topic_title for listening_part2 / question_response records (old DB records still say "Listening Part 2")
-    const displayTitle = ((item.mode === 'listening_part2' || item.mode === 'question_response') && item.topic_title === 'Listening Part 2')
+    // Override legacy topic_title for question_response records (old DB records still say "Listening Part 2")
+    const displayTitle = (item.mode === 'question_response' && item.topic_title === 'Listening Part 2')
       ? 'Question - Response'
       : item.topic_title;
 
@@ -426,7 +426,7 @@ export default function HistoryScreen({ navigation }) {
                 {[
                   { key: "all", label: "All" },
                   { key: "quiz", label: "Quiz" },
-                  { key: "question_response", label: "Question - Response" },
+                  { key: "question_response", label: "Q&R" },
                   { key: "homophone_groups", label: "Homophone" },
                   { key: "practice", label: "Practice" },
                 ].map(filter => (
