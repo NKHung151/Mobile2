@@ -13,10 +13,10 @@ import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
 import {
-  startListeningSession,
-  submitListeningAnswer,
-  completeListeningPart2Session,
-  deleteListeningPart2Session,
+  startQuestionResponseSession,
+  submitQuestionResponseAnswer,
+  completeQuestionResponseSession,
+  deleteQuestionResponseSession,
 } from "../services/api";
 import { COLORS, SHADOWS } from "../constants/config";
 
@@ -32,7 +32,7 @@ const STATES = {
 const QUESTION_OPTIONS = [5, 10, 15, 20];
 const OPTION_LABELS = ["A", "B", "C"];
 
-export default function ListeningPart2Screen({ navigation }) {
+export default function QuestionResponseScreen({ navigation }) {
   const { userId } = useUser();
 
   // Setup state
@@ -70,7 +70,7 @@ export default function ListeningPart2Screen({ navigation }) {
   const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    console.log("[ListeningPart2Screen] Mounted - userId:", userId);
+    console.log("[QuestionResponseScreen] Mounted - userId:", userId);
     animateIn();
     return () => {
       if (soundRef.current) {
@@ -87,7 +87,7 @@ export default function ListeningPart2Screen({ navigation }) {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       // If user intentionally exiting (after confirming), allow navigation
       if (isIntentionalExitRef.current) {
-        console.log('[ListeningPart2Screen] Allowing intentional exit');
+        console.log('[QuestionResponseScreen] Allowing intentional exit');
         isIntentionalExitRef.current = false; // Reset flag
         return;
       }
@@ -114,7 +114,7 @@ export default function ListeningPart2Screen({ navigation }) {
     const threshold = total * 0.7;
     const isEnough = answered >= threshold;
 
-    console.log(`[ListeningPart2Screen] Confirm exit - answered: ${answered}/${total} (threshold: ${threshold}, isEnough: ${isEnough})`);
+    console.log(`[QuestionResponseScreen] Confirm exit - answered: ${answered}/${total} (threshold: ${threshold}, isEnough: ${isEnough})`);
 
     if (isEnough) {
       // CASE 1: ≥ 70% → Offer to save session
@@ -125,20 +125,20 @@ export default function ListeningPart2Screen({ navigation }) {
           {
             text: "Continue",
             style: "cancel",
-            onPress: () => console.log("[ListeningPart2Screen] Continue session"),
+            onPress: () => console.log("[QuestionResponseScreen] Continue session"),
           },
           {
             text: "End",
             style: "default",
             onPress: async () => {
               try {
-                console.log("[ListeningPart2Screen] Completing session before exit");
-                await completeListeningPart2Session(sessionId, userId);
-                console.log("[ListeningPart2Screen] Session completed, setting exit flag");
+                console.log("[QuestionResponseScreen] Completing session before exit");
+                await completeQuestionResponseSession(sessionId, userId);
+                console.log("[QuestionResponseScreen] Session completed, setting exit flag");
                 isIntentionalExitRef.current = true; // Mark as intentional exit
                 navigation.goBack();
               } catch (err) {
-                console.error("[ListeningPart2Screen] Error completing session:", err);
+                console.error("[QuestionResponseScreen] Error completing session:", err);
                 isIntentionalExitRef.current = true; // Still exit even on error
                 navigation.goBack();
               }
@@ -155,20 +155,20 @@ export default function ListeningPart2Screen({ navigation }) {
           {
             text: "Continue Studying",
             style: "cancel",
-            onPress: () => console.log("[ListeningPart2Screen] Continue session"),
+            onPress: () => console.log("[QuestionResponseScreen] Continue session"),
           },
           {
             text: "Exit",
             style: "destructive",
             onPress: async () => {
               try {
-                console.log("[ListeningPart2Screen] Deleting incomplete session");
-                await deleteListeningPart2Session(sessionId, userId);
-                console.log("[ListeningPart2Screen] Session deleted, setting exit flag");
+                console.log("[QuestionResponseScreen] Deleting incomplete session");
+                await deleteQuestionResponseSession(sessionId, userId);
+                console.log("[QuestionResponseScreen] Session deleted, setting exit flag");
                 isIntentionalExitRef.current = true; // Mark as intentional exit
                 navigation.goBack();
               } catch (err) {
-                console.warn("[ListeningPart2Screen] Error deleting session:", err);
+                console.warn("[QuestionResponseScreen] Error deleting session:", err);
                 isIntentionalExitRef.current = true; // Still exit even on error
                 navigation.goBack();
               }
@@ -208,8 +208,8 @@ export default function ListeningPart2Screen({ navigation }) {
       sessionStartTimeRef.current = new Date();
       questionsSummaryRef.current = [];
 
-      console.log("[ListeningPart2] Starting session with", questionCount, "questions");
-      const response = await startListeningSession(userId, questionCount);
+      console.log("[QuestionResponse] Starting session with", questionCount, "questions");
+      const response = await startQuestionResponseSession(userId, questionCount);
       
       setSessionId(response.session_id);
       setQuestion(response.question);
@@ -266,7 +266,7 @@ export default function ListeningPart2Screen({ navigation }) {
 
       await sound.playAsync();
     } catch (err) {
-      console.error("[ListeningPart2] Error playing audio:", err);
+      console.error("[QuestionResponse] Error playing audio:", err);
       setIsPlaying(false);
     }
   };
@@ -302,7 +302,7 @@ export default function ListeningPart2Screen({ navigation }) {
 
     try {
       setState(STATES.LOADING);
-      const response = await submitListeningAnswer(sessionId, userId, selectedOptionIndex);
+      const response = await submitQuestionResponseAnswer(sessionId, userId, selectedOptionIndex);
 
       setResult(response);
       setState(STATES.FEEDBACK);
@@ -328,7 +328,7 @@ export default function ListeningPart2Screen({ navigation }) {
       });
       setShowNextButton(true);
     } catch (err) {
-      console.error("[ListeningPart2] Error checking answer:", err);
+      console.error("[QuestionResponse] Error checking answer:", err);
       setError(err.message);
       setState(STATES.ERROR);
     }
@@ -345,7 +345,7 @@ export default function ListeningPart2Screen({ navigation }) {
           try { await soundRef.current.stopAsync(); } catch (_) {}
         }
         // Complete session (same pattern as HomophoneGroups)
-        await completeListeningPart2Session(sessionId, userId);
+        await completeQuestionResponseSession(sessionId, userId);
         setState(STATES.RESULTS);
         animateIn();
       } else {
@@ -369,7 +369,7 @@ export default function ListeningPart2Screen({ navigation }) {
         }, 300);
       }
     } catch (err) {
-      console.error("[ListeningPart2] Error moving to next question:", err);
+      console.error("[QuestionResponse] Error moving to next question:", err);
       setError(err.message);
       setState(STATES.ERROR);
     }

@@ -24,7 +24,7 @@ const learningSessionSchema = new mongoose.Schema(
     },
     mode: {
       type: String,
-      enum: ["quiz", "chat", "homophone_groups", "listening_part2", "practice"],
+      enum: ["quiz", "chat", "homophone_groups", "question_response", "practice"],
       required: true,
     },
     status: {

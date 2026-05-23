@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const listeningPart2Schema = new mongoose.Schema({
+const questionResponseSchema = new mongoose.Schema({
   audioUrl: {
     type: String,
     required: true
@@ -32,7 +32,7 @@ const listeningPart2Schema = new mongoose.Schema({
 });
 
 // Validate exactly one correct answer per question
-listeningPart2Schema.pre('save', function(next) {
+questionResponseSchema.pre('save', function(next) {
   const correctCount = this.options.filter(opt => opt.isCorrect).length;
   if (correctCount !== 1) {
     throw new Error('Each question must have exactly one correct answer');
@@ -40,4 +40,4 @@ listeningPart2Schema.pre('save', function(next) {
   next();
 });
 
-module.exports = mongoose.model('ListeningPart2', listeningPart2Schema, 'question_responses');
+module.exports = mongoose.model('QuestionResponse', questionResponseSchema, 'question_responses');

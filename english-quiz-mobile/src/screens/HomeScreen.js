@@ -213,7 +213,7 @@ export default function HomeScreen({ navigation }) {
             <View style={[styles.cardDecoration, styles.homophoneDecoration]} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.actionCard, styles.listeningCard]} onPress={() => handleNavigate("ListeningPart2")} activeOpacity={0.9}>
+          <TouchableOpacity style={[styles.actionCard, styles.listeningCard]} onPress={() => handleNavigate("QuestionResponse")} activeOpacity={0.9}>
             <View style={styles.actionContent}>
               <View style={[styles.actionIconWrapper, styles.listeningIconWrapper]}>
                 <Ionicons name="headset" size={28} color="#fff" />

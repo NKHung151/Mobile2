@@ -14,7 +14,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import QuizScreen from "./src/screens/QuizScreen";
 import ChatScreen from "./src/screens/ChatScreen";
-import HistoryScreen from "./src/screens/HistoryScreen_New";
+import HistoryScreen from "./src/screens/HistoryScreen";
 import TranscribeScreen from "./src/screens/TranscribeScreen";
 import PracticeScreen from "./src/screens/PracticeScreen";
 import UserProfileScreen from "./src/screens/UserProfileScreen";
@@ -27,7 +27,8 @@ import AddCourseScreen from "./src/screens/AddCourseScreen";
 import EditCourseScreen from "./src/screens/EditCourseScreen";
 import ImportExcelScreen from "./src/screens/ImportExcelScreen";
 import HomophoneGroupsScreen from "./src/screens/HomophoneGroupsScreen";
-import ListeningPart2Screen from "./src/screens/ListeningPart2Screen";
+import QuestionResponseScreen from "./src/screens/QuestionResponseScreen";
+import SessionDetailsScreen from "./src/screens/SessionDetailsScreen";
 const Stack = createNativeStackNavigator();
 
 const linking = {
@@ -43,6 +44,7 @@ const linking = {
       UserProfile: "profile",
       Library: "library",
       CourseDetail: "course/:courseId",
+      SessionDetails: "session/:sessionId",
     },
   },
 };
@@ -85,7 +87,7 @@ function RootNavigator() {
             <Stack.Screen name="History" component={HistoryScreen} options={{ title: "My History" }} />
             <Stack.Screen name="Transcribe" component={TranscribeScreen} options={{ title: "Transcribe" }} />
             <Stack.Screen name="HomophoneGroups" component={HomophoneGroupsScreen} options={{ title: "Homophone Groups" }} />
-            <Stack.Screen name="ListeningPart2" component={ListeningPart2Screen} options={{ title: "Question - Response" }} />
+            <Stack.Screen name="QuestionResponse" component={QuestionResponseScreen} options={{ title: "Question - Response" }} />
             <Stack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: "My Profile" }} />
             <Stack.Screen name="Library" component={LibraryScreen} options={{ title: "Flashcards" }} />
             <Stack.Screen name="CourseDetail" component={CourseDetailScreen} options={{ headerShown: false }} />
@@ -95,6 +97,7 @@ function RootNavigator() {
             <Stack.Screen name="ImportExcel" component={ImportExcelScreen} options={{ headerShown: false }} />
             <Stack.Screen name="ListVideo" component={ListVideoScreen} options={{ title: "Learning Video" }} />
             <Stack.Screen name="VideoPlayer" component={VideoScreen} options={{ title: "Learning Video" }} />
+            <Stack.Screen name="SessionDetails" component={SessionDetailsScreen} options={{ title: "Review Session", headerShown: false }} />
           </>
         ) : (
           // Auth Stack - User is logged out

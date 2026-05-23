@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   View,
   Text,
@@ -15,28 +15,160 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
-import { getConversations } from "../services/api";
-import {
-  getLearningHistory,
-  getLearningStatistics,
-  getLearningDashboard,
-  getRecommendations,
-} from "../services/learningHistoryService";
+import { useProgressData } from "../hooks/useProgressData";
+import { formatDate, formatDuration, getModeLabel, getModeEmoji, getModeBadgeColor } from "../utils/formatters";
 import { LineChart, BarChart, PieChart } from "react-native-chart-kit";
 import { COLORS, SHADOWS } from "../constants/config";
-import ProgressReport from "../components/ProgressReport";
-import SessionDetailsModal from "../components/SessionDetailsModal";
+
+const { width } = Dimensions.get("window");
+
+/**
+ * Local ProgressReport Component (Merged)
+ */
+function ProgressReport({ statistics, sessions }) {
+  if (!sessions || sessions.length === 0) {
+    return (
+      <View style={reportStyles.container}>
+        <Text style={reportStyles.noData}>📚 No learning sessions yet!</Text>
+        <Text style={reportStyles.noData}>Complete some sessions first!</Text>
+      </View>
+    );
+  }
+
+  const getAccuracyFromSession = (s) => {
+    const qAnswered = s.questions_answered || s.questionsAnswered || s.questions || 0;
+    const correct = s.correct_answers || s.correctAnswers || s.correct || 0;
+    if (qAnswered > 0) return Math.round((correct / qAnswered) * 100);
+    return s.accuracy_percentage || 0;
+  };
+
+  const buildLast7Days = () => {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - i);
+      days.push(d);
+    }
+
+    const completed = sessions.filter((s) => s.status === "completed");
+
+    return days.map((day) => {
+      const nextDay = new Date(day);
+      nextDay.setDate(nextDay.getDate() + 1);
+
+      const daySessions = completed.filter((s) => {
+        const ts = new Date(s.created_at);
+        return ts >= day && ts < nextDay;
+      });
+
+      const label = `${day.getMonth() + 1}/${day.getDate()}`;
+
+      if (daySessions.length === 0) return { label, accuracy: 0 };
+
+      const totalQuestions = daySessions.reduce((sum, s) => sum + (s.questions_answered || 0), 0);
+      const totalCorrect = daySessions.reduce((sum, s) => sum + (s.correct_answers || 0), 0);
+
+      return { 
+        label, 
+        accuracy: totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0 
+      };
+    });
+  };
+
+  const last7Days = buildLast7Days();
+  const labels = last7Days.map((d) => d.label);
+  const data = last7Days.map((d) => d.accuracy);
+
+  const chartConfig = {
+    backgroundGradientFrom: COLORS.card,
+    backgroundGradientTo: COLORS.card,
+    color: (opacity = 1) => `rgba(79, 70, 229, ${opacity})`,
+    strokeWidth: 2,
+    decimalPlaces: 0,
+    fromZero: true,
+  };
+
+  const accuracyData = {
+    labels,
+    datasets: [
+      { data, color: (opacity = 1) => `rgba(79, 70, 229, ${opacity})` },
+      { data: [100], color: () => "transparent", withDots: false },
+    ],
+  };
+
+  const statsData = statistics?.overall || statistics || {
+    total_sessions: sessions.length,
+    overall_accuracy_percentage: sessions.length > 0 
+      ? Math.round(sessions.reduce((sum, s) => sum + getAccuracyFromSession(s), 0) / sessions.length) 
+      : 0,
+  };
+
+  const overallAccuracy = statsData.overall_accuracy_percentage || 0;
+
+  return (
+    <ScrollView style={reportStyles.container} showsVerticalScrollIndicator={false}>
+      <View style={reportStyles.masterySection}>
+        <View style={[reportStyles.masteryCard, { borderColor: COLORS.primary }]}>
+          <Text style={reportStyles.masteryLabel}>Overall Accuracy</Text>
+          <Text style={[reportStyles.masteryAccuracy, { color: COLORS.primary }]}>{overallAccuracy}%</Text>
+          <View style={reportStyles.masteryProgressBar}>
+            <View style={[reportStyles.masteryProgress, { width: `${overallAccuracy}%`, backgroundColor: COLORS.primary }]} />
+          </View>
+        </View>
+      </View>
+
+      <View style={reportStyles.section}>
+        <Text style={reportStyles.sectionTitle}>📊 Learning Overview</Text>
+        <View style={reportStyles.summaryBox}>
+          <Text style={reportStyles.summaryText}>Total Sessions Completed: {sessions.length}</Text>
+        </View>
+      </View>
+
+      <View style={reportStyles.section}>
+        <Text style={reportStyles.sectionTitle}>📈 Accuracy Trend</Text>
+        <View style={reportStyles.chartContainer}>
+          <LineChart data={accuracyData} width={width - 40} height={200} chartConfig={chartConfig} bezier style={reportStyles.chart} />
+        </View>
+      </View>
+    </ScrollView>
+  );
+}
+
+const reportStyles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.background, padding: 16 },
+  masterySection: { marginBottom: 20 },
+  masteryCard: { backgroundColor: COLORS.surface, borderRadius: 12, padding: 20, alignItems: "center", borderLeftWidth: 4, ...SHADOWS.md },
+  masteryLabel: { fontSize: 18, fontWeight: "700", color: COLORS.text, marginBottom: 8 },
+  masteryAccuracy: { fontSize: 24, fontWeight: "800", marginBottom: 12 },
+  masteryProgressBar: { width: "100%", height: 8, backgroundColor: COLORS.border, borderRadius: 4, overflow: "hidden" },
+  masteryProgress: { height: "100%", borderRadius: 4 },
+  section: { marginBottom: 20 },
+  sectionTitle: { fontSize: 16, fontWeight: "700", color: COLORS.text, marginBottom: 12 },
+  summaryBox: { backgroundColor: COLORS.surface, borderRadius: 10, padding: 16, borderLeftWidth: 4, borderLeftColor: COLORS.primary, ...SHADOWS.sm },
+  summaryText: { fontSize: 14, fontWeight: "600", color: COLORS.text },
+  chartContainer: { backgroundColor: COLORS.surface, borderRadius: 12, padding: 10, alignItems: "center", ...SHADOWS.sm },
+  chart: { borderRadius: 12 },
+  noData: { color: COLORS.textSecondary, fontSize: 16, textAlign: "center", marginTop: 20 },
+});
 
 export default function HistoryScreen({ navigation }) {
   const { userId } = useUser();
-  const [sessions, setSessions] = useState([]);
-  const [statistics, setStatistics] = useState(null);
-  const [dashboard, setDashboard] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const {
+    sessions,
+    statistics,
+    dashboard,
+    recommendations,
+    loading,
+    loadingRecommendations,
+    error,
+    fetchAllData,
+    fetchAIRecommendations
+  } = useProgressData(userId);
+
   const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [selectedModeFilter, setSelectedModeFilter] = useState("all"); // Add mode filter
+  const [selectedModeFilter, setSelectedModeFilter] = useState("all");
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -46,121 +178,7 @@ export default function HistoryScreen({ navigation }) {
       duration: 400,
       useNativeDriver: true,
     }).start();
-  }, []);
-
-  // Recommendations state
-  const [recommendations, setRecommendations] = useState(null);
-  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
-
-  // Session Details Modal state
-  const [sessionDetailsVisible, setSessionDetailsVisible] = useState(false);
-  const [selectedSession, setSelectedSession] = useState(null);
-
-  const handleViewSessionDetails = (session) => {
-    setSelectedSession(session);
-    setSessionDetailsVisible(true);
-  };
-
-  const fetchRecommendations = async () => {
-    try {
-      setLoadingRecommendations(true);
-      const resp = await getRecommendations(userId);
-      setRecommendations(resp);
-    } catch (e) {
-      console.error("[History] Recommendations error:", e.message || e);
-    } finally {
-      setLoadingRecommendations(false);
-    }
-  };
-
-  // Map mode values to display labels
-  const getModeLabel = (mode) => {
-    const modeMap = {
-      quiz: "Quiz",
-      practice: "Practice",
-      homophone_groups: "Homophone",
-      listening_part2: "Q&R"
-    };
-    return modeMap[mode] || mode;
-  };
-
-  // Get filtered sessions based on selected mode
-  const getFilteredSessions = () => {
-    if (selectedModeFilter === "all") {
-      return sessions;
-    }
-    return sessions.filter(session => session.mode === selectedModeFilter);
-  };
-
-  // Emoji per mode
-  const getModeEmoji = (mode) => {
-    const emojiMap = {
-      quiz: "🎯",
-      practice: "📚",
-      homophone_groups: "🗣️",
-      listening_part2: "🎧",
-    };
-    return emojiMap[mode] || "📖";
-  };
-
-  // Badge color per mode
-  const getModeBadgeColor = (mode) => {
-    const colorMap = {
-      quiz: COLORS.primary,
-      practice: COLORS.success,
-      homophone_groups: COLORS.warning,
-      "question-response": COLORS.info || "#0984e3",
-    };
-    return colorMap[mode] || COLORS.textSecondary;
-  };
-
-  const fetchAllData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      console.log("[History] ===== FETCHING DATA =====");
-      console.log("[History] User ID:", userId);
-
-      if (!userId) {
-        setError("User ID not set. Please enter a User ID on Home Screen.");
-        setLoading(false);
-        return;
-      }
-
-      // Fetch all data in parallel using Promise.all() for performance
-      console.log("[History] Fetching learning data (parallel)...");
-      const [historyResponse, statsResponse, dashboardResponse] = await Promise.all([
-        getLearningHistory(userId, { status: 'completed' }),
-        getLearningStatistics(userId),
-        getLearningDashboard(userId),
-      ]);
-
-      console.log("[History] History Response:", historyResponse);
-      console.log(
-        "[History] Sessions count:",
-        historyResponse.sessions?.length || 0,
-      );
-      // Filter out chat & transcribe — not tracked in History
-      const rawSessions = historyResponse.sessions || [];
-      setSessions(rawSessions.filter(s => s.mode !== 'chat' && s.mode !== 'transcribe'));
-
-      console.log("[History] Statistics Response:", statsResponse);
-      setStatistics(statsResponse.statistics);
-
-      console.log("[History] Dashboard Response:", dashboardResponse);
-      setDashboard(dashboardResponse.dashboard);
-
-      console.log("[History] ===== DATA FETCH COMPLETE =====");
-    } catch (err) {
-      console.error("[History] ===== ERROR =====");
-      console.error("[History] Error message:", err.message);
-      console.error("[History] Error details:", err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [fetchAllData]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -168,36 +186,23 @@ export default function HistoryScreen({ navigation }) {
     setRefreshing(false);
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Unknown";
-
-    // So sánh theo calendar day (00:00 → 23:59 mỗi ngày)
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
-
-    const sessionDayStart = new Date(date);
-    sessionDayStart.setHours(0, 0, 0, 0);
-
-    const diffDays = Math.round(
-      (todayStart - sessionDayStart) / (1000 * 60 * 60 * 24)
-    );
-
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "Yesterday";
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
+  const handleViewSessionDetails = (session) => {
+    navigation.navigate("SessionDetails", {
+      sessionId: session.session_id,
+      userId: userId,
+      topic_title: session.topic_title
     });
   };
 
-  const formatDuration = (minutes) => {
-    if (!minutes || minutes < 1) return "< 1m";
-    if (minutes < 60) return `${minutes}m`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+  // Get filtered sessions based on selected mode
+  const getFilteredSessions = () => {
+    if (selectedModeFilter === "all") {
+      return sessions;
+    }
+    if (selectedModeFilter === "question_response") {
+      return sessions.filter(session => session.mode === "question_response");
+    }
+    return sessions.filter(session => session.mode === selectedModeFilter);
   };
 
   const renderDashboardCard = () => {
@@ -303,7 +308,7 @@ export default function HistoryScreen({ navigation }) {
           )}
           <TouchableOpacity
             style={styles.recoButton}
-            onPress={fetchRecommendations}
+            onPress={fetchAIRecommendations}
           >
             <Text style={styles.recoButtonText}>
               {loadingRecommendations
@@ -323,8 +328,8 @@ export default function HistoryScreen({ navigation }) {
     const emoji = getModeEmoji(item.mode);
     const modeLabel = getModeLabel(item.mode);
 
-    // Override legacy topic_title for listening_part2 records (old DB records still say "Listening Part 2")
-    const displayTitle = (item.mode === 'listening_part2' && item.topic_title === 'Listening Part 2')
+    // Override legacy topic_title for question_response records (old DB records still say "Listening Part 2")
+    const displayTitle = (item.mode === 'question_response' && item.topic_title === 'Listening Part 2')
       ? 'Question - Response'
       : item.topic_title;
 
@@ -421,7 +426,7 @@ export default function HistoryScreen({ navigation }) {
                 {[
                   { key: "all", label: "All" },
                   { key: "quiz", label: "Quiz" },
-                  { key: "listening_part2", label: "Question - Response" },
+                  { key: "question_response", label: "Q&R" },
                   { key: "homophone_groups", label: "Homophone" },
                   { key: "practice", label: "Practice" },
                 ].map(filter => (
@@ -557,17 +562,6 @@ export default function HistoryScreen({ navigation }) {
           <ProgressReport statistics={statistics} sessions={sessions} />
         )}
       </View>
-
-      {/* Session Details Modal */}
-      {selectedSession && (
-        <SessionDetailsModal
-          visible={sessionDetailsVisible}
-          onClose={() => setSessionDetailsVisible(false)}
-          sessionId={selectedSession.session_id}
-          userId={userId}
-          topic_title={selectedSession.topic_title}
-        />
-      )}
     </View>
   );
 }
