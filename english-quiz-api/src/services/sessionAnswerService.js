@@ -95,18 +95,18 @@ async function saveHomophoneAnswer(sessionId, userId, questionId, sentence, user
 }
 
 /**
- * Save answer for LISTENING PART 2 (QUESTION-RESPONSE) mode
+ * Save answer for QUESTION-RESPONSE mode
  */
-async function saveListeningAnswer(sessionId, userId, questionId, questionText, selectedOptionIndex, options, correctOptionIndex, isCorrect, questionNumber = 0) {
+async function saveQuestionResponseAnswer(sessionId, userId, questionId, questionText, selectedOptionIndex, options, correctOptionIndex, isCorrect, questionNumber = 0) {
   try {
     // Convert option index to actual text
     const userAnswer = options[selectedOptionIndex] || `Option ${selectedOptionIndex + 1}`;
     const correctAnswer = options[correctOptionIndex] || `Option ${correctOptionIndex + 1}`;
 
-    logger.info(`[SaveAnswer] Listening - session: ${sessionId}, user: ${userId}, question: ${questionId}, question_number: ${questionNumber}`);
-    logger.info(`[SaveAnswer] Listening - selectedIndex: ${selectedOptionIndex}, correctIndex: ${correctOptionIndex}`);
-    logger.info(`[SaveAnswer] Listening - userAnswer: ${userAnswer}, correctAnswer: ${correctAnswer}`);
-    logger.info(`[SaveAnswer] Listening - options: ${JSON.stringify(options)}`);
+    logger.info(`[SaveAnswer] QuestionResponse - session: ${sessionId}, user: ${userId}, question: ${questionId}, question_number: ${questionNumber}`);
+    logger.info(`[SaveAnswer] QuestionResponse - selectedIndex: ${selectedOptionIndex}, correctIndex: ${correctOptionIndex}`);
+    logger.info(`[SaveAnswer] QuestionResponse - userAnswer: ${userAnswer}, correctAnswer: ${correctAnswer}`);
+    logger.info(`[SaveAnswer] QuestionResponse - options: ${JSON.stringify(options)}`);
 
     const answer = new SessionAnswer({
       session_id: sessionId,
@@ -119,14 +119,14 @@ async function saveListeningAnswer(sessionId, userId, questionId, questionText, 
       is_correct: isCorrect,
       explanation: null,
       options: options, // Store all options
-      source_type: "listening_part2",
+      source_type: "question_response",
       question_number: questionNumber,
     });
     await answer.save();
-    logger.info(`[SaveAnswer] Listening answer saved successfully: answer_id=${answer._id}, question_number=${questionNumber}`);
+    logger.info(`[SaveAnswer] QuestionResponse answer saved successfully: answer_id=${answer._id}, question_number=${questionNumber}`);
     return answer;
   } catch (err) {
-    logger.error(`[SaveAnswer] Listening save error: ${err.message}`, err);
+    logger.error(`[SaveAnswer] QuestionResponse save error: ${err.message}`, err);
     throw err;
   }
 }
@@ -135,5 +135,6 @@ module.exports = {
   saveQuizAnswer,
   savePracticeAnswer,
   saveHomophoneAnswer,
-  saveListeningAnswer,
+  saveQuestionResponseAnswer,
 };
+

@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-const ListeningPart2 = require('../models/ListeningPart2');
+const QuestionResponse = require('../models/QuestionResponse');
 const logger = require('../utils/logger');
 const config = require('../config');
 
@@ -17,7 +17,7 @@ function cleanExpiredSessions() {
 }
 
 /**
- * Start a listening session with random questions
+ * Start a question-response session with random questions
  * Uses MongoDB $sample to guarantee no duplicates
  */
 async function startSession(user_id, question_count = 10) {
@@ -27,12 +27,12 @@ async function startSession(user_id, question_count = 10) {
 
     // Use $sample to get random questions without duplicates
     // Keep isCorrect in memory for validation, but strip before sending to client
-    const questions = await ListeningPart2.aggregate([
+    const questions = await QuestionResponse.aggregate([
       { $sample: { size: count } }
     ]);
 
     if (questions.length === 0) {
-      throw new Error('No listening questions found in database');
+      throw new Error('No question-response questions found in database');
     }
 
     const session_id = uuidv4();
@@ -49,7 +49,7 @@ async function startSession(user_id, question_count = 10) {
     sessionStore.set(session_id, session);
 
     logger.info(
-      `[ListeningPart2] Session started: session=${session_id}, user=${user_id}, questions=${count}`
+      `[QuestionResponse] Session started: session=${session_id}, user=${user_id}, questions=${count}`
     );
 
     // Return first question WITHOUT isCorrect to client
@@ -60,7 +60,7 @@ async function startSession(user_id, question_count = 10) {
       total_questions: questions.length
     };
   } catch (error) {
-    logger.error('[ListeningPart2] Error in startSession:', error);
+    logger.error('[QuestionResponse] Error in startSession:', error);
     throw error;
   }
 }
@@ -111,7 +111,7 @@ function submitAnswer(session_id, selected_option_index) {
       transcript: currentQuestion.content.transcript,
       translation: currentQuestion.content.translation,
       // Data for saving to SessionAnswer
-      question_id: currentQuestion._id ? currentQuestion._id.toString() : `listening_${session.current_index}`,
+      question_id: currentQuestion._id ? currentQuestion._id.toString() : `question_response_${session.current_index}`,
       question_text: currentQuestion.content.transcript,
       user_answer_index: selected_option_index,
       user_answer: currentQuestion.options[selected_option_index]?.text || `Option ${selected_option_index + 1}`,
@@ -135,13 +135,13 @@ function submitAnswer(session_id, selected_option_index) {
       sessionStore.delete(session_id);
       
       logger.info(
-        `[ListeningPart2] Session completed: session=${session_id}, score=${session.correct_count}/${session.questions.length}`
+        `[QuestionResponse] Session completed: session=${session_id}, score=${session.correct_count}/${session.questions.length}`
       );
     }
 
     return result;
   } catch (error) {
-    logger.error('[ListeningPart2] Error in submitAnswer:', error);
+    logger.error('[QuestionResponse] Error in submitAnswer:', error);
     throw error;
   }
 }

@@ -30,9 +30,6 @@ router.get("/history", getUserLearningHistory);
 // GET /api/learning/statistics?user_id=xxx - Get learning statistics
 router.get("/statistics", getLearningStatistics);
 
-// GET /api/learning/topic-progress?user_id=xxx&topic_id=yyy - Get topic progress
-router.get("/topic-progress", getTopicProgress);
-
 // GET /api/learning/dashboard?user_id=xxx - Get learning dashboard data
 router.get("/dashboard", getLearningDashboard);
 

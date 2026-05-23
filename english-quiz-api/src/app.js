@@ -24,9 +24,10 @@ const uploadRoutes = require("./routes/upload");
 const progressRoutes = require("./routes/progress");
 const settingsRoutes = require("./routes/settings");
 const homophoneGroupsRoutes = require("./routes/homophoneGroups");
-const listeningPart2Routes = require("./routes/listeningPart2");
 const videosRoutes = require("./routes/videos");
 const Video = require("./models/Video");
+const questionResponseRoutes = require("./routes/questionResponse");
+
 
 
 // Middleware
@@ -106,7 +107,7 @@ app.use("/api", uploadRoutes); // File upload endpoints
 app.use("/api/progress", progressRoutes); // User learning progress endpoints
 app.use("/api/settings", settingsRoutes); // User setting endpoints
 app.use("/api/homophone-groups", homophoneGroupsRoutes); // Homophone groups learning endpoints
-app.use("/api/listening-part2", listeningPart2Routes); // Listening Part 2 practice endpoints
+app.use("/api/question-response", questionResponseRoutes); // Question-Response practice endpoints
 
 
 
