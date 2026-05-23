@@ -758,22 +758,27 @@ export default function QuestionResponseScreen({ navigation }) {
 
     const getTitle = () => {
       if (accuracy >= 90) return "Perfect! 🏆";
-      if (accuracy >= 70) return "Great Job! 🎉";
-      if (accuracy >= 50) return "Good Effort! 💪";
-      return "Keep Practicing! 📚";
+      if (accuracy >= 75) return "Excellent! 🎉";
+      if (accuracy >= 60) return "Good Job! 👍";
+      if (accuracy >= 50) return "Keep Going! 💪";
+      return "Need Practice! 📚";
     };
 
     const getFeedbackTitle = () => {
       if (accuracy >= 90) return "Outstanding! 🌟";
-      if (accuracy >= 70) return "Excellent! 💪";
-      return "Good effort! 📚";
+      if (accuracy >= 75) return "Excellent! 💪";
+      if (accuracy >= 60) return "Good Job! ⭐";
+      if (accuracy >= 50) return "Keep Going! 📚";
+      return "Need Practice! 🔄";
     };
 
     const getFeedbackText = () => {
-  if (accuracy >= 90) return "Excellent! You're mastering this skill!";
-  if (accuracy >= 70) return "Great job! Keep going to reach perfection!";
-  return "Keep practicing, you're getting better every time!";
-};
+      if (accuracy >= 90) return "Excellent! You're mastering this skill!";
+      if (accuracy >= 75) return "Great job! Keep going to reach perfection!";
+      if (accuracy >= 60) return "You are doing great! A bit more practice to master it.";
+      if (accuracy >= 50) return "Keep practicing, you're getting better every time!";
+      return "Don't give up! Try again to improve your score.";
+    };
 
     return (
       <Animated.ScrollView
@@ -787,7 +792,7 @@ export default function QuestionResponseScreen({ navigation }) {
           {/* Icon */}
           <View style={styles.resultsIconContainer}>
             <Text style={styles.resultsEmoji}>
-              {accuracy >= 70 ? "🎉" : "👏"}
+              {accuracy >= 75 ? "🎉" : accuracy >= 50 ? "👏" : "📚"}
             </Text>
           </View>
 
@@ -799,7 +804,7 @@ export default function QuestionResponseScreen({ navigation }) {
           <View style={styles.scoreCardRow}>
             <View style={styles.scoreCardItem}>
               <Text style={styles.scoreCardLabel}>ACCURACY</Text>
-              <Text style={[styles.scoreCardValue, { color: accuracy >= 70 ? COLORS.success : COLORS.error }]}>
+              <Text style={[styles.scoreCardValue, { color: accuracy >= 60 ? COLORS.success : COLORS.error }]}>
                 {accuracy}%
               </Text>
             </View>
