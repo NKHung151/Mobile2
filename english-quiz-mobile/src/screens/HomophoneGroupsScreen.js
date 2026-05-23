@@ -401,12 +401,22 @@ export default function HomophoneGroupsScreen({ navigation }) {
         <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
           <View style={styles.resultsContainer}>
             <View style={styles.resultsIconContainer}>
-              <Text style={styles.resultsEmoji}>{accuracy >= 70 ? "🎉" : "👏"}</Text>
+              <Text style={styles.resultsEmoji}>
+                {accuracy >= 75 ? "🎉" : accuracy >= 50 ? "👏" : "📚"}
+              </Text>
             </View>
             
             <Text style={styles.resultsTitle}>
-                {accuracy >= 90 ? "Perfect! 🏆" : accuracy >= 70 ? "Great Job! 🎉" : accuracy >= 50 ? "Good Effort! 💪" : "Keep Practicing! 📚"}
-              </Text>
+              {accuracy >= 90
+                ? "Perfect! 🏆"
+                : accuracy >= 75
+                ? "Excellent! 🎉"
+                : accuracy >= 60
+                ? "Good Job! 👍"
+                : accuracy >= 50
+                ? "Keep Going! 💪"
+                : "Need Practice! 📚"}
+            </Text>
             <Text style={styles.resultsSubtitle}>Quiz Completed</Text>
 
             {/* Score Card */}
@@ -427,14 +437,26 @@ export default function HomophoneGroupsScreen({ navigation }) {
             {/* Feedback */}
             <View style={styles.feedbackCard}>
               <Text style={styles.feedbackTitle}>
-                {accuracy >= 90 ? "Perfect! 🌟" : accuracy >= 70 ? "Excellent! 💪" : "Good effort! 📚"}
+                {accuracy >= 90
+                  ? "Perfect! 🌟"
+                  : accuracy >= 75
+                  ? "Excellent! 💪"
+                  : accuracy >= 60
+                  ? "Good Job! ⭐"
+                  : accuracy >= 50
+                  ? "Keep Going! 📚"
+                  : "Need Practice! 🔄"}
               </Text>
               <Text style={styles.feedbackText}>
-                {accuracy >= 90 
-                  ? "You're mastering these pairs!" 
-                  : accuracy >= 70 
+                {accuracy >= 90
+                  ? "You're mastering these pairs!"
+                  : accuracy >= 75
                   ? "Keep practicing to improve!"
-                  : "Keep practicing, you'll improve!"}
+                  : accuracy >= 60
+                  ? "Great progress, keep going!"
+                  : accuracy >= 50
+                  ? "Keep practicing, you'll improve!"
+                  : "Review your answers and try again to improve!"}
               </Text>
             </View>
 
