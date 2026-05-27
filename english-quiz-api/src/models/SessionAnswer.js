@@ -3,56 +3,56 @@ const mongoose = require("mongoose");
 const sessionAnswerSchema = new mongoose.Schema(
   {
     session_id: {
-      type: String,
+      type: String, // ID của phiên học chứa câu trả lời này
       required: true,
       index: true,
     },
     user_id: {
-      type: String,
+      type: String, // ID người học sở hữu phiên và câu trả lời
       required: true,
       index: true,
     },
     question_id: {
-      type: String,
+      type: String, // ID định danh của câu hỏi gốc
       required: true,
     },
     question_text: {
-      type: String,
+      type: String, // Nội dung/văn bản câu hỏi (để hiển thị trực quan khi xem lại bài)
     },
     question_type: {
-      type: String,
+      type: String, // Kiểu câu hỏi học tập (quiz, fill_in_blank, listening, homophone_groups...)
       enum: ["quiz", "multiple_choice", "fill_in_blank", "fillup", "listening", "homophone_groups", "error_detection", "reorder"],
       default: "quiz",
     },
-    // User's answer
+    // Câu trả lời của người dùng
     user_answer: {
-      type: String,
+      type: String, // Văn bản đáp án do học viên lựa chọn hoặc điền vào
       required: true,
     },
-    // Correct answer
+    // Đáp án chính xác
     correct_answer: {
-      type: Object,
+      type: Object, // Đáp án chính xác của câu hỏi (chuỗi hoặc object lưu trữ thông tin đáp án chuẩn)
       required: true,
     },
-    // Answer details
+    // Chi tiết kết quả làm bài
     is_correct: {
-      type: Boolean,
+      type: Boolean, // Đánh giá kết quả làm bài của học viên (true = đúng, false = sai)
       required: true,
     },
-    explanation: String,
-    // Options (for multiple choice)
-    options: [String],
-    // Time to answer
+    explanation: String, // Lời giải thích/dịch nghĩa của câu hỏi
+    // Các phương án lựa chọn (cho câu hỏi trắc nghiệm)
+    options: [String], // Danh sách hiển thị các phương án để học viên chọn lựa
+    // Thời gian trả lời
     time_spent_seconds: {
-      type: Number,
+      type: Number, // Số giây học viên tiêu tốn để trả lời câu hỏi này
       default: 0,
     },
-    // Metadata
-    source_id: String, // e.g. quiz_id, topic_id, homophone_group_id
-    source_type: String, // e.g. "quiz", "homophone_groups", "question_response"
-    // Question sequence number (for ordering in review)
+    // Siêu dữ liệu liên kết nguồn
+    source_id: String, // ID liên kết nguồn dữ liệu gốc (ví dụ: homophone_group_id, quiz_id)
+    source_type: String, // Loại nguồn dữ liệu ('quiz', 'homophone_groups', 'question_response')
+    // Số thứ tự của câu hỏi trong phiên học
     question_number: {
-      type: Number,
+      type: Number, // Thứ tự câu hỏi trong phiên (phục vụ sắp xếp hiển thị khi review)
       default: 0,
     },
   },

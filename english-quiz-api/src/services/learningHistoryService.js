@@ -6,7 +6,17 @@ const { generateWithFallbacks } = require("../utils/aiHelper");
 const config = require("../config");
 
 /**
- * Get learning history sessions for a user with filtering
+ * Lấy danh sách lịch sử phiên học tập của người dùng kèm bộ lọc nâng cao.
+ * Kết quả tự động sắp xếp theo thời gian tạo mới nhất giảm dần.
+ * 
+ * @param {string} userId - ID người dùng cần lấy lịch sử
+ * @param {Object} [filters={}] - Bộ lọc tìm kiếm
+ * @param {number} [filters.limit=50] - Số bản ghi tối đa trả về
+ * @param {number} [filters.skip=0] - Số bản ghi bỏ qua (cho phân trang)
+ * @param {string} [filters.status] - Trạng thái phiên (started, completed, abandoned)
+ * @param {string} [filters.mode] - Chế độ học (quiz, homophone_groups, question_response)
+ * @param {string} [filters.topic_id] - ID của chủ đề tương ứng
+ * @returns {Promise<Object>} Trả về { sessions: Array, total: Number }
  */
 async function getUserHistory(userId, filters = {}) {
   const { limit = 50, skip = 0, status, mode, topic_id } = filters;
@@ -27,10 +37,15 @@ async function getUserHistory(userId, filters = {}) {
 }
 
 /**
- * Calculate detailed statistics for a user
+ * Tính toán số liệu thống kê chi tiết và phân tích tiến độ học tập của người dùng.
+ * Loại bỏ các chế độ không thuộc phạm vi tương tác câu hỏi trắc nghiệm (như 'chat', 'transcribe').
+ * Thống kê tổng số câu hỏi đã trả lời, số câu đúng, độ chính xác tổng quát và số ngày học tuần này.
+ * 
+ * @param {string} userId - ID người dùng cần tính toán thống kê
+ * @returns {Promise<Object>} Đối tượng chứa thông tin thống kê tổng quát, thống kê tuần và top chủ đề học tốt nhất
  */
 async function getDetailedStatistics(userId) {
-  // Get all relevant sessions
+  // Lấy toàn bộ các phiên học tương tác từ database
   const allSessions = await LearningHistory.find({
     user_id: userId,
     mode: { $nin: ["chat", "transcribe"] },
@@ -59,7 +74,7 @@ async function getDetailedStatistics(userId) {
     ? Math.round((totalCorrectAnswers / totalQuestionsAnswered) * 100)
     : 0;
 
-  // Aggregate topics
+  // Tổng hợp dữ liệu các chủ đề bằng framework Aggregate của MongoDB
   const allTopics = await LearningHistory.aggregate([
     { $match: { user_id: userId, status: "completed", mode: { $nin: ["chat", "transcribe"] } } },
     {
@@ -115,7 +130,11 @@ async function getDetailedStatistics(userId) {
 }
 
 /**
- * Get dashboard data for a user
+ * Lấy tóm tắt chỉ số bảng điều khiển (Dashboard) của học viên trong ngày hôm nay và tuần này.
+ * Đồng thời, trích xuất danh sách các chủ đề cần ôn tập (có độ chính xác kém nhất) để hiển thị khuyến nghị.
+ * 
+ * @param {string} userId - ID người dùng
+ * @returns {Promise<Object>} Chỉ số hôm nay, chỉ số tuần và tổng quan chủ đề ôn tập
  */
 async function getDashboardSummary(userId) {
   const today = new Date();
@@ -195,7 +214,12 @@ async function getDashboardSummary(userId) {
 }
 
 /**
- * Generate AI suggestions based on user history
+ * Sinh gợi ý và lời khuyên học tập cá nhân hóa sử dụng Google Gemini AI.
+ * Truy vấn cơ sở dữ liệu để lọc ra các chủ đề yếu nhất (có tỷ lệ chính xác thấp nhất),
+ * xây dựng prompt và gửi yêu cầu đến Gemini API để nhận lời khuyên tiếng Việt thiết thực.
+ * 
+ * @param {string} userId - ID người dùng
+ * @returns {Promise<Object>} Trả về đối tượng chứa weakest_topic, ai_advice và danh sách thống kê chủ đề học tập
  */
 async function generateAISuggestions(userId) {
   const topicSummaries = await LearningHistory.aggregate([
@@ -243,7 +267,8 @@ async function generateAISuggestions(userId) {
     };
   }
 
-  // Build prompt and call Gemini (simplified for the service layer)
+  // Gọi Google Gemini API để tạo gợi ý cá nhân hóa dựa trên kết quả học tập thực tế của học viên.
+  // Endpoint gọi: https://generativelanguage.googleapis.com (thông qua SDK @google/generative-ai)
   const prompt = `Phân tích dữ liệu học tập của người dùng: ${JSON.stringify(topicSummaries.slice(0, 5))}. Hãy đưa ra lời khuyên học tập bằng tiếng Việt (dưới 200 từ).`;
   
   try {
@@ -263,7 +288,12 @@ async function generateAISuggestions(userId) {
 }
 
 /**
- * Get answers for a specific session with strict validation
+ * Lấy thông tin chi tiết một phiên học cũ kèm danh sách các đáp án chi tiết của phiên đó.
+ * Thực hiện kiểm tra quyền sở hữu bài làm để bảo mật thông tin (đối chiếu session_id và user_id).
+ * 
+ * @param {string} sessionId - ID phiên học tập cần xem chi tiết
+ * @param {string} userId - ID người dùng sở hữu phiên học
+ * @returns {Promise<Object|null>} Trả về { session, answers } hoặc null nếu không tìm thấy bản ghi tương ứng
  */
 async function getSessionDetails(sessionId, userId) {
   const session = await LearningHistory.findOne({ session_id: sessionId, user_id: userId });

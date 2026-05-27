@@ -3,96 +3,96 @@ const mongoose = require("mongoose");
 const learningSessionSchema = new mongoose.Schema(
   {
     session_id: {
-      type: String,
+      type: String, // ID định danh duy nhất của phiên học tập
       required: true,
       unique: true,
       index: true,
     },
     user_id: {
-      type: String,
+      type: String, // ID người học sở hữu phiên học này
       required: true,
       index: true,
     },
     topic_id: {
-      type: String,
+      type: String, // ID của chủ đề học tập tương ứng
       required: true,
       index: true,
     },
     topic_title: {
-      type: String,
+      type: String, // Tiêu đề của chủ đề học tập
       required: true,
     },
     mode: {
-      type: String,
+      type: String, // Chế độ/phân hệ học (quiz, chat, homophone_groups, question_response, practice)
       enum: ["quiz", "chat", "homophone_groups", "question_response", "practice"],
       required: true,
     },
     status: {
-      type: String,
+      type: String, // Trạng thái của phiên học ('started', 'in_progress', 'completed', 'abandoned')
       enum: ["started", "in_progress", "completed", "abandoned"],
       default: "started",
     },
-    // Performance metrics
+    // Các trường dữ liệu hiệu suất học tập
     total_questions: {
-      type: Number,
+      type: Number, // Tổng số câu hỏi dự kiến của phiên học
       default: 0,
     },
     questions_answered: {
-      type: Number,
+      type: Number, // Số câu hỏi học viên thực tế đã làm
       default: 0,
     },
     correct_answers: {
-      type: Number,
+      type: Number, // Số câu hỏi trả lời chính xác
       default: 0,
     },
     incorrect_answers: {
-      type: Number,
+      type: Number, // Số câu hỏi trả lời sai
       default: 0,
     },
     total_score: {
-      type: Number,
+      type: Number, // Tổng số điểm đạt được
       default: 0,
     },
     max_score: {
-      type: Number,
+      type: Number, // Điểm số tối đa có thể đạt được
       default: 0,
     },
     accuracy_percentage: {
-      type: Number,
+      type: Number, // Tỷ lệ chính xác của bài làm (đơn vị %)
       default: 0,
     },
-    // Time tracking
+    // Theo dõi thời gian
     start_time: {
-      type: Date,
+      type: Date, // Thời điểm bắt đầu phiên học tập
       default: Date.now,
     },
     end_time: {
-      type: Date,
+      type: Date, // Thời điểm kết thúc phiên học
       default: null,
     },
     duration_minutes: {
-      type: Number,
+      type: Number, // Thời gian làm bài tính bằng phút (tính tự động tại pre-save hook)
       default: 0,
     },
-    // Engagement metrics
+    // Chỉ số tương tác chi tiết
     time_per_question_seconds: {
-      type: Number,
+      type: Number, // Thời gian trả lời trung bình của một câu hỏi (giây)
       default: 0,
     },
     completion_percentage: {
-      type: Number,
+      type: Number, // Tỷ lệ hoàn thành phiên học (%)
       default: 0,
     },
-    // Activity details
+    // Chi tiết bổ sung
     messages_exchanged: {
-      type: Number,
+      type: Number, // Số tin nhắn đã gửi nhận (dùng trong chế độ chat/AI)
       default: 0,
     },
-    learning_tags: [String],
-    difficulties_encountered: [String],
-    // Metadata
-    device_type: String,
-    ip_address: String,
+    learning_tags: [String], // Nhãn tag phục vụ gợi ý ôn tập
+    difficulties_encountered: [String], // Ghi nhận lỗi/khó khăn người dùng gặp phải
+    // Siêu dữ liệu hệ thống
+    device_type: String, // Loại thiết bị truy cập (ios, android, web)
+    ip_address: String, // Địa chỉ IP máy khách truy cập
   },
   {
     timestamps: {
