@@ -2,36 +2,36 @@ const mongoose = require('mongoose');
 
 const questionResponseSchema = new mongoose.Schema({
   audioUrl: {
-    type: String,
+    type: String, // Đường dẫn URL lưu trữ file âm thanh của câu hỏi TOEIC Part 2
     required: true
   },
   content: {
     transcript: {
-      type: String,
+      type: String, // Văn bản kịch bản gốc của câu hỏi tiếng Anh
       required: true
     },
     translation: {
-      type: String,
+      type: String, // Nghĩa tiếng Việt tương ứng của kịch bản câu hỏi
       default: ''
     }
   },
   options: [{
     text: {
-      type: String,
+      type: String, // Nội dung văn bản tiếng Anh của phương án trả lời (A, B hoặc C)
       required: true
     },
     translation: {
-      type: String,
+      type: String, // Bản dịch tiếng Việt tương ứng của phương án
       default: ''
     },
     isCorrect: {
-      type: Boolean,
+      type: Boolean, // Cờ đánh dấu phương án này có phải là đáp án đúng duy nhất hay không
       default: false
     }
   }]
 });
 
-// Validate exactly one correct answer per question
+// Hàm middleware kiểm định trước khi lưu: Đảm bảo mỗi câu hỏi có duy nhất 1 đáp án đúng
 questionResponseSchema.pre('save', function(next) {
   const correctCount = this.options.filter(opt => opt.isCorrect).length;
   if (correctCount !== 1) {

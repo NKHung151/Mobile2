@@ -184,13 +184,14 @@ async function getRandomHomophoneGroup() {
 }
 
 /**
- * VALIDATION: Check if a sentence is grammatically valid for a specific word
- * Edge case #4 fix: Prevents sentences meant for other words in the group
+ * Kiểm tra xem câu văn được sinh ra có hợp lệ về mặt ngữ pháp và ngữ nghĩa đối với từ mục tiêu hay không.
+ * Đây là cơ chế Validate nâng cao nhằm giải quyết Edge Case #4 (tránh việc sinh ra câu phù hợp cho cả từ đồng âm khác).
  * 
- * Example:
- *   sentence: "The _____ is shining brightly"
- *   word: "sun"     → ✅ Valid (makes sense)
- *   word: "hot"     → ❌ Invalid (doesn't make sense - "The hot is shining brightly" is wrong)
+ * @param {string} sentence - Câu văn chứa khoảng trống "_____"
+ * @param {string} word - Từ đích cần điền vào ô trống
+ * @param {Object} homophoneGroup - Nhóm từ đồng âm chứa các từ cạnh tranh
+ * @param {Object} model - Google Generative Model instance để thực hiện phân tích ngữ pháp
+ * @returns {Promise<boolean>} Trả về true nếu câu văn chỉ phù hợp duy nhất với từ đích về mặt ngữ nghĩa/ngữ pháp
  */
 async function validateSentenceForWord(sentence, word, homophoneGroup, model) {
   try {
@@ -215,10 +216,12 @@ Rules for VALID:
 
 Answer now:`;
 
+    // Gọi Google Gemini API (model: gemini-2.5-flash) để thực hiện xác thực ngữ pháp (Grammar Validation)
+    // Endpoint: googleapis.com/v1beta/models/gemini-2.5-flash:generateContent
     const result = await model.generateContent(validationPrompt);
     const responseText = result.response.text().trim();
     
-    // Parse JSON response
+    // Parse JSON response từ AI
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       logger.warn(`[HomophoneGroups] Validation response not JSON: "${responseText}"`);
@@ -234,8 +237,13 @@ Answer now:`;
 }
 
 /**
- * Generate a sentence using Gemini AI with a blank for the homophone word
- * Includes validation to prevent edge case #4 (wrong word assigned)
+ * Sinh câu hỏi điền vào chỗ trống tự động bằng Gemini AI với cơ chế thử lại (Retry) và kiểm tra chéo (Validator).
+ * Đảm bảo chỉ có từ đích (target word) khớp về mặt ngữ nghĩa trong câu, tránh các từ đồng âm cạnh tranh khác.
+ * 
+ * @param {string} word - Từ đích cần điền vào ô trống
+ * @param {Object} homophoneGroup - Nhóm từ đồng âm chứa các từ cạnh tranh
+ * @param {number} [maxRetries=3] - Số lần thử tối đa trong trường hợp AI sinh câu bị lỗi/không qua vòng xác thực
+ * @returns {Promise<string|null>} Câu văn tiếng Anh chứa khoảng trống "_____", hoặc null nếu thất bại sau maxRetries lần
  */
 async function generateSentenceWithAI(word, homophoneGroup, maxRetries = 3) {
   let attempts = 0;
@@ -265,17 +273,20 @@ Example of BAD sentence (multiple words fit):
 Return ONLY the sentence with blank, no quotes, no explanation:`;
 
       const model = genAI.getGenerativeModel({ model: config.gemini.model });
+      
+      // Gọi Google Gemini API (model: gemini-2.5-flash) để sinh câu ngữ cảnh có chứa blank
+      // Endpoint: googleapis.com/v1beta/models/gemini-2.5-flash:generateContent
       const result = await model.generateContent(prompt);
       let sentence = result.response.text().trim().replace(/^["']|["']$/g, '');
 
-      // Check if sentence has blank marker
+      // Kiểm tra xem câu có chứa kí tự khoảng trống quy ước hay không
       if (!sentence.includes('_____') && !sentence.includes('[blank]')) {
         logger.warn(`[HomophoneGroups] Attempt ${attempts}: AI sentence missing blank: "${sentence}"`);
         lastError = 'No blank marker in sentence';
         continue;
       }
 
-      // VALIDATE the sentence
+      // Xác thực câu văn vừa sinh thông qua mô hình chấm điểm ngữ nghĩa
       const isValid = await validateSentenceForWord(sentence, word, homophoneGroup, model);
       if (!isValid) {
         logger.warn(`[HomophoneGroups] Attempt ${attempts}: Validation failed for sentence: "${sentence}" with word: "${word}"`);
@@ -296,11 +307,15 @@ Return ONLY the sentence with blank, no quotes, no explanation:`;
 }
 
 /**
- * Generate contextual fallback sentences with blanks for homophones
- * Now uses homophone-specific templates for better accuracy
+ * Trả về câu văn mẫu dự phòng (fallback) trong trường hợp Gemini AI bị lỗi hoặc quá hạn mức.
+ * Truy vấn từ ngân hàng câu văn mẫu tĩnh được định nghĩa trước cho từng từ đồng âm cụ thể.
+ * 
+ * @param {string} word - Từ đồng âm cần lấy câu mẫu
+ * @param {Object} homophoneGroup - Nhóm chứa từ đó
+ * @returns {string} Câu văn chứa chỗ trống "_____" phù hợp
  */
 function generateFallbackSentence(word, homophoneGroup) {
-  // Look up word-specific sentences from per-word deterministic bank
+  // Tìm câu cụ thể theo từ khóa đồng âm trong ngân hàng dữ liệu tĩnh
   const sentences = HOMOPHONE_SENTENCE_BANK[word.toLowerCase()];
   
   if (sentences && sentences.length > 0) {
@@ -309,7 +324,7 @@ function generateFallbackSentence(word, homophoneGroup) {
     return sentence;
   }
 
-  // Fallback to generic templates if word not found in bank
+  // Sử dụng câu mẫu mặc định chung nếu từ đồng âm không nằm trong ngân hàng câu tĩnh
   const genericTemplates = [
     `I can _____ you very clearly.`,
     `They went _____ last summer.`,
@@ -339,7 +354,11 @@ function generateFallbackSentence(word, homophoneGroup) {
 }
 
 /**
- * Shuffle array (Fisher-Yates)
+ * Trộn ngẫu nhiên các phần tử trong mảng sử dụng giải thuật Fisher-Yates.
+ * Được áp dụng để trộn thứ tự các đáp án hiển thị lên màn hình client.
+ * 
+ * @param {Array} arr - Mảng đầu vào cần trộn
+ * @returns {Array} Mảng mới đã được tráo ngẫu nhiên thứ tự các phần tử
  */
 function shuffle(arr) {
   const a = [...arr];
@@ -351,25 +370,29 @@ function shuffle(arr) {
 }
 
 /**
- * Main: generate a full question from a HomophoneGroup
- * Includes AI with validation + fallback with homophones-specific sentences
+ * Hàm chính: Sinh câu hỏi hoàn chỉnh cho một nhóm từ đồng âm chỉ định.
+ * Ưu tiên gọi Gemini sinh câu hỏi cá nhân hóa, tự động fallback về ngân hàng câu mẫu nếu có lỗi.
+ * Ghi câu hỏi vào bộ lưu trữ RAM `questionStore` để bảo mật đáp án đúng.
+ * 
+ * @param {Object} homophoneGroup - Bản ghi nhóm từ đồng âm lấy từ MongoDB Atlas
+ * @returns {Promise<Object>} Câu hỏi an toàn để gửi về client (chứa ID câu hỏi, khoảng trống, choices, đáp án cho Audio)
  */
 async function generateQuestion(homophoneGroup) {
-  // Pick a random correct word
+  // Chọn ngẫu nhiên từ đúng trong nhóm từ đồng âm
   const correctIndex = Math.floor(Math.random() * homophoneGroup.words.length);
   const correctWord = homophoneGroup.words[correctIndex];
   const correctPhonetic = homophoneGroup.phonetics[correctIndex] || null;
 
-  // Try AI sentence first (with validation to prevent edge case #4)
+  // Gọi AI để tạo câu
   let sentence = await generateSentenceWithAI(correctWord, homophoneGroup);
   
-  // If AI fails, use homophones-specific fallback (or generic fallback if not available)
+  // Cơ chế Fallback dự phòng nếu AI mất kết nối/gặp lỗi quota
   if (!sentence) {
     sentence = generateFallbackSentence(correctWord, homophoneGroup);
     logger.info(`[HomophoneGroups] Fallback to template for "${correctWord}": "${sentence}"`);
   }
 
-  // Build choices array with phonetics + meanings
+  // Chuẩn bị mảng các phương án lựa chọn và xáo trộn ngẫu nhiên
   const choices = shuffle(
     homophoneGroup.words.map((word, i) => ({
       word,
@@ -393,26 +416,31 @@ async function generateQuestion(homophoneGroup) {
     created_at: Date.now()
   };
 
-  // Store for answer validation
+  // Lưu trữ câu hỏi đầy đủ lên bộ nhớ RAM để xác thực kết quả sau đó
   cleanExpiredQuestions();
   questionStore.set(question_id, question);
 
   logger.info(`[HomophoneGroups] Question created: id=${question_id}, correct="${correctWord}", sentence="${sentence}"`);
 
-  // Return without leaking correct_answer to client
-  // But send correctAnswerForAudio for text-to-speech (to make audio sound complete)
+  // Trả về câu hỏi an toàn (không bao gồm thuộc tính correct_answer để tránh bị can thiệp qua debug)
   return {
     question_id,
     source_id: homophoneGroup._id,
     source_type: 'homophone_groups',
     sentence,
-    correctAnswerForAudio: correctWord, // ONLY for audio pronunciation, not to show
-    choices // [{word, phonetic, meaning}]
+    correctAnswerForAudio: correctWord, // Cung cấp từ chính xác để phía mobile gọi Text-to-Speech phát âm hoàn chỉnh câu văn
+    choices
   };
 }
 
 /**
- * Validate answer + return full question data for saving
+ * Kiểm định câu trả lời của học viên và trả về toàn bộ dữ liệu chi tiết của câu hỏi.
+ * Xóa câu hỏi khỏi RAM lưu đệm `questionStore` sau khi chấm điểm thành công.
+ * 
+ * @param {string} question_id - ID định danh của câu hỏi cần chấm điểm
+ * @param {string} user_answer - Đáp án người học chọn
+ * @returns {Object} Dữ liệu kết quả chấm điểm bao gồm is_correct, correct_answer, phonetic, meaning...
+ * @throws {Error} Ném lỗi nếu câu hỏi không tồn tại trong cache hoặc đã quá hạn 10 phút.
  */
 function checkAnswerWithData(question_id, user_answer) {
   cleanExpiredQuestions();
@@ -428,7 +456,6 @@ function checkAnswerWithData(question_id, user_answer) {
     `[HomophoneGroups] Answer: id=${question_id}, user="${user_answer}", correct="${question.correct_answer}", result=${is_correct}`
   );
 
-  // Return full data for saving (BEFORE deleting from store)
   const fullData = {
     is_correct,
     correct_answer: question.correct_answer,
@@ -440,14 +467,18 @@ function checkAnswerWithData(question_id, user_answer) {
     user_answer,
   };
 
-  // Remove from store after answered
+  // Xóa khỏi RAM cache để ngăn chặn việc gửi request chấm điểm lại nhiều lần cho cùng một câu hỏi
   questionStore.delete(question_id);
 
   return fullData;
 }
 
 /**
- * Validate answer
+ * Kiểm định câu trả lời và trả về kết quả tối giản.
+ * 
+ * @param {string} question_id - ID câu hỏi
+ * @param {string} user_answer - Đáp án người học chọn
+ * @returns {Object} Object rút gọn chứa { is_correct, correct_answer, correct_phonetic, source_id }
  */
 function checkAnswer(question_id, user_answer) {
   const data = checkAnswerWithData(question_id, user_answer);
