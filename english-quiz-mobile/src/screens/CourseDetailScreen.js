@@ -8,6 +8,12 @@ import { getCourseById, getCourseVocabularies, deleteCourse as deleteCourseApi, 
 
 const { width } = Dimensions.get("window");
 
+/**
+ * TẠO URL ÂM THANH TỪ GOOGLE TTS
+ *
+ * Sử dụng: Phát âm thanh từ vựng trong course detail preview
+ * Tương tự như CourseDetailFocusModeScreen
+ */
 const generateGoogleTTSUrl = (text, languageCode = "en") => {
   if (!text || text.trim() === "") {
     return "";
@@ -16,33 +22,72 @@ const generateGoogleTTSUrl = (text, languageCode = "en") => {
   return `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=${languageCode}&client=tw-ob`;
 };
 
+/**
+ * LESSON MENU ITEMS - Menu tuỳ chọn học
+ *
+ * Hiển thị trong modal menu:
+ * - "Chế độ tập trung" → Điều hướng tới Focus Mode
+ * - "Bài tập ôn tập" → Để implement
+ * - "Hỏi AI" → Để implement
+ */
 const LESSON_MENU_ITEMS = [
   { id: 1, label: "Chế độ tập trung", icon: "flash" },
   { id: 2, label: "Bài tập ôn tập", icon: "document" },
   { id: 3, label: "Hỏi AI", icon: "chatbubble" },
 ];
 
+/**
+ * COURSE DETAIL SCREEN - Màn hình xem chi tiết khóa học
+ *
+ * Mục đích:
+ * - Hiển thị thông tin khóa học (tên, mô tả)
+ * - Hiển thị preview flashcards (dạng lật)
+ * - Cho phép user: lật, điều hướng, đánh dấu, phát audio
+ * - Điểm vào Focus Mode (chế độ tập trung)
+ *
+ * Khác với CourseDetailFocusModeScreen:
+ * - DetailScreen: Preview mode, có header với course info
+ * - FocusModeScreen: Full-screen learning mode, không có header
+ * - DetailScreen: Có menu tuỳ chọn (tập trung, ôn tập, AI)
+ * - FocusModeScreen: Tập trung 100% vào học
+ */
 export default function CourseDetailScreen({ navigation, route }) {
   const { courseId } = route.params;
-  const [course, setCourse] = useState(null);
-  const [flashcards, setFlashcards] = useState([]);
+
+  // ============ STATE: COURSE & FLASHCARDS ============
+  const [course, setCourse] = useState(null); // Thông tin khóa học
+  const [flashcards, setFlashcards] = useState([]); // Danh sách từ vựng
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [playingAudio, setPlayingAudio] = useState(null);
-  const [isUpdatingCourseStar, setIsUpdatingCourseStar] = useState(false);
-  const flipAnim = useRef(new Animated.Value(0)).current;
-  const soundRef = useRef(null);
+  // ============ STATE: NAVIGATION & ANIMATION ============
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0); // Vị trí thẻ hiện tại
+  const [isFlipped, setIsFlipped] = useState(false); // Trạng thái lật
+  const [isMenuVisible, setIsMenuVisible] = useState(false); // Modal menu tuỳ chọn
 
+  // ============ STATE: INTERACTIONS ============
+  const [playingAudio, setPlayingAudio] = useState(null); // ID audio đang phát
+  const [isUpdatingCourseStar, setIsUpdatingCourseStar] = useState(false); // Đang cập nhật star?
+  const flipAnim = useRef(new Animated.Value(0)).current; // Animation value (0-1)
+  const soundRef = useRef(null); // Reference đến Audio.Sound object
+
+  /**
+   * LOAD COURSE DETAIL & VOCABULARIES
+   *
+   * Quy trình:
+   * 1. Parallel fetch: getCourseById() + getCourseVocabularies()
+   * 2. Cập nhật state: course + flashcards
+   * 3. Handle errors
+   * 4. Set loading = false
+   */
   const loadCourseDetail = useCallback(async () => {
     try {
       setIsLoading(true);
       setError("");
 
+      // Fetch song song (Promise.all)
       const [courseRes, vocabRes] = await Promise.all([getCourseById(courseId), getCourseVocabularies(courseId)]);
+
       setCourse(courseRes?.data || null);
       setFlashcards(vocabRes?.data || []);
     } catch (err) {
@@ -52,10 +97,19 @@ export default function CourseDetailScreen({ navigation, route }) {
     }
   }, [courseId]);
 
+  /**
+   * useEffect: Load data khi component mount hoặc courseId thay đổi
+   */
   useEffect(() => {
     loadCourseDetail();
   }, [courseId, loadCourseDetail]);
 
+  /**
+   * useEffect: Cleanup audio khi component unmount
+   *
+   * Nguyên nhân: Tránh memory leaks
+   * Gọi: soundRef.current.unloadAsync()
+   */
   useEffect(() => {
     return () => {
       if (soundRef.current) {
@@ -64,6 +118,12 @@ export default function CourseDetailScreen({ navigation, route }) {
     };
   }, []);
 
+  /**
+   * PLAY AUDIO: Phát âm thanh từ Google TTS
+   *
+   * Tương tự như CourseDetailFocusModeScreen
+   * Sử dụng: Khi user click audio button trên flashcard preview
+   */
   const playAudio = async (audioUrl) => {
     if (!audioUrl) {
       Alert.alert("Thông báo", "Không có âm thanh cho mục này");
@@ -90,6 +150,11 @@ export default function CourseDetailScreen({ navigation, route }) {
     }
   };
 
+  /**
+   * STOP AUDIO: Dừng phát âm thanh
+   *
+   * Gọi khi: User click lại audio button khi đang phát
+   */
   const stopAudio = async () => {
     if (soundRef.current) {
       await soundRef.current.stopAsync();
@@ -97,6 +162,14 @@ export default function CourseDetailScreen({ navigation, route }) {
     }
   };
 
+  /**
+   * HANDLE FLIP CARD: Lật thẻ với animation 3D
+   *
+   * Animation:
+   * - 600ms timing (chậm hơn Focus Mode 500ms để emphatic hơn)
+   * - Flip 0 → 1 trên animation value
+   * - Transform: rotateY (front/back)
+   */
   const handleFlipCard = () => {
     Animated.timing(flipAnim, {
       toValue: isFlipped ? 0 : 1,
@@ -120,6 +193,14 @@ export default function CourseDetailScreen({ navigation, route }) {
     outputRange: ["180deg", "360deg"],
   });
 
+  /**
+   * HANDLE NEXT SLIDE: Chuyển sang thẻ tiếp theo
+   *
+   * Quy trình:
+   * 1. Check không phải thẻ cuối
+   * 2. Tăng index
+   * 3. Reset flip state & animation
+   */
   const handleNextSlide = () => {
     if (currentSlideIndex < flashcards.length - 1) {
       setCurrentSlideIndex(currentSlideIndex + 1);
@@ -128,6 +209,14 @@ export default function CourseDetailScreen({ navigation, route }) {
     }
   };
 
+  /**
+   * HANDLE PREV SLIDE: Chuyển sang thẻ trước đó
+   *
+   * Quy trình:
+   * 1. Check không phải thẻ đầu
+   * 2. Giảm index
+   * 3. Reset flip state & animation
+   */
   const handlePrevSlide = () => {
     if (currentSlideIndex > 0) {
       setCurrentSlideIndex(currentSlideIndex - 1);
@@ -136,6 +225,17 @@ export default function CourseDetailScreen({ navigation, route }) {
     }
   };
 
+  /**
+   * HANDLE DELETE COURSE: Xóa khóa học
+   *
+   * Quy trình:
+   * 1. Confirm alert
+   * 2. Gọi API deleteCourseApi
+   * 3. Navigate back nếu thành công
+   * 4. Show error nếu fail
+   *
+   * Ghi chú: Chỉ creator có thể xóa
+   */
   const handleDeleteCourse = () => {
     Alert.alert("Xóa học phần", "Bạn có chắc muốn xóa học phần này không?", [
       { text: "Hủy", style: "cancel" },
@@ -158,6 +258,12 @@ export default function CourseDetailScreen({ navigation, route }) {
   const totalTerms = flashcards.length;
   const isCourseStar = Boolean(course?.course_user?.is_star);
 
+  /**
+   * NORMALIZE CARDS: Transform flashcard data để dễ sử dụng
+   *
+   * Từ backend format: {term, definition, user_state: {is_memorized, is_star}}
+   * Sang UI format: {english, vietnamese, is_star, is_memorized}
+   */
   const normalizedCards = Array.isArray(flashcards)
     ? flashcards.map((card) => ({
         id: card._id,
@@ -172,6 +278,17 @@ export default function CourseDetailScreen({ navigation, route }) {
       }))
     : [];
 
+  /**
+   * TOGGLE COURSE STAR: Đánh dấu/bỏ đánh dấu khóa học yêu thích
+   *
+   * Quy trình:
+   * 1. Toggle giá trị
+   * 2. Gọi API updateCourseStar
+   * 3. Update local state
+   * 4. Handle errors
+   *
+   * Ghi chú: Dùng isUpdatingCourseStar để tránh double-click
+   */
   const toggleCourseStar = async () => {
     if (!course || isUpdatingCourseStar) return;
 
@@ -193,6 +310,15 @@ export default function CourseDetailScreen({ navigation, route }) {
     }
   };
 
+  /**
+   * TOGGLE VOCABULARY STAR: Đánh dấu/bỏ đánh dấu từ vựng yêu thích
+   *
+   * Quy trình:
+   * 1. Toggle is_star
+   * 2. Gọi API updateVocabularyProgress
+   * 3. Update flashcards state
+   * 4. Hiển thị thay đổi ngay lập tức
+   */
   const toggleVocabularyStar = async (card) => {
     if (!card?._id) return;
     const next = !Boolean(card?.user_state?.is_star);
@@ -222,26 +348,22 @@ export default function CourseDetailScreen({ navigation, route }) {
 
     try {
       if (!course.is_public) {
-        Alert.alert(
-          "Private Course",
-          "This course is private. Do you want to make it public before sharing?",
-          [
-            { text: "Cancel", onPress: () => {} },
-            {
-              text: "Make Public & Share",
-              onPress: async () => {
-                await updateCourse(course._id, { is_public: true });
-                const response = await shareCourse(course._id);
-                Clipboard.setString(response.data.share_code);
-                setCourse((prev) => ({
-                  ...(prev || {}),
-                  is_public: true,
-                }));
-                Alert.alert("Shared!", `Share code copied: ${response.data.share_code}`);
-              },
+        Alert.alert("Private Course", "This course is private. Do you want to make it public before sharing?", [
+          { text: "Cancel", onPress: () => {} },
+          {
+            text: "Make Public & Share",
+            onPress: async () => {
+              await updateCourse(course._id, { is_public: true });
+              const response = await shareCourse(course._id);
+              Clipboard.setString(response.data.share_code);
+              setCourse((prev) => ({
+                ...(prev || {}),
+                is_public: true,
+              }));
+              Alert.alert("Shared!", `Share code copied: ${response.data.share_code}`);
             },
-          ],
-        );
+          },
+        ]);
       } else {
         const response = await shareCourse(course._id);
         Clipboard.setString(response.data.share_code);
