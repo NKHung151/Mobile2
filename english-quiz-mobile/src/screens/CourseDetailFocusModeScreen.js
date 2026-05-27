@@ -7,6 +7,24 @@ import { getCourseVocabularies, getMySetting, updateMySetting, updateVocabularyP
 
 const { width } = Dimensions.get("window");
 
+/**
+ * TẠO URL ÂM THANH TỪgoogle TTS (TEXT-TO-SPEECH)
+ *
+ * Mục đích: Tạo URL để phát âm thanh của từ vựng/định nghĩa qua Google Translate
+ *
+ * Google TTS API Format:
+ * https://translate.google.com/translate_tts?ie=UTF-8&q=[encoded_text]&tl=[language_code]&client=tw-ob
+ *
+ * Ví dụ:
+ * - generateGoogleTTSUrl("apple", "en")
+ *   → https://translate.google.com/translate_tts?ie=UTF-8&q=apple&tl=en&client=tw-ob
+ * - generateGoogleTTSUrl("quả táo", "vi")
+ *   → https://translate.google.com/translate_tts?ie=UTF-8&q=qu%E1%BA%A3%20t%C3%A1o&tl=vi&client=tw-ob
+ *
+ * @param {string} text - Văn bản cần phát âm thanh
+ * @param {string} languageCode - Mã ngôn ngữ (ví dụ: "en", "vi", "fr")
+ * @returns {string} URL âm thanh hoặc chuỗi rỗng nếu text trống
+ */
 const generateGoogleTTSUrl = (text, languageCode = "en") => {
   if (!text || text.trim() === "") {
     return "";
@@ -15,28 +33,79 @@ const generateGoogleTTSUrl = (text, languageCode = "en") => {
   return `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=${languageCode}&client=tw-ob`;
 };
 
+/**
+ * COURSE DETAIL FOCUS MODE SCREEN - MÀN HÌNH HỌC FOCUS MODE (FLASHCARD)
+ *
+ * Mục đích:
+ * - Cung cấp giao diện học tập toàn màn hình với flashcard
+ * - Cho phép người dùng luyện tập từ vựng qua việc lật, điều hướng, đánh dấu
+ * - Theo dõi tiến độ học tập (progress %)
+ * - Hỗ trợ shuffle, audio, images
+ *
+ * Tính năng chính:
+ * ✅ Hiển thị flashcard với animation flip 3D
+ * ✅ Navigate prev/next giữa các thẻ
+ * ✅ Đánh dấu "Đã ghi nhớ"
+ * ✅ Đánh dấu "Yêu thích"
+ * ✅ Phát âm thanh (Google TTS)
+ * ✅ Hiển thị hình ảnh
+ * ✅ Shuffle/Unshuffle thứ tự
+ * ✅ Tạo practice session (1 lần duy nhất khi vào màn hình)
+ * ✅ Tự động update progress khi navigate/mark
+ * ✅ Đóng & save session khi thoát
+ *
+ * Key Implementation Details:
+ * 1. Sử dụng React Ref (practiceIdRef) để lưu practice session ID
+ *    - Nguyên nhân: Tránh React Strict Mode tạo lại session 2 lần
+ *    - React Strict Mode unmount → mount lại component khi develop
+ *    - Nếu không dùng Ref, sẽ tạo 2 session thay vì 1
+ *
+ * 2. Sử dụng isInitializingRef để đảm bảo chỉ tạo session 1 lần
+ *    - Kiểm tra: if (isInitializingRef.current) return
+ *    - Set true ngay khi bắt đầu tạo
+ *    - Ngăn chặn race conditions
+ *
+ * 3. Data Merging với VocabularyUser
+ *    - Backend trả về: [{...vocab, user_state: {is_memorized, is_star}}]
+ *    - Frontend lưu vào state cards
+ *    - Khi update → setState newCards với user_state mới
+ *
+ * 4. Progress Tracking
+ *    - Tính % = (currentSlideIndex + 1) / total * 100
+ *    - unmemorized_count = số thẻ chưa đánh dấu "Đã ghi nhớ"
+ *    - status = "in_progress" hoặc "completed" (khi xem hết tất cả)
+ */
 export default function CourseDetailFocusMode({ navigation, route }) {
   const { courseId } = route.params;
-  const [cards, setCards] = useState([]);
-  const [originalCards, setOriginalCards] = useState([]);
+
+  // ============ STATE: FLASHCARD DATA ============
+  const [cards, setCards] = useState([]); // Mảng vocabulary, có thể bị shuffle
+  const [originalCards, setOriginalCards] = useState([]); // Bản gốc, để restore khi unshuffle
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const flipAnim = useRef(new Animated.Value(0)).current;
+  // ============ STATE: NAVIGATION & ANIMATION ============
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0); // Vị trí thẻ hiện tại (0-based)
+  const [isFlipped, setIsFlipped] = useState(false); // Trạng thái lật thẻ
+  const flipAnim = useRef(new Animated.Value(0)).current; // Animation value (0 = mặt trước, 1 = mặt sau)
 
-  // Practice Tracking - Dùng Ref để lưu duy nhất 1 ID của phiên học
-  const practiceIdRef = useRef(null);
-  const isInitializingRef = useRef(false);
+  // ============ PRACTICE SESSION TRACKING ============
+  // ⚠️ CRITICAL: Dùng Ref thay vì State để tránh React Strict Mode tạo 2 session
+  const practiceIdRef = useRef(null); // Lưu ID của practice session (1 lần duy nhất)
+  const isInitializingRef = useRef(false); // Flag để đảm bảo chỉ init 1 lần
 
-  // Settings
-  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-  const [isShuffled, setIsShuffled] = useState(false);
-  const [frontLanguage, setFrontLanguage] = useState("english");
-  const [playingAudio, setPlayingAudio] = useState(null);
-  const soundRef = useRef(null);
+  // ============ STATE: SETTINGS ============
+  const [isSettingsVisible, setIsSettingsVisible] = useState(false); // Modal cài đặt
+  const [isShuffled, setIsShuffled] = useState(false); // Đã shuffle hay chưa?
+  const [frontLanguage, setFrontLanguage] = useState("english"); // Ngôn ngữ mặt trước (english/vietnamese)
+  const [playingAudio, setPlayingAudio] = useState(null); // ID của audio đang phát (để show pause icon)
+  const soundRef = useRef(null); // Reference đến Audio.Sound object (để stop khi unmount)
 
+  /**
+   * CLEANUP: Unload âm thanh khi component unmount
+   * - Nguyên nhân: Tránh memory leaks
+   * - Gọi soundRef.current.unloadAsync() để giải phóng resource
+   */
   useEffect(() => {
     return () => {
       if (soundRef.current) {
@@ -45,28 +114,48 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     };
   }, []);
 
+  /**
+   * INIT: Load flashcards + tạo practice session
+   *
+   * Quy trình:
+   * 1. Fetch getCourseVocabularies (trả về [{...vocab, user_state}])
+   * 2. Fetch getMySetting (lấy cài đặt user: front_side = "definition"?)
+   * 3. Tạo practice session (1 lần duy nhất)
+   *    - Tính unmemorized_count từ flashcards
+   *    - Set status = "in_progress", progress = 0
+   * 4. Lưu practiceId vào Ref (không phải state!)
+   *
+   * ⚠️ GUARD: Kiểm tra isInitializingRef & practiceIdRef để tránh tạo 2 lần
+   */
   useEffect(() => {
-    let isMounted = true;
+    let isMounted = true; // Để hủy request nếu component unmount
 
     const initData = async () => {
+      // ⚠️ GUARD: Nếu đã init hoặc đã có practiceId, bỏ qua
       if (isInitializingRef.current || practiceIdRef.current) return;
 
       try {
         isInitializingRef.current = true;
         setIsLoading(true);
 
+        // Fetch data từ backend
         const [vocabRes, settingRes] = await Promise.all([getCourseVocabularies(courseId), getMySetting()]);
 
         const loadedCards = vocabRes?.data || [];
         if (isMounted) {
           setCards(loadedCards);
-          setOriginalCards(loadedCards);
+          setOriginalCards(loadedCards); // Lưu bản gốc để restore khi unshuffle
         }
 
-        // TẠO BẢN GHI 1 LẦN DUY NHẤT KHI VÀO MÀN HÌNH
+        // ========== TẠO PRACTICE SESSION (1 LẦN DUY NHẤT) ==========
+        // Chỉ tạo nếu:
+        // - Có flashcards
+        // - Chưa có practiceId
         if (loadedCards.length > 0 && !practiceIdRef.current) {
+          // Tính số từ chưa ghi nhớ
           const initialUnmemorized = loadedCards.filter((c) => !c.user_state?.is_memorized).length;
 
+          // Gọi API tạo session
           const res = await createCoursePracticeSession(courseId, {
             status: "in_progress",
             progress: 0,
@@ -74,17 +163,20 @@ export default function CourseDetailFocusMode({ navigation, route }) {
             started_at: new Date().toISOString(),
           });
 
+          // Lưu practiceId vào Ref (không phải state!)
+          // ID có thể là _id hoặc id tùy backend trả
           if (res?.data?._id || res?.data?.id) {
             practiceIdRef.current = res.data._id || res.data.id;
-            console.log("Đã tạo Practice Session ID:", practiceIdRef.current);
+            console.log("✅ Tạo Practice Session thành công. ID:", practiceIdRef.current);
           }
         }
 
+        // Load cài đặt user: nếu front_side = "definition" thì bắt đầu với mặt sau
         if (settingRes?.data?.front_side === "definition" && isMounted) {
           setFrontLanguage("vietnamese");
         }
       } catch (err) {
-        console.error("Init Error:", err);
+        console.error("❌ Lỗi init:", err);
         if (isMounted) setError("Không thể tải dữ liệu luyện tập");
       } finally {
         if (isMounted) setIsLoading(false);
@@ -95,48 +187,97 @@ export default function CourseDetailFocusMode({ navigation, route }) {
 
     return () => {
       isMounted = false;
-      // Lưu ý: KHÔNG reset practiceIdRef.current ở đây để tránh Strict Mode tạo lại 2 lần
+      // ⚠️ LƯU Ý: KHÔNG reset practiceIdRef.current ở đây
+      // Nếu reset, React Strict Mode sẽ tạo session mới → vô ích
     };
   }, [courseId]);
 
-  // HÀM UPDATE BẢN GHI (KHÔNG TẠO MỚI)
+  /**
+   * UPDATE PROGRESS FUNCTION
+   *
+   * Mục đích: Đồng bộ tiến độ với backend (KHÔNG tạo session mới!)
+   *
+   * Gọi khi:
+   * - Navigate next/prev
+   * - Toggle memorized/star
+   * - Thoát màn hình
+   *
+   * Tính toán:
+   * - progressPercent = (currentSlideIndex + 1) / total * 100
+   * - unmemorized_count = số thẻ chưa đánh dấu
+   * - status = "completed" nếu đã xem hết, "in_progress" nếu chưa
+   *
+   * Ghi chú:
+   * - Chỉ gọi nếu practiceIdRef.current tồn tại
+   * - Sử dụng practiceIdRef.current (từ Ref, không phải state)
+   * - Không tạo session mới!
+   */
   const syncProgress = async (updatedCards = cards, index = currentSlideIndex, options = {}) => {
+    // ⚠️ Guard: Nếu chưa có practiceId, bỏ qua (chưa tạo session)
     if (!practiceIdRef.current) {
-      console.log("Bỏ qua đồng bộ: Chưa có practiceId");
+      console.log("ℹ️ Bỏ qua sync: Chưa có practiceId");
       return;
     }
 
     const { finishSession = false } = options;
+
+    // Tính toán progress
     const total = updatedCards.length;
     const currentUnmemorized = updatedCards.filter((c) => !c.user_state?.is_memorized).length;
     const progressPercent = total > 0 ? Math.round(((index + 1) / total) * 100) : 0;
 
-    // Chỉ cần đã hiển thị đến thẻ cuối là completed, không phụ thuộc memorized.
+    // Kiểm tra hoàn thành: nếu đã xem đến thẻ cuối (index >= total - 1) thì "completed"
+    // Lưu ý: Không phụ thuộc vào memorized status, chỉ phụ thuộc xem hết hay chưa
     const isCompletedByViewed = total > 0 && index >= total - 1;
     const nowIso = new Date().toISOString();
 
     try {
-      // Chỉ GỌI CẬP NHẬT vào practiceIdRef.current đã lưu
+      // Gọi API update progress (sử dụng practiceId từ Ref!)
       await updateCoursePracticeProgress(courseId, {
-        practiceId: practiceIdRef.current,
+        practiceId: practiceIdRef.current, // ⚠️ Từ Ref, không phải state!
         progress: progressPercent,
         unmemorized_count: currentUnmemorized,
         status: isCompletedByViewed ? "completed" : "in_progress",
         finished_at: isCompletedByViewed || finishSession ? nowIso : null,
         is_finished: finishSession,
       });
-      console.log("Đã đồng bộ tiến độ thành công vào ID:", practiceIdRef.current);
+      console.log("✅ Sync progress thành công:", {
+        practiceId: practiceIdRef.current,
+        progress: progressPercent,
+        status: isCompletedByViewed ? "completed" : "in_progress",
+      });
     } catch (e) {
-      console.log("Lỗi đồng bộ tiến độ:", e);
+      console.log("⚠️ Lỗi sync progress:", e);
     }
   };
 
-  // Đồng bộ một lần cuối khi thoát để khóa phiên hiện tại
+  /**
+   * HANDLE CLOSE: Thoát Focus Mode
+   *
+   * Mục đích: Đồng bộ tiến độ cuối cùng và tắt session trước khi thoát
+   *
+   * Quy trình:
+   * 1. Gọi syncProgress với finishSession = true
+   * 2. Set finished_at = now (đánh dấu session kết thúc)
+   * 3. Gọi navigation.goBack() để quay về CourseDetail
+   */
   const handleClose = async () => {
     await syncProgress(cards, currentSlideIndex, { finishSession: true });
     navigation.goBack();
   };
 
+  /**
+   * HANDLE FLIP CARD: Lật thẻ với animation 3D
+   *
+   * Animation:
+   * - Sử dụng Animated.timing() để mượt mà
+   * - Flip 0 → 1 (500ms) khi lật từ trước sang sau
+   * - Transform: rotateY(perspective)
+   *
+   * Trạng thái:
+   * - isFlipped: boolean để track
+   * - flipAnim: animated value (0-1)
+   */
   const handleFlipCard = () => {
     Animated.timing(flipAnim, {
       toValue: isFlipped ? 0 : 1,
@@ -146,6 +287,15 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     setIsFlipped(!isFlipped);
   };
 
+  /**
+   * HANDLE NEXT: Chuyển sang thẻ tiếp theo
+   *
+   * Quy trình:
+   * 1. Kiểm tra không phải thẻ cuối cùng
+   * 2. Tăng currentSlideIndex
+   * 3. Reset animation flip
+   * 4. Sync progress
+   */
   const handleNext = () => {
     if (currentSlideIndex < cards.length - 1) {
       const nextIndex = currentSlideIndex + 1;
@@ -156,6 +306,15 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     }
   };
 
+  /**
+   * HANDLE PREV: Chuyển sang thẻ trước đó
+   *
+   * Quy trình:
+   * 1. Kiểm tra không phải thẻ đầu tiên
+   * 2. Giảm currentSlideIndex
+   * 3. Reset animation flip
+   * 4. Sync progress
+   */
   const handlePrev = () => {
     if (currentSlideIndex > 0) {
       const nextIndex = currentSlideIndex - 1;
@@ -166,6 +325,18 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     }
   };
 
+  /**
+   * TOGGLE STAR: Đánh dấu/bỏ đánh dấu yêu thích
+   *
+   * Mục đích: Cho phép người dùng đánh dấu các từ vựng yêu thích
+   *
+   * Quy trình:
+   * 1. Lấy trạng thái hiện tại của thẻ
+   * 2. Toggle is_star
+   * 3. Gọi API updateVocabularyProgress
+   * 4. Update state (newCards) để UI phản ứng
+   * 5. Sync progress
+   */
   const toggleStar = async () => {
     const card = cards[currentSlideIndex];
     const nextStar = !card.user_state?.is_star;
@@ -181,6 +352,20 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     }
   };
 
+  /**
+   * TOGGLE MEMORIZED: Đánh dấu "Đã ghi nhớ"
+   *
+   * Mục đích: Cho phép người dùng đánh dấu các từ đã ghi nhớ
+   *
+   * Quy trình:
+   * 1. Lấy trạng thái hiện tại
+   * 2. Toggle is_memorized
+   * 3. Gọi API updateVocabularyProgress
+   * 4. Update state để UI phản ứng
+   * 5. Sync progress (cập nhật unmemorized_count)
+   *
+   * Ghi chú: Khi toggle, unmemorized_count sẽ thay đổi
+   */
   const toggleMemorized = async () => {
     const card = cards[currentSlideIndex];
     const nextMem = !card.user_state?.is_memorized;
@@ -196,6 +381,22 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     }
   };
 
+  /**
+   * PLAY AUDIO: Phát âm thanh từ Google TTS
+   *
+   * Mục đích: Cho người dùng nghe phát âm của từ/định nghĩa
+   *
+   * Quy trình:
+   * 1. Kiểm tra audioUrl có hợp lệ không
+   * 2. Unload âm thanh cũ (nếu còn)
+   * 3. Tạo Audio.Sound mới + load từ URL
+   * 4. Phát âm thanh
+   * 5. Lắng nghe sự kiện onPlaybackStatusUpdate (khi xong, clear playingAudio)
+   *
+   * Error Handling:
+   * - Nếu không có audioUrl → Alert thông báo
+   * - Nếu lỗi phát → Alert thông báo chi tiết lỗi
+   */
   const playAudio = async (audioUrl, side = "front") => {
     if (!audioUrl) {
       Alert.alert("Thông báo", "Không có âm thanh cho mục này");
@@ -203,14 +404,18 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     }
 
     try {
+      // Unload âm thanh cũ
       if (soundRef.current) {
         await soundRef.current.unloadAsync();
       }
 
+      // Tạo Sound object mới
       const sound = new Audio.Sound();
       soundRef.current = sound;
       await sound.loadAsync({ uri: audioUrl });
       await sound.playAsync();
+
+      // Lắng nghe sự kiện: khi xong phát, clear playingAudio
       sound.setOnPlaybackStatusUpdate((status) => {
         if (status.didJustFinish) {
           setPlayingAudio(null);
@@ -222,6 +427,11 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     }
   };
 
+  /**
+   * STOP AUDIO: Dừng phát âm thanh
+   *
+   * Gọi khi: Người dùng click lại icon audio khi đang phát
+   */
   const stopAudio = async () => {
     if (soundRef.current) {
       await soundRef.current.stopAsync();
@@ -229,8 +439,9 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     }
   };
 
+  // ========== ANIMATION INTERPOLATION ==========
+  // Tính giá trị transform dựa trên flipAnim (0-1)
   const currentCard = cards[currentSlideIndex];
-
   const frontInterpolate = flipAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
@@ -240,6 +451,7 @@ export default function CourseDetailFocusMode({ navigation, route }) {
     outputRange: ["180deg", "360deg"],
   });
 
+  // ========== LOADING STATE ==========
   if (isLoading)
     return (
       <View style={styles.container}>
@@ -309,13 +521,7 @@ export default function CourseDetailFocusMode({ navigation, route }) {
                   style={styles.audioButton}
                   activeOpacity={0.7}
                 >
-                  <Ionicons
-                    name={
-                      playingAudio === (frontLanguage === "english" ? `term_${currentCard?._id}` : `def_${currentCard?._id}`) ? "pause" : "volume-high"
-                    }
-                    size={20}
-                    color="#FFFFFF"
-                  />
+                  <Ionicons name={playingAudio === (frontLanguage === "english" ? `term_${currentCard?._id}` : `def_${currentCard?._id}`) ? "pause" : "volume-high"} size={20} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
@@ -354,13 +560,7 @@ export default function CourseDetailFocusMode({ navigation, route }) {
                   style={styles.audioButton}
                   activeOpacity={0.7}
                 >
-                  <Ionicons
-                    name={
-                      playingAudio === (frontLanguage === "english" ? `def_${currentCard?._id}` : `term_${currentCard?._id}`) ? "pause" : "volume-high"
-                    }
-                    size={20}
-                    color="#FFFFFF"
-                  />
+                  <Ionicons name={playingAudio === (frontLanguage === "english" ? `def_${currentCard?._id}` : `term_${currentCard?._id}`) ? "pause" : "volume-high"} size={20} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
