@@ -1,0 +1,2961 @@
+[{
+  "_id": "sheep_ship_seat_sit",
+  "words": [
+    "sheep",
+    "ship",
+    "seat",
+    "sit"
+  ],
+  "phonetics": [
+    "/ʃiːp/",
+    "/ʃɪp/",
+    "/siːt/",
+    "/sɪt/"
+  ],
+  "meanings": [
+    "con cừu",
+    "con tàu",
+    "chỗ ngồi",
+    "ngồi"
+  ]
+},
+{
+  "_id": "leave_live_love_leaf",
+  "words": [
+    "leave",
+    "live",
+    "love",
+    "leaf"
+  ],
+  "phonetics": [
+    "/liːv/",
+    "/lɪv/",
+    "/lʌv/",
+    "/liːf/"
+  ],
+  "meanings": [
+    "rời đi",
+    "sống",
+    "yêu",
+    "lá cây"
+  ]
+},
+{
+  "_id": "beach_bitch_bench_batch",
+  "words": [
+    "beach",
+    "bitch",
+    "bench",
+    "batch"
+  ],
+  "phonetics": [
+    "/biːtʃ/",
+    "/bɪtʃ/",
+    "/bentʃ/",
+    "/bætʃ/"
+  ],
+  "meanings": [
+    "bãi biển",
+    "con chó cái",
+    "ghế dài",
+    "mẻ / lô hàng"
+  ]
+},
+{
+  "_id": "full_fool_fall_feel",
+  "words": [
+    "full",
+    "fool",
+    "fall",
+    "feel"
+  ],
+  "phonetics": [
+    "/fʊl/",
+    "/fuːl/",
+    "/fɔːl/",
+    "/fiːl/"
+  ],
+  "meanings": [
+    "đầy / no",
+    "kẻ ngốc",
+    "ngã / mùa thu",
+    "cảm thấy"
+  ]
+},
+{
+  "_id": "pull_pool_pole_pill",
+  "words": [
+    "pull",
+    "pool",
+    "pole",
+    "pill"
+  ],
+  "phonetics": [
+    "/pʊl/",
+    "/puːl/",
+    "/pəʊl/",
+    "/pɪl/"
+  ],
+  "meanings": [
+    "kéo",
+    "hồ bơi",
+    "cột / cực",
+    "viên thuốc"
+  ]
+},
+{
+  "_id": "hat_hot_hit_hut",
+  "words": [
+    "hat",
+    "hot",
+    "hit",
+    "hut"
+  ],
+  "phonetics": [
+    "/hæt/",
+    "/hɒt/",
+    "/hɪt/",
+    "/hʌt/"
+  ],
+  "meanings": [
+    "mũ",
+    "nóng",
+    "đánh / cú hit",
+    "lều"
+  ]
+},
+{
+  "_id": "bad_bed_bid_bud",
+  "words": [
+    "bad",
+    "bed",
+    "bid",
+    "bud"
+  ],
+  "phonetics": [
+    "/bæd/",
+    "/bed/",
+    "/bɪd/",
+    "/bʌd/"
+  ],
+  "meanings": [
+    "xấu / tệ",
+    "cái giường",
+    "ra giá / đặt cược",
+    "nụ hoa / bạn thân"
+  ]
+},
+{
+  "_id": "man_men_main_moon",
+  "words": [
+    "man",
+    "men",
+    "main",
+    "moon"
+  ],
+  "phonetics": [
+    "/mæn/",
+    "/men/",
+    "/meɪn/",
+    "/muːn/"
+  ],
+  "meanings": [
+    "đàn ông",
+    "những người đàn ông",
+    "chính / chủ yếu",
+    "mặt trăng"
+  ]
+},
+{
+  "_id": "cap_cup_cop_keep",
+  "words": [
+    "cap",
+    "cup",
+    "cop",
+    "keep"
+  ],
+  "phonetics": [
+    "/kæp/",
+    "/kʌp/",
+    "/kɒp/",
+    "/kiːp/"
+  ],
+  "meanings": [
+    "mũ lưỡi trai",
+    "cái cốc",
+    "cảnh sát",
+    "giữ"
+  ]
+},
+{
+  "_id": "cut_cot_cat_coat",
+  "words": [
+    "cut",
+    "cot",
+    "cat",
+    "coat"
+  ],
+  "phonetics": [
+    "/kʌt/",
+    "/kɒt/",
+    "/kæt/",
+    "/kəʊt/"
+  ],
+  "meanings": [
+    "cắt",
+    "giường gấp / cũi",
+    "con mèo",
+    "áo khoác"
+  ]
+},
+{
+  "_id": "rice_lice_rise_lies",
+  "words": [
+    "rice",
+    "lice",
+    "rise",
+    "lies"
+  ],
+  "phonetics": [
+    "/raɪs/",
+    "/laɪs/",
+    "/raɪz/",
+    "/laɪz/"
+  ],
+  "meanings": [
+    "cơm / gạo",
+    "chấy / rận",
+    "mọc lên / tăng",
+    "những lời nói dối"
+  ]
+},
+{
+  "_id": "vine_wine_fine_nine",
+  "words": [
+    "vine",
+    "wine",
+    "fine",
+    "nine"
+  ],
+  "phonetics": [
+    "/vaɪn/",
+    "/waɪn/",
+    "/faɪn/",
+    "/naɪn/"
+  ],
+  "meanings": [
+    "cây nho",
+    "rượu vang",
+    "tốt / phạt tiền",
+    "số chín"
+  ]
+},
+{
+  "_id": "thin_sin_tin_bin",
+  "words": [
+    "thin",
+    "sin",
+    "tin",
+    "bin"
+  ],
+  "phonetics": [
+    "/θɪn/",
+    "/sɪn/",
+    "/tɪn/",
+    "/bɪn/"
+  ],
+  "meanings": [
+    "mỏng / gầy",
+    "tội lỗi",
+    "thiếc / hộp thiếc",
+    "thùng rác"
+  ]
+},
+{
+  "_id": "then_den_ten_hen",
+  "words": [
+    "then",
+    "den",
+    "ten",
+    "hen"
+  ],
+  "phonetics": [
+    "/ðen/",
+    "/den/",
+    "/ten/",
+    "/hen/"
+  ],
+  "meanings": [
+    "sau đó / lúc đó",
+    "hang / phòng riêng",
+    "số mười",
+    "gà mái"
+  ]
+},
+{
+  "_id": "cheap_chip_chop_shop",
+  "words": [
+    "cheap",
+    "chip",
+    "chop",
+    "shop"
+  ],
+  "phonetics": [
+    "/tʃiːp/",
+    "/tʃɪp/",
+    "/tʃɒp/",
+    "/ʃɒp/"
+  ],
+  "meanings": [
+    "rẻ",
+    "khoai chiên / chip",
+    "chặt / thái",
+    "cửa hàng"
+  ]
+},
+{
+  "_id": "fan_van_pan_ban",
+  "words": [
+    "fan",
+    "van",
+    "pan",
+    "ban"
+  ],
+  "phonetics": [
+    "/fæn/",
+    "/væn/",
+    "/pæn/",
+    "/bæn/"
+  ],
+  "meanings": [
+    "quạt / người hâm mộ",
+    "xe tải nhỏ",
+    "chảo",
+    "cấm"
+  ]
+},
+{
+  "_id": "light_right_night_might",
+  "words": [
+    "light",
+    "right",
+    "night",
+    "might"
+  ],
+  "phonetics": [
+    "/laɪt/",
+    "/raɪt/",
+    "/naɪt/",
+    "/maɪt/"
+  ],
+  "meanings": [
+    "ánh sáng / nhẹ",
+    "đúng / phải",
+    "ban đêm",
+    "có thể / sức mạnh"
+  ]
+},
+{
+  "_id": "bit_beat_bat_boat",
+  "words": [
+    "bit",
+    "beat",
+    "bat",
+    "boat"
+  ],
+  "phonetics": [
+    "/bɪt/",
+    "/biːt/",
+    "/bæt/",
+    "/bəʊt/"
+  ],
+  "meanings": [
+    "một chút / cắn (quá khứ)",
+    "đánh bại / nhịp",
+    "con dơi / vợt",
+    "con thuyền"
+  ]
+},
+{
+  "_id": "sit_set_sat_suit",
+  "words": [
+    "sit",
+    "set",
+    "sat",
+    "suit"
+  ],
+  "phonetics": [
+    "/sɪt/",
+    "/set/",
+    "/sæt/",
+    "/suːt/"
+  ],
+  "meanings": [
+    "ngồi",
+    "đặt / bộ",
+    "đã ngồi (quá khứ)",
+    "bộ vest / phù hợp"
+  ]
+},
+{
+  "_id": "live_leave_love_move",
+  "words": [
+    "live",
+    "leave",
+    "love",
+    "move"
+  ],
+  "phonetics": [
+    "/lɪv/",
+    "/liːv/",
+    "/lʌv/",
+    "/muːv/"
+  ],
+  "meanings": [
+    "sống",
+    "rời đi",
+    "yêu",
+    "di chuyển"
+  ]
+},
+{
+  "_id": "hear_here_hair_hire",
+  "words": [
+    "hear",
+    "here",
+    "hair",
+    "hire"
+  ],
+  "phonetics": [
+    "/hɪə/",
+    "/hɪə/",
+    "/heə/",
+    "/haɪə/"
+  ],
+  "meanings": [
+    "nghe",
+    "ở đây",
+    "tóc",
+    "thuê"
+  ]
+},
+{
+  "_id": "their_there_theyre_dare",
+  "words": [
+    "their",
+    "there",
+    "they're",
+    "dare"
+  ],
+  "phonetics": [
+    "/ðeə/",
+    "/ðeə/",
+    "/ðeə/",
+    "/deə/"
+  ],
+  "meanings": [
+    "của họ",
+    "ở đó",
+    "họ đang (they are)",
+    "dám"
+  ]
+},
+{
+  "_id": "two_too_to_do",
+  "words": [
+    "two",
+    "too",
+    "to",
+    "do"
+  ],
+  "phonetics": [
+    "/tuː/",
+    "/tuː/",
+    "/tuː/",
+    "/duː/"
+  ],
+  "meanings": [
+    "số hai",
+    "cũng / quá",
+    "đến / để",
+    "làm"
+  ]
+},
+{
+  "_id": "know_no_now_new",
+  "words": [
+    "know",
+    "no",
+    "now",
+    "new"
+  ],
+  "phonetics": [
+    "/nəʊ/",
+    "/nəʊ/",
+    "/naʊ/",
+    "/njuː/"
+  ],
+  "meanings": [
+    "biết",
+    "không",
+    "bây giờ",
+    "mới"
+  ]
+},
+{
+  "_id": "write_right_ride_wide",
+  "words": [
+    "write",
+    "right",
+    "ride",
+    "wide"
+  ],
+  "phonetics": [
+    "/raɪt/",
+    "/raɪt/",
+    "/raɪd/",
+    "/waɪd/"
+  ],
+  "meanings": [
+    "viết",
+    "đúng / phải",
+    "cưỡi / đi xe",
+    "rộng"
+  ]
+},
+{
+  "_id": "see_sea_say_saw",
+  "words": [
+    "see",
+    "sea",
+    "say",
+    "saw"
+  ],
+  "phonetics": [
+    "/siː/",
+    "/siː/",
+    "/seɪ/",
+    "/sɔː/"
+  ],
+  "meanings": [
+    "nhìn / thấy",
+    "biển",
+    "nói",
+    "đã thấy (quá khứ) / cái cưa"
+  ]
+},
+{
+  "_id": "buy_by_bye_bay",
+  "words": [
+    "buy",
+    "by",
+    "bye",
+    "bay"
+  ],
+  "phonetics": [
+    "/baɪ/",
+    "/baɪ/",
+    "/baɪ/",
+    "/beɪ/"
+  ],
+  "meanings": [
+    "mua",
+    "bởi / cạnh",
+    "tạm biệt",
+    "vịnh"
+  ]
+},
+{
+  "_id": "meet_meat_mat_mitt",
+  "words": [
+    "meet",
+    "meat",
+    "mat",
+    "mitt"
+  ],
+  "phonetics": [
+    "/miːt/",
+    "/miːt/",
+    "/mæt/",
+    "/mɪt/"
+  ],
+  "meanings": [
+    "gặp gỡ",
+    "thịt",
+    "tấm thảm",
+    "găng tay"
+  ]
+},
+{
+  "_id": "hole_whole_hall_hill",
+  "words": [
+    "hole",
+    "whole",
+    "hall",
+    "hill"
+  ],
+  "phonetics": [
+    "/həʊl/",
+    "/həʊl/",
+    "/hɔːl/",
+    "/hɪl/"
+  ],
+  "meanings": [
+    "cái lỗ",
+    "toàn bộ / nguyên",
+    "hành lang / sảnh",
+    "ngọn đồi"
+  ]
+},
+{
+  "_id": "word_ward_wore_war",
+  "words": [
+    "word",
+    "ward",
+    "wore",
+    "war"
+  ],
+  "phonetics": [
+    "/wɜːd/",
+    "/wɔːd/",
+    "/wɔː/",
+    "/wɔː/"
+  ],
+  "meanings": [
+    "từ ngữ",
+    "phòng bệnh / khu vực",
+    "đã mặc (quá khứ wear)",
+    "chiến tranh"
+  ]
+},
+{
+  "_id": "bed_bad_bird_board",
+  "words": [
+    "bed",
+    "bad",
+    "bird",
+    "board"
+  ],
+  "phonetics": [
+    "/bed/",
+    "/bæd/",
+    "/bɜːd/",
+    "/bɔːd/"
+  ],
+  "meanings": [
+    "cái giường",
+    "xấu / tệ",
+    "con chim",
+    "tấm ván / bảng"
+  ]
+},
+{
+  "_id": "pen_pan_pin_pun",
+  "words": [
+    "pen",
+    "pan",
+    "pin",
+    "pun"
+  ],
+  "phonetics": [
+    "/pen/",
+    "/pæn/",
+    "/pɪn/",
+    "/pʌn/"
+  ],
+  "meanings": [
+    "bút mực",
+    "chảo",
+    "ghim / cái đinh",
+    "chơi chữ"
+  ]
+},
+{
+  "_id": "ten_tan_ton_tune",
+  "words": [
+    "ten",
+    "tan",
+    "ton",
+    "tune"
+  ],
+  "phonetics": [
+    "/ten/",
+    "/tæn/",
+    "/tʌn/",
+    "/tjuːn/"
+  ],
+  "meanings": [
+    "số mười",
+    "màu nâu da / rám nắng",
+    "tấn (đơn vị)",
+    "giai điệu"
+  ]
+},
+{
+  "_id": "get_got_gut_gate",
+  "words": [
+    "get",
+    "got",
+    "gut",
+    "gate"
+  ],
+  "phonetics": [
+    "/ɡet/",
+    "/ɡɒt/",
+    "/ɡʌt/",
+    "/ɡeɪt/"
+  ],
+  "meanings": [
+    "lấy / nhận",
+    "đã nhận (quá khứ)",
+    "ruột / bản năng",
+    "cổng"
+  ]
+},
+{
+  "_id": "let_lot_lit_late",
+  "words": [
+    "let",
+    "lot",
+    "lit",
+    "late"
+  ],
+  "phonetics": [
+    "/let/",
+    "/lɒt/",
+    "/lɪt/",
+    "/leɪt/"
+  ],
+  "meanings": [
+    "để / cho phép",
+    "nhiều / lô đất",
+    "thắp sáng (quá khứ light)",
+    "trễ / muộn"
+  ]
+},
+{
+  "_id": "net_nut_not_note",
+  "words": [
+    "net",
+    "nut",
+    "not",
+    "note"
+  ],
+  "phonetics": [
+    "/net/",
+    "/nʌt/",
+    "/nɒt/",
+    "/nəʊt/"
+  ],
+  "meanings": [
+    "lưới / mạng",
+    "hạt / đai ốc",
+    "không",
+    "ghi chú / tờ tiền"
+  ]
+},
+{
+  "_id": "run_ran_ruin_rain",
+  "words": [
+    "run",
+    "ran",
+    "ruin",
+    "rain"
+  ],
+  "phonetics": [
+    "/rʌn/",
+    "/ræn/",
+    "/ruːɪn/",
+    "/reɪn/"
+  ],
+  "meanings": [
+    "chạy",
+    "đã chạy (quá khứ)",
+    "tàn phá / đổ nát",
+    "mưa"
+  ]
+},
+{
+  "_id": "sun_son_sin_seen",
+  "words": [
+    "sun",
+    "son",
+    "sin",
+    "seen"
+  ],
+  "phonetics": [
+    "/sʌn/",
+    "/sʌn/",
+    "/sɪn/",
+    "/siːn/"
+  ],
+  "meanings": [
+    "mặt trời",
+    "con trai",
+    "tội lỗi",
+    "đã thấy (quá khứ phân từ see)"
+  ]
+},
+{
+  "_id": "won_one_wan_wine",
+  "words": [
+    "won",
+    "one",
+    "wan",
+    "wine"
+  ],
+  "phonetics": [
+    "/wʌn/",
+    "/wʌn/",
+    "/wɒn/",
+    "/waɪn/"
+  ],
+  "meanings": [
+    "đã thắng (quá khứ win)",
+    "số một",
+    "xanh xao / nhợt nhạt",
+    "rượu vang"
+  ]
+},
+{
+  "_id": "for_four_far_fur",
+  "words": [
+    "for",
+    "four",
+    "far",
+    "fur"
+  ],
+  "phonetics": [
+    "/fɔː/",
+    "/fɔː/",
+    "/fɑː/",
+    "/fɜː/"
+  ],
+  "meanings": [
+    "cho / vì",
+    "số bốn",
+    "xa",
+    "lông thú"
+  ]
+},
+{
+  "_id": "flour_flower_floor_flaw",
+  "words": [
+    "flour",
+    "flower",
+    "floor",
+    "flaw"
+  ],
+  "phonetics": [
+    "/flaʊə/",
+    "/flaʊə/",
+    "/flɔː/",
+    "/flɔː/"
+  ],
+  "meanings": [
+    "bột mì",
+    "bông hoa",
+    "sàn nhà",
+    "khiếm khuyết / lỗi"
+  ]
+},
+{
+  "_id": "board_bored_bird_beard",
+  "words": [
+    "board",
+    "bored",
+    "bird",
+    "beard"
+  ],
+  "phonetics": [
+    "/bɔːd/",
+    "/bɔːd/",
+    "/bɜːd/",
+    "/bɪəd/"
+  ],
+  "meanings": [
+    "tấm ván / lên tàu",
+    "chán nản",
+    "con chim",
+    "râu"
+  ]
+},
+{
+  "_id": "pair_pear_pare_poor",
+  "words": [
+    "pair",
+    "pear",
+    "pare",
+    "poor"
+  ],
+  "phonetics": [
+    "/peə/",
+    "/peə/",
+    "/peə/",
+    "/pɔː/"
+  ],
+  "meanings": [
+    "cặp đôi",
+    "quả lê",
+    "gọt vỏ",
+    "nghèo"
+  ]
+},
+{
+  "_id": "bare_bear_beer_bore",
+  "words": [
+    "bare",
+    "bear",
+    "beer",
+    "bore"
+  ],
+  "phonetics": [
+    "/beə/",
+    "/beə/",
+    "/bɪə/",
+    "/bɔː/"
+  ],
+  "meanings": [
+    "trần / trống",
+    "con gấu / chịu đựng",
+    "bia",
+    "nhàm chán / khoan"
+  ]
+},
+{
+  "_id": "wear_where_were_war",
+  "words": [
+    "wear",
+    "where",
+    "were",
+    "war"
+  ],
+  "phonetics": [
+    "/weə/",
+    "/weə/",
+    "/wɜː/",
+    "/wɔː/"
+  ],
+  "meanings": [
+    "mặc (quần áo)",
+    "ở đâu",
+    "đã là (quá khứ be)",
+    "chiến tranh"
+  ]
+},
+{
+  "_id": "sail_sale_sole_soul",
+  "words": [
+    "sail",
+    "sale",
+    "sole",
+    "soul"
+  ],
+  "phonetics": [
+    "/seɪl/",
+    "/seɪl/",
+    "/səʊl/",
+    "/səʊl/"
+  ],
+  "meanings": [
+    "cánh buồm / dong buồm",
+    "bán hàng / giảm giá",
+    "duy nhất / đế giày",
+    "linh hồn"
+  ]
+},
+{
+  "_id": "tail_tale_tall_tile",
+  "words": [
+    "tail",
+    "tale",
+    "tall",
+    "tile"
+  ],
+  "phonetics": [
+    "/teɪl/",
+    "/teɪl/",
+    "/tɔːl/",
+    "/taɪl/"
+  ],
+  "meanings": [
+    "đuôi",
+    "câu chuyện / truyện",
+    "cao",
+    "gạch lát"
+  ]
+},
+{
+  "_id": "mail_male_mall_mill",
+  "words": [
+    "mail",
+    "male",
+    "mall",
+    "mill"
+  ],
+  "phonetics": [
+    "/meɪl/",
+    "/meɪl/",
+    "/mɔːl/",
+    "/mɪl/"
+  ],
+  "meanings": [
+    "thư / bưu điện",
+    "nam giới / đực",
+    "trung tâm thương mại",
+    "cối xay / nhà máy"
+  ]
+},
+{
+  "_id": "rain_reign_rein_run",
+  "words": [
+    "rain",
+    "reign",
+    "rein",
+    "run"
+  ],
+  "phonetics": [
+    "/reɪn/",
+    "/reɪn/",
+    "/reɪn/",
+    "/rʌn/"
+  ],
+  "meanings": [
+    "mưa",
+    "trị vì / triều đại",
+    "dây cương ngựa",
+    "chạy"
+  ]
+},
+{
+  "_id": "pain_pane_pine_pint",
+  "words": [
+    "pain",
+    "pane",
+    "pine",
+    "pint"
+  ],
+  "phonetics": [
+    "/peɪn/",
+    "/peɪn/",
+    "/paɪn/",
+    "/paɪnt/"
+  ],
+  "meanings": [
+    "đau đớn",
+    "tấm kính cửa sổ",
+    "cây thông / nhớ thương",
+    "đơn vị đo (nửa lít)"
+  ]
+},
+{
+  "_id": "train_trail_trial_tray",
+  "words": [
+    "train",
+    "trail",
+    "trial",
+    "tray"
+  ],
+  "phonetics": [
+    "/treɪn/",
+    "/treɪl/",
+    "/traɪəl/",
+    "/treɪ/"
+  ],
+  "meanings": [
+    "tàu hỏa / huấn luyện",
+    "đường mòn / theo dõi",
+    "phiên tòa / thử nghiệm",
+    "cái khay"
+  ]
+},
+{
+  "_id": "plane_plain_plan_plant",
+  "words": [
+    "plane",
+    "plain",
+    "plan",
+    "plant"
+  ],
+  "phonetics": [
+    "/pleɪn/",
+    "/pleɪn/",
+    "/plæn/",
+    "/plɑːnt/"
+  ],
+  "meanings": [
+    "máy bay / mặt phẳng",
+    "đồng bằng / đơn giản",
+    "kế hoạch",
+    "cây / nhà máy"
+  ]
+},
+{
+  "_id": "brake_break_brick_brook",
+  "words": [
+    "brake",
+    "break",
+    "brick",
+    "brook"
+  ],
+  "phonetics": [
+    "/breɪk/",
+    "/breɪk/",
+    "/brɪk/",
+    "/brʊk/"
+  ],
+  "meanings": [
+    "phanh xe",
+    "nghỉ / vỡ",
+    "gạch xây",
+    "suối nhỏ"
+  ]
+},
+{
+  "_id": "stake_steak_stick_stock",
+  "words": [
+    "stake",
+    "steak",
+    "stick",
+    "stock"
+  ],
+  "phonetics": [
+    "/steɪk/",
+    "/steɪk/",
+    "/stɪk/",
+    "/stɒk/"
+  ],
+  "meanings": [
+    "cọc / cổ phần",
+    "bít tết",
+    "que / gậy / dính",
+    "hàng tồn kho / cổ phiếu"
+  ]
+},
+{
+  "_id": "week_weak_walk_woke",
+  "words": [
+    "week",
+    "weak",
+    "walk",
+    "woke"
+  ],
+  "phonetics": [
+    "/wiːk/",
+    "/wiːk/",
+    "/wɔːk/",
+    "/wəʊk/"
+  ],
+  "meanings": [
+    "tuần",
+    "yếu",
+    "đi bộ",
+    "thức dậy (quá khứ wake)"
+  ]
+},
+{
+  "_id": "peek_peak_pick_pack",
+  "words": [
+    "peek",
+    "peak",
+    "pick",
+    "pack"
+  ],
+  "phonetics": [
+    "/piːk/",
+    "/piːk/",
+    "/pɪk/",
+    "/pæk/"
+  ],
+  "meanings": [
+    "nhìn trộm",
+    "đỉnh núi / cao điểm",
+    "chọn / hái",
+    "gói / đóng gói"
+  ]
+},
+{
+  "_id": "heel_heal_hill_hall",
+  "words": [
+    "heel",
+    "heal",
+    "hill",
+    "hall"
+  ],
+  "phonetics": [
+    "/hiːl/",
+    "/hiːl/",
+    "/hɪl/",
+    "/hɔːl/"
+  ],
+  "meanings": [
+    "gót chân",
+    "chữa lành",
+    "ngọn đồi",
+    "hành lang / sảnh"
+  ]
+},
+{
+  "_id": "steel_steal_still_stall",
+  "words": [
+    "steel",
+    "steal",
+    "still",
+    "stall"
+  ],
+  "phonetics": [
+    "/stiːl/",
+    "/stiːl/",
+    "/stɪl/",
+    "/stɔːl/"
+  ],
+  "meanings": [
+    "thép",
+    "trộm cắp",
+    "vẫn còn / yên tĩnh",
+    "gian hàng / chuồng ngựa"
+  ]
+},
+{
+  "_id": "feel_fill_fall_foal",
+  "words": [
+    "feel",
+    "fill",
+    "fall",
+    "foal"
+  ],
+  "phonetics": [
+    "/fiːl/",
+    "/fɪl/",
+    "/fɔːl/",
+    "/fəʊl/"
+  ],
+  "meanings": [
+    "cảm thấy",
+    "đổ đầy",
+    "mùa thu / ngã",
+    "ngựa con"
+  ]
+},
+{
+  "_id": "deal_dial_dill_dull",
+  "words": [
+    "deal",
+    "dial",
+    "dill",
+    "dull"
+  ],
+  "phonetics": [
+    "/diːl/",
+    "/daɪəl/",
+    "/dɪl/",
+    "/dʌl/"
+  ],
+  "meanings": [
+    "thỏa thuận / chia bài",
+    "quay số / mặt đồng hồ",
+    "thì là (gia vị)",
+    "nhàm chán / tối"
+  ]
+},
+{
+  "_id": "seal_sell_cell_sale",
+  "words": [
+    "seal",
+    "sell",
+    "cell",
+    "sale"
+  ],
+  "phonetics": [
+    "/siːl/",
+    "/sel/",
+    "/sel/",
+    "/seɪl/"
+  ],
+  "meanings": [
+    "con hải cẩu / đóng dấu",
+    "bán",
+    "tế bào / phòng giam",
+    "đợt giảm giá"
+  ]
+},
+{
+  "_id": "real_reel_rail_role",
+  "words": [
+    "real",
+    "reel",
+    "rail",
+    "role"
+  ],
+  "phonetics": [
+    "/rɪəl/",
+    "/riːl/",
+    "/reɪl/",
+    "/rəʊl/"
+  ],
+  "meanings": [
+    "thật / thực",
+    "cuộn phim / quay như chóng mặt",
+    "lan can / đường ray",
+    "vai diễn"
+  ]
+},
+{
+  "_id": "meal_mill_mole_mall",
+  "words": [
+    "meal",
+    "mill",
+    "mole",
+    "mall"
+  ],
+  "phonetics": [
+    "/miːl/",
+    "/mɪl/",
+    "/məʊl/",
+    "/mɔːl/"
+  ],
+  "meanings": [
+    "bữa ăn",
+    "cối xay / nhà máy",
+    "con chuột chũi / nốt ruồi",
+    "trung tâm thương mại"
+  ]
+},
+{
+  "_id": "tall_tale_tile_tool",
+  "words": [
+    "tall",
+    "tale",
+    "tile",
+    "tool"
+  ],
+  "phonetics": [
+    "/tɔːl/",
+    "/teɪl/",
+    "/taɪl/",
+    "/tuːl/"
+  ],
+  "meanings": [
+    "cao",
+    "câu chuyện",
+    "gạch lát",
+    "công cụ"
+  ]
+},
+{
+  "_id": "call_coal_cool_coil",
+  "words": [
+    "call",
+    "coal",
+    "cool",
+    "coil"
+  ],
+  "phonetics": [
+    "/kɔːl/",
+    "/kəʊl/",
+    "/kuːl/",
+    "/kɔɪl/"
+  ],
+  "meanings": [
+    "gọi / cuộc gọi",
+    "than đá",
+    "mát mẻ / tuyệt",
+    "cuộn / dây xoắn"
+  ]
+},
+{
+  "_id": "fall_fail_foil_feel",
+  "words": [
+    "fall",
+    "fail",
+    "foil",
+    "feel"
+  ],
+  "phonetics": [
+    "/fɔːl/",
+    "/feɪl/",
+    "/fɔɪl/",
+    "/fiːl/"
+  ],
+  "meanings": [
+    "ngã / mùa thu",
+    "thất bại",
+    "giấy bạc / cản trở",
+    "cảm thấy"
+  ]
+},
+{
+  "_id": "hall_hill_heel_hail",
+  "words": [
+    "hall",
+    "hill",
+    "heel",
+    "hail"
+  ],
+  "phonetics": [
+    "/hɔːl/",
+    "/hɪl/",
+    "/hiːl/",
+    "/heɪl/"
+  ],
+  "meanings": [
+    "sảnh / hành lang",
+    "ngọn đồi",
+    "gót chân",
+    "mưa đá / chào hỏi"
+  ]
+},
+{
+  "_id": "wall_well_will_wool",
+  "words": [
+    "wall",
+    "well",
+    "will",
+    "wool"
+  ],
+  "phonetics": [
+    "/wɔːl/",
+    "/wel/",
+    "/wɪl/",
+    "/wʊl/"
+  ],
+  "meanings": [
+    "bức tường",
+    "giếng / khỏe mạnh",
+    "sẽ (trợ động từ)",
+    "len / lông cừu"
+  ]
+},
+{
+  "_id": "ball_bell_bill_bull",
+  "words": [
+    "ball",
+    "bell",
+    "bill",
+    "bull"
+  ],
+  "phonetics": [
+    "/bɔːl/",
+    "/bel/",
+    "/bɪl/",
+    "/bʊl/"
+  ],
+  "meanings": [
+    "quả bóng",
+    "chuông / cái chuông",
+    "hóa đơn / tờ tiền",
+    "bò đực"
+  ]
+},
+{
+  "_id": "tall_toll_till_tile",
+  "words": [
+    "tall",
+    "toll",
+    "till",
+    "tile"
+  ],
+  "phonetics": [
+    "/tɔːl/",
+    "/təʊl/",
+    "/tɪl/",
+    "/taɪl/"
+  ],
+  "meanings": [
+    "cao",
+    "phí cầu đường / chuông vang",
+    "ngăn kéo tiền / cho đến khi",
+    "gạch lát"
+  ]
+},
+{
+  "_id": "goal_girl_gale_gull",
+  "words": [
+    "goal",
+    "girl",
+    "gale",
+    "gull"
+  ],
+  "phonetics": [
+    "/ɡəʊl/",
+    "/ɡɜːl/",
+    "/ɡeɪl/",
+    "/ɡʌl/"
+  ],
+  "meanings": [
+    "bàn thắng / mục tiêu",
+    "cô gái",
+    "cơn gió mạnh",
+    "con mòng biển"
+  ]
+},
+{
+  "_id": "road_rode_load_loud",
+  "words": [
+    "road",
+    "rode",
+    "load",
+    "loud"
+  ],
+  "phonetics": [
+    "/rəʊd/",
+    "/rəʊd/",
+    "/ləʊd/",
+    "/laʊd/"
+  ],
+  "meanings": [
+    "con đường",
+    "đã cưỡi (quá khứ ride)",
+    "tải trọng / chất lên",
+    "to / ồn ào"
+  ]
+},
+{
+  "_id": "code_cord_core_cure",
+  "words": [
+    "code",
+    "cord",
+    "core",
+    "cure"
+  ],
+  "phonetics": [
+    "/kəʊd/",
+    "/kɔːd/",
+    "/kɔː/",
+    "/kjʊə/"
+  ],
+  "meanings": [
+    "mã / code",
+    "dây thừng / dây cáp",
+    "lõi / cốt lõi",
+    "chữa khỏi / thuốc chữa"
+  ]
+},
+{
+  "_id": "bold_bald_ball_bell",
+  "words": [
+    "bold",
+    "bald",
+    "ball",
+    "bell"
+  ],
+  "phonetics": [
+    "/bəʊld/",
+    "/bɔːld/",
+    "/bɔːl/",
+    "/bel/"
+  ],
+  "meanings": [
+    "đậm / can đảm",
+    "hói đầu",
+    "quả bóng",
+    "cái chuông"
+  ]
+},
+{
+  "_id": "cold_cord_card_curd",
+  "words": [
+    "cold",
+    "cord",
+    "card",
+    "curd"
+  ],
+  "phonetics": [
+    "/kəʊld/",
+    "/kɔːd/",
+    "/kɑːd/",
+    "/kɜːd/"
+  ],
+  "meanings": [
+    "lạnh / cảm lạnh",
+    "dây thừng",
+    "thẻ / danh thiếp",
+    "sữa đông / đậu hũ"
+  ]
+},
+{
+  "_id": "gold_told_bold_hold",
+  "words": [
+    "gold",
+    "told",
+    "bold",
+    "hold"
+  ],
+  "phonetics": [
+    "/ɡəʊld/",
+    "/təʊld/",
+    "/bəʊld/",
+    "/həʊld/"
+  ],
+  "meanings": [
+    "vàng",
+    "đã nói (quá khứ tell)",
+    "đậm / dũng cảm",
+    "giữ / nắm"
+  ]
+},
+{
+  "_id": "sold_mold_fold_told",
+  "words": [
+    "sold",
+    "mold",
+    "fold",
+    "told"
+  ],
+  "phonetics": [
+    "/səʊld/",
+    "/məʊld/",
+    "/fəʊld/",
+    "/təʊld/"
+  ],
+  "meanings": [
+    "đã bán (quá khứ sell)",
+    "khuôn / nấm mốc",
+    "gấp / nếp gấp",
+    "đã nói (quá khứ tell)"
+  ]
+},
+{
+  "_id": "port_part_past_post",
+  "words": [
+    "port",
+    "part",
+    "past",
+    "post"
+  ],
+  "phonetics": [
+    "/pɔːt/",
+    "/pɑːt/",
+    "/pɑːst/",
+    "/pəʊst/"
+  ],
+  "meanings": [
+    "cảng / cổng kết nối",
+    "phần / bộ phận",
+    "quá khứ / đi qua",
+    "bài đăng / cột / bưu điện"
+  ]
+},
+{
+  "_id": "sort_sport_short_shirt",
+  "words": [
+    "sort",
+    "sport",
+    "short",
+    "shirt"
+  ],
+  "phonetics": [
+    "/sɔːt/",
+    "/spɔːt/",
+    "/ʃɔːt/",
+    "/ʃɜːt/"
+  ],
+  "meanings": [
+    "sắp xếp / loại",
+    "thể thao",
+    "ngắn / thiếu",
+    "áo sơ mi"
+  ]
+},
+{
+  "_id": "form_farm_firm_foam",
+  "words": [
+    "form",
+    "farm",
+    "firm",
+    "foam"
+  ],
+  "phonetics": [
+    "/fɔːm/",
+    "/fɑːm/",
+    "/fɜːm/",
+    "/fəʊm/"
+  ],
+  "meanings": [
+    "hình thức / biểu mẫu",
+    "trang trại",
+    "chắc chắn / công ty",
+    "bọt"
+  ]
+},
+{
+  "_id": "turn_torn_town_tone",
+  "words": [
+    "turn",
+    "torn",
+    "town",
+    "tone"
+  ],
+  "phonetics": [
+    "/tɜːn/",
+    "/tɔːn/",
+    "/taʊn/",
+    "/təʊn/"
+  ],
+  "meanings": [
+    "quay / lượt",
+    "bị xé rách (quá khứ phân từ tear)",
+    "thị trấn",
+    "âm điệu / tông màu"
+  ]
+},
+{
+  "_id": "burn_barn_born_bone",
+  "words": [
+    "burn",
+    "barn",
+    "born",
+    "bone"
+  ],
+  "phonetics": [
+    "/bɜːn/",
+    "/bɑːn/",
+    "/bɔːn/",
+    "/bəʊn/"
+  ],
+  "meanings": [
+    "đốt cháy",
+    "kho thóc / chuồng trại",
+    "được sinh ra",
+    "xương"
+  ]
+},
+{
+  "_id": "learn_lean_loan_lane",
+  "words": [
+    "learn",
+    "lean",
+    "loan",
+    "lane"
+  ],
+  "phonetics": [
+    "/lɜːn/",
+    "/liːn/",
+    "/ləʊn/",
+    "/leɪn/"
+  ],
+  "meanings": [
+    "học / tìm hiểu",
+    "gầy / tựa vào",
+    "khoản vay",
+    "làn đường / ngõ nhỏ"
+  ]
+},
+{
+  "_id": "earn_ear_year_yearn",
+  "words": [
+    "earn",
+    "ear",
+    "year",
+    "yearn"
+  ],
+  "phonetics": [
+    "/ɜːn/",
+    "/ɪə/",
+    "/jɪə/",
+    "/jɜːn/"
+  ],
+  "meanings": [
+    "kiếm được",
+    "tai",
+    "năm",
+    "khao khát / mong mỏi"
+  ]
+},
+{
+  "_id": "search_church_perch_birch",
+  "words": [
+    "search",
+    "church",
+    "perch",
+    "birch"
+  ],
+  "phonetics": [
+    "/sɜːtʃ/",
+    "/tʃɜːtʃ/",
+    "/pɜːtʃ/",
+    "/bɜːtʃ/"
+  ],
+  "meanings": [
+    "tìm kiếm",
+    "nhà thờ",
+    "đậu / cá rô",
+    "cây bạch dương"
+  ]
+},
+{
+  "_id": "bird_word_heard_herd",
+  "words": [
+    "bird",
+    "word",
+    "heard",
+    "herd"
+  ],
+  "phonetics": [
+    "/bɜːd/",
+    "/wɜːd/",
+    "/hɜːd/",
+    "/hɜːd/"
+  ],
+  "meanings": [
+    "con chim",
+    "từ ngữ",
+    "đã nghe (quá khứ hear)",
+    "đàn gia súc"
+  ]
+},
+{
+  "_id": "work_walk_woke_weak",
+  "words": [
+    "work",
+    "walk",
+    "woke",
+    "weak"
+  ],
+  "phonetics": [
+    "/wɜːk/",
+    "/wɔːk/",
+    "/wəʊk/",
+    "/wiːk/"
+  ],
+  "meanings": [
+    "làm việc",
+    "đi bộ",
+    "thức dậy (quá khứ wake)",
+    "yếu"
+  ]
+},
+{
+  "_id": "think_thank_thick_thatch",
+  "words": [
+    "think",
+    "thank",
+    "thick",
+    "thatch"
+  ],
+  "phonetics": [
+    "/θɪŋk/",
+    "/θæŋk/",
+    "/θɪk/",
+    "/θætʃ/"
+  ],
+  "meanings": [
+    "nghĩ / suy nghĩ",
+    "cảm ơn",
+    "dày",
+    "mái tranh"
+  ]
+},
+{
+  "_id": "ship_shop_shape_sharp",
+  "words": [
+    "ship",
+    "shop",
+    "shape",
+    "sharp"
+  ],
+  "phonetics": [
+    "/ʃɪp/",
+    "/ʃɒp/",
+    "/ʃeɪp/",
+    "/ʃɑːp/"
+  ],
+  "meanings": [
+    "con tàu",
+    "cửa hàng",
+    "hình dạng",
+    "sắc bén / chua"
+  ]
+},
+{
+  "_id": "chip_chap_cheap_cheep",
+  "words": [
+    "chip",
+    "chap",
+    "cheap",
+    "cheep"
+  ],
+  "phonetics": [
+    "/tʃɪp/",
+    "/tʃæp/",
+    "/tʃiːp/",
+    "/tʃiːp/"
+  ],
+  "meanings": [
+    "khoai chiên / mảnh vỡ",
+    "người đàn ông (thân mật)",
+    "rẻ",
+    "tiếng chim chiêm chiếp"
+  ]
+},
+{
+  "_id": "check_chuck_cheek_chick",
+  "words": [
+    "check",
+    "chuck",
+    "cheek",
+    "chick"
+  ],
+  "phonetics": [
+    "/tʃek/",
+    "/tʃʌk/",
+    "/tʃiːk/",
+    "/tʃɪk/"
+  ],
+  "meanings": [
+    "kiểm tra / séc",
+    "ném / bỏ",
+    "má / má hỗn",
+    "gà con / cô gái trẻ"
+  ]
+},
+{
+  "_id": "just_jest_gust_guest",
+  "words": [
+    "just",
+    "jest",
+    "gust",
+    "guest"
+  ],
+  "phonetics": [
+    "/dʒʌst/",
+    "/dʒest/",
+    "/ɡʌst/",
+    "/ɡest/"
+  ],
+  "meanings": [
+    "vừa / chỉ / công bằng",
+    "trò đùa / nói đùa",
+    "cơn gió mạnh",
+    "khách"
+  ]
+},
+{
+  "_id": "jump_dump_damp_lamp",
+  "words": [
+    "jump",
+    "dump",
+    "damp",
+    "lamp"
+  ],
+  "phonetics": [
+    "/dʒʌmp/",
+    "/dʌmp/",
+    "/dæmp/",
+    "/læmp/"
+  ],
+  "meanings": [
+    "nhảy",
+    "đổ / bãi rác",
+    "ẩm ướt",
+    "đèn"
+  ]
+},
+{
+  "_id": "king_ring_sing_wing",
+  "words": [
+    "king",
+    "ring",
+    "sing",
+    "wing"
+  ],
+  "phonetics": [
+    "/kɪŋ/",
+    "/rɪŋ/",
+    "/sɪŋ/",
+    "/wɪŋ/"
+  ],
+  "meanings": [
+    "vua",
+    "nhẫn / chuông reo",
+    "hát",
+    "cánh"
+  ]
+},
+{
+  "_id": "bang_gang_hang_sang",
+  "words": [
+    "bang",
+    "gang",
+    "hang",
+    "sang"
+  ],
+  "phonetics": [
+    "/bæŋ/",
+    "/ɡæŋ/",
+    "/hæŋ/",
+    "/sæŋ/"
+  ],
+  "meanings": [
+    "tiếng nổ / đập mạnh",
+    "băng đảng",
+    "treo / treo cổ",
+    "đã hát (quá khứ sing)"
+  ]
+},
+{
+  "_id": "long_song_tong_gong",
+  "words": [
+    "long",
+    "song",
+    "tong",
+    "gong"
+  ],
+  "phonetics": [
+    "/lɒŋ/",
+    "/sɒŋ/",
+    "/tɒŋ/",
+    "/ɡɒŋ/"
+  ],
+  "meanings": [
+    "dài / mong muốn",
+    "bài hát",
+    "kẹp / cái tongs",
+    "cái chiêng"
+  ]
+},
+{
+  "_id": "bring_drink_think_blink",
+  "words": [
+    "bring",
+    "drink",
+    "think",
+    "blink"
+  ],
+  "phonetics": [
+    "/brɪŋ/",
+    "/drɪŋk/",
+    "/θɪŋk/",
+    "/blɪŋk/"
+  ],
+  "meanings": [
+    "mang lại",
+    "uống / đồ uống",
+    "nghĩ",
+    "nháy mắt"
+  ]
+},
+{
+  "_id": "must_mast_mist_most",
+  "words": [
+    "must",
+    "mast",
+    "mist",
+    "most"
+  ],
+  "phonetics": [
+    "/mʌst/",
+    "/mɑːst/",
+    "/mɪst/",
+    "/məʊst/"
+  ],
+  "meanings": [
+    "phải (trợ động từ)",
+    "cột buồm / cột ăng-ten",
+    "sương mù",
+    "hầu hết / nhiều nhất"
+  ]
+},
+{
+  "_id": "last_list_lost_lust",
+  "words": [
+    "last",
+    "list",
+    "lost",
+    "lust"
+  ],
+  "phonetics": [
+    "/lɑːst/",
+    "/lɪst/",
+    "/lɒst/",
+    "/lʌst/"
+  ],
+  "meanings": [
+    "cuối cùng / kéo dài",
+    "danh sách",
+    "bị lạc / đã mất",
+    "ham muốn / thèm khát"
+  ]
+},
+{
+  "_id": "fast_fist_feast_first",
+  "words": [
+    "fast",
+    "fist",
+    "feast",
+    "first"
+  ],
+  "phonetics": [
+    "/fɑːst/",
+    "/fɪst/",
+    "/fiːst/",
+    "/fɜːst/"
+  ],
+  "meanings": [
+    "nhanh / nhịn ăn",
+    "nắm đấm",
+    "bữa tiệc / yến tiệc",
+    "đầu tiên"
+  ]
+},
+{
+  "_id": "past_pest_post_posh",
+  "words": [
+    "past",
+    "pest",
+    "post",
+    "posh"
+  ],
+  "phonetics": [
+    "/pɑːst/",
+    "/pest/",
+    "/pəʊst/",
+    "/pɒʃ/"
+  ],
+  "meanings": [
+    "quá khứ / đi qua",
+    "sâu bệnh / kẻ phiền toái",
+    "bài đăng / bưu điện / cột",
+    "sang trọng"
+  ]
+},
+{
+  "_id": "class_glass_grass_grace",
+  "words": [
+    "class",
+    "glass",
+    "grass",
+    "grace"
+  ],
+  "phonetics": [
+    "/klɑːs/",
+    "/ɡlɑːs/",
+    "/ɡrɑːs/",
+    "/ɡreɪs/"
+  ],
+  "meanings": [
+    "lớp học / đẳng cấp",
+    "kính / ly thủy tinh",
+    "cỏ",
+    "duyên dáng / ân sủng"
+  ]
+},
+{
+  "_id": "place_plane_plate_plait",
+  "words": [
+    "place",
+    "plane",
+    "plate",
+    "plait"
+  ],
+  "phonetics": [
+    "/pleɪs/",
+    "/pleɪn/",
+    "/pleɪt/",
+    "/plæt/"
+  ],
+  "meanings": [
+    "nơi chốn / đặt",
+    "máy bay / mặt phẳng",
+    "đĩa / tấm kim loại",
+    "bím tóc"
+  ]
+},
+{
+  "_id": "space_spade_spare_spare",
+  "words": [
+    "space",
+    "spade",
+    "spare",
+    "speak"
+  ],
+  "phonetics": [
+    "/speɪs/",
+    "/speɪd/",
+    "/speə/",
+    "/spiːk/"
+  ],
+  "meanings": [
+    "không gian / khoảng cách",
+    "cái xẻng / bích (bài tây)",
+    "dự phòng / tha thứ",
+    "nói chuyện"
+  ]
+},
+{
+  "_id": "trace_track_trick_truck",
+  "words": [
+    "trace",
+    "track",
+    "trick",
+    "truck"
+  ],
+  "phonetics": [
+    "/treɪs/",
+    "/træk/",
+    "/trɪk/",
+    "/trʌk/"
+  ],
+  "meanings": [
+    "dấu vết / theo dõi",
+    "đường ray / bài hát / theo dõi",
+    "trò lừa / thủ thuật",
+    "xe tải"
+  ]
+},
+{
+  "_id": "price_prize_praise_press",
+  "words": [
+    "price",
+    "prize",
+    "praise",
+    "press"
+  ],
+  "phonetics": [
+    "/praɪs/",
+    "/praɪz/",
+    "/preɪz/",
+    "/pres/"
+  ],
+  "meanings": [
+    "giá cả",
+    "giải thưởng / trân trọng",
+    "khen ngợi / ca ngợi",
+    "báo chí / ấn / nhấn"
+  ]
+},
+{
+  "_id": "drive_drove_drone_drawn",
+  "words": [
+    "drive",
+    "drove",
+    "drone",
+    "drawn"
+  ],
+  "phonetics": [
+    "/draɪv/",
+    "/drəʊv/",
+    "/drəʊn/",
+    "/drɔːn/"
+  ],
+  "meanings": [
+    "lái xe",
+    "đã lái (quá khứ drive)",
+    "máy bay không người lái / tiếng vo ve",
+    "bị kéo (quá khứ phân từ draw)"
+  ]
+},
+{
+  "_id": "smile_small_smell_spell",
+  "words": [
+    "smile",
+    "small",
+    "smell",
+    "spell"
+  ],
+  "phonetics": [
+    "/smaɪl/",
+    "/smɔːl/",
+    "/smel/",
+    "/spel/"
+  ],
+  "meanings": [
+    "nụ cười / mỉm cười",
+    "nhỏ bé",
+    "mùi / ngửi",
+    "đánh vần / giai đoạn / bùa chú"
+  ]
+},
+{
+  "_id": "clean_clear_cream_dream",
+  "words": [
+    "clean",
+    "clear",
+    "cream",
+    "dream"
+  ],
+  "phonetics": [
+    "/kliːn/",
+    "/klɪə/",
+    "/kriːm/",
+    "/driːm/"
+  ],
+  "meanings": [
+    "sạch / dọn dẹp",
+    "rõ ràng / trong suốt",
+    "kem / màu kem",
+    "giấc mơ / mơ"
+  ]
+},
+{
+  "_id": "sweet_sweat_sweep_sleep",
+  "words": [
+    "sweet",
+    "sweat",
+    "sweep",
+    "sleep"
+  ],
+  "phonetics": [
+    "/swiːt/",
+    "/swet/",
+    "/swiːp/",
+    "/sliːp/"
+  ],
+  "meanings": [
+    "ngọt / kẹo",
+    "mồ hôi / đổ mồ hôi",
+    "quét",
+    "ngủ / giấc ngủ"
+  ]
+},
+{
+  "_id": "street_stress_stretch_stream",
+  "words": [
+    "street",
+    "stress",
+    "stretch",
+    "stream"
+  ],
+  "phonetics": [
+    "/striːt/",
+    "/stres/",
+    "/stretʃ/",
+    "/striːm/"
+  ],
+  "meanings": [
+    "phố / đường",
+    "căng thẳng / nhấn mạnh",
+    "duỗi / kéo căng",
+    "dòng suối / luồng dữ liệu"
+  ]
+},
+{
+  "_id": "ground_grand_grant_grind",
+  "words": [
+    "ground",
+    "grand",
+    "grant",
+    "grind"
+  ],
+  "phonetics": [
+    "/ɡraʊnd/",
+    "/ɡrænd/",
+    "/ɡrɑːnt/",
+    "/ɡraɪnd/"
+  ],
+  "meanings": [
+    "mặt đất / xay (quá khứ grind)",
+    "hoành tráng / nghìn đô",
+    "cấp / trao tặng",
+    "nghiền / xay"
+  ]
+},
+{
+  "_id": "found_fund_fend_fond",
+  "words": [
+    "found",
+    "fund",
+    "fend",
+    "fond"
+  ],
+  "phonetics": [
+    "/faʊnd/",
+    "/fʌnd/",
+    "/fend/",
+    "/fɒnd/"
+  ],
+  "meanings": [
+    "tìm thấy (quá khứ find) / thành lập",
+    "quỹ / cấp vốn",
+    "tự lo / chống đỡ",
+    "yêu thích / trìu mến"
+  ]
+},
+{
+  "_id": "count_court_coat_coot",
+  "words": [
+    "count",
+    "court",
+    "coat",
+    "coot"
+  ],
+  "phonetics": [
+    "/kaʊnt/",
+    "/kɔːt/",
+    "/kəʊt/",
+    "/kuːt/"
+  ],
+  "meanings": [
+    "đếm / bá tước",
+    "tòa án / sân / tán tỉnh",
+    "áo khoác",
+    "con sâm cầm (loài chim)"
+  ]
+},
+{
+  "_id": "house_horse_hoarse_worse",
+  "words": [
+    "house",
+    "horse",
+    "hoarse",
+    "worse"
+  ],
+  "phonetics": [
+    "/haʊs/",
+    "/hɔːs/",
+    "/hɔːs/",
+    "/wɜːs/"
+  ],
+  "meanings": [
+    "ngôi nhà",
+    "con ngựa",
+    "khàn giọng",
+    "tệ hơn"
+  ]
+},
+{
+  "_id": "mouse_moose_moss_most",
+  "words": [
+    "mouse",
+    "moose",
+    "moss",
+    "most"
+  ],
+  "phonetics": [
+    "/maʊs/",
+    "/muːs/",
+    "/mɒs/",
+    "/məʊst/"
+  ],
+  "meanings": [
+    "con chuột",
+    "con nai sừng tấm",
+    "rêu",
+    "hầu hết / nhiều nhất"
+  ]
+},
+{
+  "_id": "down_dawn_done_dune",
+  "words": [
+    "down",
+    "dawn",
+    "done",
+    "dune"
+  ],
+  "phonetics": [
+    "/daʊn/",
+    "/dɔːn/",
+    "/dʌn/",
+    "/djuːn/"
+  ],
+  "meanings": [
+    "xuống / lông tơ",
+    "bình minh / rạng đông",
+    "xong / đã làm",
+    "đồi cát"
+  ]
+},
+{
+  "_id": "town_tone_torn_thorn",
+  "words": [
+    "town",
+    "tone",
+    "torn",
+    "thorn"
+  ],
+  "phonetics": [
+    "/taʊn/",
+    "/təʊn/",
+    "/tɔːn/",
+    "/θɔːn/"
+  ],
+  "meanings": [
+    "thị trấn",
+    "âm điệu / tông màu",
+    "bị xé (quá khứ phân từ tear)",
+    "gai góc"
+  ]
+},
+{
+  "_id": "brown_brow_brew_brow",
+  "words": [
+    "brown",
+    "brow",
+    "brew",
+    "brood"
+  ],
+  "phonetics": [
+    "/braʊn/",
+    "/braʊ/",
+    "/bruː/",
+    "/bruːd/"
+  ],
+  "meanings": [
+    "màu nâu",
+    "lông mày / trán",
+    "ủ (bia/trà) / đồ uống",
+    "ấp trứng / suy nghĩ ủ ê"
+  ]
+},
+{
+  "_id": "crown_croon_crop_crow",
+  "words": [
+    "crown",
+    "croon",
+    "crop",
+    "crow"
+  ],
+  "phonetics": [
+    "/kraʊn/",
+    "/kruːn/",
+    "/krɒp/",
+    "/krəʊ/"
+  ],
+  "meanings": [
+    "vương miện / chóp đầu",
+    "hát nhẹ nhàng",
+    "mùa màng / xén",
+    "con quạ / gáy (gà)"
+  ]
+},
+{
+  "_id": "now_knew_new_gnaw",
+  "words": [
+    "now",
+    "knew",
+    "new",
+    "gnaw"
+  ],
+  "phonetics": [
+    "/naʊ/",
+    "/njuː/",
+    "/njuː/",
+    "/nɔː/"
+  ],
+  "meanings": [
+    "bây giờ",
+    "đã biết (quá khứ know)",
+    "mới",
+    "gặm / cắn"
+  ]
+},
+{
+  "_id": "some_sum_same_seam",
+  "words": [
+    "some",
+    "sum",
+    "same",
+    "seam"
+  ],
+  "phonetics": [
+    "/sʌm/",
+    "/sʌm/",
+    "/seɪm/",
+    "/siːm/"
+  ],
+  "meanings": [
+    "một số / vài",
+    "tổng / tính tổng",
+    "giống nhau",
+    "đường may / mạch (than)"
+  ]
+},
+{
+  "_id": "come_comb_calm_claim",
+  "words": [
+    "come",
+    "comb",
+    "calm",
+    "claim"
+  ],
+  "phonetics": [
+    "/kʌm/",
+    "/kəʊm/",
+    "/kɑːm/",
+    "/kleɪm/"
+  ],
+  "meanings": [
+    "đến",
+    "lược / chải",
+    "bình tĩnh / yên lặng",
+    "yêu cầu / đòi / tuyên bố"
+  ]
+},
+{
+  "_id": "done_dune_dine_dene",
+  "words": [
+    "done",
+    "dune",
+    "dine",
+    "dean"
+  ],
+  "phonetics": [
+    "/dʌn/",
+    "/djuːn/",
+    "/daɪn/",
+    "/diːn/"
+  ],
+  "meanings": [
+    "xong / đã làm",
+    "đồi cát",
+    "ăn tối (trang trọng)",
+    "trưởng khoa / trưởng nhóm"
+  ]
+},
+{
+  "_id": "none_nun_noon_known",
+  "words": [
+    "none",
+    "nun",
+    "noon",
+    "known"
+  ],
+  "phonetics": [
+    "/nʌn/",
+    "/nʌn/",
+    "/nuːn/",
+    "/nəʊn/"
+  ],
+  "meanings": [
+    "không ai / không cái nào",
+    "nữ tu sĩ",
+    "buổi trưa / 12 giờ trưa",
+    "được biết đến"
+  ]
+},
+{
+  "_id": "fun_phone_fond_find",
+  "words": [
+    "fun",
+    "phone",
+    "fond",
+    "find"
+  ],
+  "phonetics": [
+    "/fʌn/",
+    "/fəʊn/",
+    "/fɒnd/",
+    "/faɪnd/"
+  ],
+  "meanings": [
+    "vui vẻ / niềm vui",
+    "điện thoại / gọi điện",
+    "yêu thích / trìu mến",
+    "tìm thấy"
+  ]
+},
+{
+  "_id": "able_apple_ample_ankle",
+  "words": [
+    "able",
+    "apple",
+    "ample",
+    "ankle"
+  ],
+  "phonetics": [
+    "/ˈeɪbəl/",
+    "/ˈæpəl/",
+    "/ˈæmpəl/",
+    "/ˈæŋkəl/"
+  ],
+  "meanings": [
+    "có thể / có khả năng",
+    "quả táo",
+    "đầy đủ / rộng rãi",
+    "mắt cá chân"
+  ]
+},
+{
+  "_id": "table_cable_label_fable",
+  "words": [
+    "table",
+    "cable",
+    "label",
+    "fable"
+  ],
+  "phonetics": [
+    "/ˈteɪbəl/",
+    "/ˈkeɪbəl/",
+    "/ˈleɪbəl/",
+    "/ˈfeɪbəl/"
+  ],
+  "meanings": [
+    "cái bàn / bảng",
+    "cáp / dây cáp",
+    "nhãn / dán nhãn",
+    "truyện ngụ ngôn"
+  ]
+},
+{
+  "_id": "simple_sample_symbol_temple",
+  "words": [
+    "simple",
+    "sample",
+    "symbol",
+    "temple"
+  ],
+  "phonetics": [
+    "/ˈsɪmpəl/",
+    "/ˈsɑːmpəl/",
+    "/ˈsɪmbəl/",
+    "/ˈtempəl/"
+  ],
+  "meanings": [
+    "đơn giản",
+    "mẫu / thử",
+    "biểu tượng",
+    "ngôi đền / thái dương (phần đầu)"
+  ]
+},
+{
+  "_id": "little_litter_bitter_better",
+  "words": [
+    "little",
+    "litter",
+    "bitter",
+    "better"
+  ],
+  "phonetics": [
+    "/ˈlɪtəl/",
+    "/ˈlɪtə/",
+    "/ˈbɪtə/",
+    "/ˈbetə/"
+  ],
+  "meanings": [
+    "nhỏ / ít",
+    "rác / ổ con vật",
+    "đắng / cay đắng",
+    "tốt hơn"
+  ]
+},
+{
+  "_id": "butter_batter_battery_buttery",
+  "words": [
+    "butter",
+    "batter",
+    "battery",
+    "buttery"
+  ],
+  "phonetics": [
+    "/ˈbʌtə/",
+    "/ˈbætə/",
+    "/ˈbætəri/",
+    "/ˈbʌtəri/"
+  ],
+  "meanings": [
+    "bơ",
+    "bột nhão / đánh liên tiếp",
+    "pin / tổ hợp",
+    "nhiều bơ / phòng đựng thức ăn"
+  ]
+},
+{
+  "_id": "water_waiter_winter_wonder",
+  "words": [
+    "water",
+    "waiter",
+    "winter",
+    "wonder"
+  ],
+  "phonetics": [
+    "/ˈwɔːtə/",
+    "/ˈweɪtə/",
+    "/ˈwɪntə/",
+    "/ˈwʌndə/"
+  ],
+  "meanings": [
+    "nước / tưới nước",
+    "người phục vụ / bồi bàn",
+    "mùa đông",
+    "kỳ diệu / tự hỏi"
+  ]
+},
+{
+  "_id": "letter_latter_litter_lather",
+  "words": [
+    "letter",
+    "latter",
+    "litter",
+    "lather"
+  ],
+  "phonetics": [
+    "/ˈletə/",
+    "/ˈlætə/",
+    "/ˈlɪtə/",
+    "/ˈlæðə/"
+  ],
+  "meanings": [
+    "chữ cái / lá thư",
+    "cái sau (trong hai thứ)",
+    "rác / ổ con vật",
+    "bọt xà phòng / đánh bọt"
+  ]
+},
+{
+  "_id": "number_lumber_rumble_tumble",
+  "words": [
+    "number",
+    "lumber",
+    "rumble",
+    "tumble"
+  ],
+  "phonetics": [
+    "/ˈnʌmbə/",
+    "/ˈlʌmbə/",
+    "/ˈrʌmbəl/",
+    "/ˈtʌmbəl/"
+  ],
+  "meanings": [
+    "số / con số",
+    "gỗ xẻ / lê bước nặng nề",
+    "tiếng ầm ầm / ầm ĩ",
+    "ngã nhào / lộn nhào"
+  ]
+},
+{
+  "_id": "open_oven_often_ocean",
+  "words": [
+    "open",
+    "oven",
+    "often",
+    "ocean"
+  ],
+  "phonetics": [
+    "/ˈəʊpən/",
+    "/ˈʌvən/",
+    "/ˈɒfən/",
+    "/ˈəʊʃən/"
+  ],
+  "meanings": [
+    "mở",
+    "lò nướng",
+    "thường xuyên",
+    "đại dương"
+  ]
+},
+{
+  "_id": "garden_pardon_burden_warden",
+  "words": [
+    "garden",
+    "pardon",
+    "burden",
+    "warden"
+  ],
+  "phonetics": [
+    "/ˈɡɑːdən/",
+    "/ˈpɑːdən/",
+    "/ˈbɜːdən/",
+    "/ˈwɔːdən/"
+  ],
+  "meanings": [
+    "khu vườn",
+    "tha thứ / xin lỗi",
+    "gánh nặng",
+    "người giám sát / quản ngục"
+  ]
+},
+{
+  "_id": "happen_hidden_harden_heaven",
+  "words": [
+    "happen",
+    "hidden",
+    "harden",
+    "heaven"
+  ],
+  "phonetics": [
+    "/ˈhæpən/",
+    "/ˈhɪdən/",
+    "/ˈhɑːdən/",
+    "/ˈhevən/"
+  ],
+  "meanings": [
+    "xảy ra",
+    "bị giấu / ẩn",
+    "làm cứng / trở nên cứng rắn",
+    "thiên đường"
+  ]
+},
+{
+  "_id": "reason_season_treason_lesson",
+  "words": [
+    "reason",
+    "season",
+    "treason",
+    "lesson"
+  ],
+  "phonetics": [
+    "/ˈriːzən/",
+    "/ˈsiːzən/",
+    "/ˈtriːzən/",
+    "/ˈlesən/"
+  ],
+  "meanings": [
+    "lý do / lý luận",
+    "mùa / gia vị",
+    "phản quốc",
+    "bài học"
+  ]
+},
+{
+  "_id": "nation_notion_motion_ocean",
+  "words": [
+    "nation",
+    "notion",
+    "motion",
+    "ocean"
+  ],
+  "phonetics": [
+    "/ˈneɪʃən/",
+    "/ˈnəʊʃən/",
+    "/ˈməʊʃən/",
+    "/ˈəʊʃən/"
+  ],
+  "meanings": [
+    "quốc gia / dân tộc",
+    "ý niệm / khái niệm",
+    "chuyển động / đề xuất",
+    "đại dương"
+  ]
+},
+{
+  "_id": "action_auction_caution_mention",
+  "words": [
+    "action",
+    "auction",
+    "caution",
+    "mention"
+  ],
+  "phonetics": [
+    "/ˈækʃən/",
+    "/ˈɔːkʃən/",
+    "/ˈkɔːʃən/",
+    "/ˈmenʃən/"
+  ],
+  "meanings": [
+    "hành động",
+    "đấu giá",
+    "thận trọng / cảnh báo",
+    "đề cập / nhắc đến"
+  ]
+},
+{
+  "_id": "picture_pitcher_capture_ecture",
+  "words": [
+    "picture",
+    "pitcher",
+    "capture",
+    "lecture"
+  ],
+  "phonetics": [
+    "/ˈpɪktʃə/",
+    "/ˈpɪtʃə/",
+    "/ˈkæptʃə/",
+    "/ˈlektʃə/"
+  ],
+  "meanings": [
+    "bức tranh / hình ảnh",
+    "cái bình / người ném bóng",
+    "bắt giữ / chụp",
+    "bài giảng / giảng bài"
+  ]
+}]

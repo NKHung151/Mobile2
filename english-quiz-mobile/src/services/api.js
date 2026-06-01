@@ -340,7 +340,10 @@ export const updateMySetting = async (payload) => {
 // ==================== HOMOPHONE GROUPS API ====================
 
 /**
- * Start a homophone groups learning session
+ * Bắt đầu một phiên học tập luyện tập từ đồng âm (Homophone Groups).
+ * 
+ * @param {string} userId - ID của người dùng học viên
+ * @returns {Promise<Object>} Trả về đối tượng chứa thông tin session_id và trạng thái khởi tạo
  */
 export const startHomophoneGroupsSession = async (userId) => {
   const response = await api.post("/api/homophone-groups/session/start", {
@@ -350,7 +353,9 @@ export const startHomophoneGroupsSession = async (userId) => {
 };
 
 /**
- * Get the next homophone groups question
+ * Lấy câu hỏi từ đồng âm ngẫu nhiên tiếp theo từ API backend.
+ * 
+ * @returns {Promise<Object>} Đối tượng câu hỏi an toàn (question_id, choices, sentence chứa blank, correctWordForAudio)
  */
 export const startHomophoneGroups = async () => {
   const response = await api.post("/api/homophone-groups/start");
@@ -358,7 +363,13 @@ export const startHomophoneGroups = async () => {
 };
 
 /**
- * Submit an answer to a homophone groups question
+ * Gửi đáp án trả lời cho câu hỏi luyện tập từ đồng âm hiện tại để kiểm định.
+ * 
+ * @param {string} questionId - ID định danh của câu hỏi cần chấm điểm
+ * @param {string} userAnswer - Từ đồng âm do người học lựa chọn
+ * @param {string} [sessionId=null] - ID phiên học hiện tại để tích lũy điểm số
+ * @param {string} [userId=null] - ID người học sở hữu phiên
+ * @returns {Promise<Object>} Kết quả kiểm tra đáp án chi tiết (is_correct, correct_answer, correct_phonetic...)
  */
 export const submitHomophoneGroupsAnswer = async (
   questionId,
@@ -376,7 +387,11 @@ export const submitHomophoneGroupsAnswer = async (
 };
 
 /**
- * Complete a homophone groups learning session
+ * Đánh dấu hoàn thành phiên học luyện tập từ đồng âm hiện tại.
+ * 
+ * @param {string} sessionId - ID phiên học cần kết thúc
+ * @param {string} userId - ID người học sở hữu phiên
+ * @returns {Promise<Object>} Kết quả cập nhật phiên học tập sang trạng thái completed
  */
 export const completeHomophoneGroupsSession = async (sessionId, userId) => {
   const response = await api.post("/api/homophone-groups/session/complete", {
@@ -387,7 +402,12 @@ export const completeHomophoneGroupsSession = async (sessionId, userId) => {
 };
 
 /**
- * Delete an incomplete homophone groups session (HYBRID 70% rule)
+ * Hủy bỏ và xóa hoàn toàn phiên luyện tập từ đồng âm khi học viên thoát sớm dưới 70% tiến trình.
+ * Áp dụng quy tắc Hybrid Early Exit Rule để tránh rác cơ sở dữ liệu.
+ * 
+ * @param {string} sessionId - ID phiên học cần hủy bỏ
+ * @param {string} userId - ID người học sở hữu phiên
+ * @returns {Promise<Object>} Trạng thái xác nhận xóa thành công bản ghi khỏi DB
  */
 export const deleteHomophoneGroupsSession = async (sessionId, userId) => {
   const response = await api.delete(`/api/homophone-groups/session/${sessionId}`, {
@@ -401,7 +421,11 @@ export const deleteHomophoneGroupsSession = async (sessionId, userId) => {
 // ==================== QUESTION RESPONSE API ====================
 
 /**
- * Start a question-response learning session
+ * Khởi tạo một phiên thi nghe thử thách TOEIC Part 2 (Question - Response).
+ * 
+ * @param {string} userId - ID học viên
+ * @param {number} [questionCount=10] - Số lượng câu hỏi của phiên thi
+ * @returns {Promise<Object>} Đối tượng chứa session_id, danh sách các câu hỏi đã loại bỏ đáp án đúng
  */
 export const startQuestionResponseSession = async (userId, questionCount = 10) => {
   const response = await api.post("/api/question-response/session/start", {
@@ -412,7 +436,12 @@ export const startQuestionResponseSession = async (userId, questionCount = 10) =
 };
 
 /**
- * Submit answer to a question-response question
+ * Gửi câu trả lời của học viên đối với một câu hỏi cụ thể trong phiên thi TOEIC Part 2.
+ * 
+ * @param {string} sessionId - ID phiên thi đang diễn ra
+ * @param {string} userId - ID học viên thực hiện câu hỏi
+ * @param {number} selectedOptionIndex - Chỉ mục phương án được chọn (0 = A, 1 = B, 2 = C)
+ * @returns {Promise<Object>} Kết quả kiểm tra đáp án chi tiết, transcript của câu hỏi và dịch nghĩa đầy đủ
  */
 export const submitQuestionResponseAnswer = async (sessionId, userId, selectedOptionIndex) => {
   const response = await api.post("/api/question-response/answer", {
@@ -424,7 +453,11 @@ export const submitQuestionResponseAnswer = async (sessionId, userId, selectedOp
 };
 
 /**
- * Complete a question-response session
+ * Hoàn tất và lưu trữ kết quả toàn bộ phiên làm bài TOEIC Part 2.
+ * 
+ * @param {string} sessionId - ID phiên thi cần kết thúc
+ * @param {string} userId - ID học viên sở hữu phiên thi
+ * @returns {Promise<Object>} Dữ liệu tổng hợp phiên thi đã được cập nhật thành công
  */
 export const completeQuestionResponseSession = async (sessionId, userId) => {
   const response = await api.post("/api/question-response/session/complete", {
@@ -435,7 +468,12 @@ export const completeQuestionResponseSession = async (sessionId, userId) => {
 };
 
 /**
- * Delete an incomplete question-response session (HYBRID 70% rule)
+ * Hủy bỏ phiên thi nghe TOEIC Part 2 khi thoát sớm dưới 70% tiến độ làm bài.
+ * Áp dụng quy tắc Hybrid Early Exit Rule đảm bảo an toàn cơ sở dữ liệu.
+ * 
+ * @param {string} sessionId - ID phiên thi cần hủy
+ * @param {string} userId - ID học viên sở hữu phiên thi
+ * @returns {Promise<Object>} Kết quả thực hiện lệnh xóa bản ghi từ Express Server
  */
 export const deleteQuestionResponseSession = async (sessionId, userId) => {
   const response = await api.delete(`/api/question-response/session/${sessionId}`, {

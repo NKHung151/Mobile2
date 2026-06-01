@@ -37,7 +37,13 @@ learningApi.interceptors.response.use(
 );
 
 /**
- * Start a new learning session
+ * Khởi tạo một phiên học tập mới trên API backend.
+ * 
+ * @param {string} userId - ID người dùng
+ * @param {string} topicId - ID chủ đề học tập
+ * @param {string} topicTitle - Tiêu đề của chủ đề
+ * @param {string} mode - Chế độ học tập (ví dụ: 'homophone_groups', 'question_response')
+ * @returns {Promise<Object>} Response object chứa session_id vừa tạo
  */
 export const startLearningSession = async (
   userId,
@@ -49,13 +55,22 @@ export const startLearningSession = async (
     user_id: userId,
     topic_id: topicId,
     topic_title: topicTitle,
-    mode, // 'quiz' or 'chat'
+    mode, 
   });
   return response.data;
 };
 
 /**
- * Update session progress during learning
+ * Cập nhật tiến độ của phiên học hiện tại trong quá trình học tập.
+ * 
+ * @param {string} sessionId - ID của phiên học tập
+ * @param {string} userId - ID người dùng
+ * @param {number} questionsAnswered - Số câu đã trả lời
+ * @param {number} correctAnswers - Số câu trả lời đúng
+ * @param {number} totalScore - Tổng số điểm đạt được
+ * @param {number} maxScore - Điểm số tối đa của phiên
+ * @param {string} status - Trạng thái phiên ('completed', 'abandoned')
+ * @returns {Promise<Object>} Trả về trạng thái lưu trữ cập nhật tiến trình
  */
 export const updateSessionProgress = async (
   sessionId,
@@ -79,7 +94,11 @@ export const updateSessionProgress = async (
 };
 
 /**
- * Complete a learning session
+ * Đánh dấu phiên học tập hiện tại đã hoàn thành.
+ * 
+ * @param {string} sessionId - ID phiên học tập
+ * @param {string} userId - ID người dùng sở hữu phiên
+ * @returns {Promise<Object>} Phản hồi từ server xác nhận hoàn tất thành công
  */
 export const completeLearningSession = async (sessionId, userId) => {
   const response = await learningApi.post("/api/learning/session/complete", {
@@ -90,7 +109,16 @@ export const completeLearningSession = async (sessionId, userId) => {
 };
 
 /**
- * Get user's learning history
+ * Lấy lịch sử học tập của học viên với các tham số phân trang và lọc chế độ.
+ * 
+ * @param {string} userId - ID của học viên cần lấy lịch sử
+ * @param {Object} [options={}] - Các tùy chọn lọc dữ liệu
+ * @param {number} [options.limit=50] - Số lượng bản ghi giới hạn
+ * @param {number} [options.skip=0] - Số bản ghi bỏ qua
+ * @param {string} [options.status] - Trạng thái phiên cần lọc
+ * @param {string} [options.mode] - Chế độ học tập cần lọc
+ * @param {string} [options.topicId] - ID chủ đề học tập
+ * @returns {Promise<Object>} Danh sách lịch sử các phiên học và tổng số phiên
  */
 export const getLearningHistory = async (userId, options = {}) => {
   const {
@@ -116,7 +144,10 @@ export const getLearningHistory = async (userId, options = {}) => {
 };
 
 /**
- * Get learning statistics
+ * Truy xuất chỉ số thống kê học tập tổng quát của học viên.
+ * 
+ * @param {string} userId - ID học viên
+ * @returns {Promise<Object>} Response object chứa các trường dữ liệu statistics tổng quan và theo tuần
  */
 export const getLearningStatistics = async (userId) => {
   const response = await learningApi.get("/api/learning/statistics", {
@@ -126,7 +157,11 @@ export const getLearningStatistics = async (userId) => {
 };
 
 /**
- * Get topic progress
+ * Truy xuất tiến trình học tập của một chủ đề cụ thể.
+ * 
+ * @param {string} userId - ID học viên
+ * @param {string} topicId - ID chủ đề
+ * @returns {Promise<Object>} Tiến độ học tập của chủ đề (số phiên hoàn thành, tỷ lệ chính xác)
  */
 export const getTopicProgress = async (userId, topicId) => {
   const response = await learningApi.get("/api/learning/topic-progress", {
@@ -139,7 +174,10 @@ export const getTopicProgress = async (userId, topicId) => {
 };
 
 /**
- * Get learning dashboard data
+ * Lấy chỉ số Dashboard tổng hợp của học viên trong ngày hôm nay và tuần này.
+ * 
+ * @param {string} userId - ID học viên
+ * @returns {Promise<Object>} Số liệu Dashboard (thời gian học, số câu trả lời, top chủ đề cần review)
  */
 export const getLearningDashboard = async (userId) => {
   const response = await learningApi.get("/api/learning/dashboard", {
@@ -149,8 +187,10 @@ export const getLearningDashboard = async (userId) => {
 };
 
 /**
- * Get personalized AI recommendations for next learning topic
- * Requires Gemini API to be configured and quota available
+ * Gọi API backend lấy lời khuyên học tập cá nhân hóa do mô hình Gemini AI phân tích.
+ * 
+ * @param {string} userId - ID học viên
+ * @returns {Promise<Object>} Gợi ý AI chứa chủ đề yếu nhất và lời khuyên tiếng Việt cụ thể
  */
 export const getRecommendations = async (userId) => {
   const params = { user_id: userId };
@@ -161,7 +201,10 @@ export const getRecommendations = async (userId) => {
 };
 
 /**
- * Delete learning history
+ * Xóa sạch toàn bộ lịch sử học tập của học viên khỏi cơ sở dữ liệu.
+ * 
+ * @param {string} userId - ID học viên cần xóa lịch sử
+ * @returns {Promise<Object>} Kết quả thực hiện xóa thành công
  */
 export const deleteAllLearningHistory = async (userId) => {
   const response = await learningApi.delete("/api/learning/history", {
@@ -171,8 +214,11 @@ export const deleteAllLearningHistory = async (userId) => {
 };
 
 /**
- * Get detailed answers for a specific session
- * Returns all questions, user answers, correct answers, and results
+ * Lấy danh sách đáp án chi tiết và các câu hỏi của một phiên học chỉ định.
+ * 
+ * @param {string} sessionId - ID phiên học tập cần xem lại
+ * @param {string} userId - ID học viên sở hữu phiên
+ * @returns {Promise<Object>} Đối tượng chứa session thông tin chung và mảng answers chi tiết từng câu
  */
 export const getSessionAnswers = async (sessionId, userId) => {
   const response = await learningApi.get(
@@ -185,8 +231,12 @@ export const getSessionAnswers = async (sessionId, userId) => {
 };
 
 /**
- * Save an answer during a session
- * Called after each question is answered
+ * Lưu trữ đáp án chi tiết của một câu hỏi đã hoàn thành trong phiên học.
+ * 
+ * @param {string} sessionId - ID phiên học đang diễn ra
+ * @param {string} userId - ID học viên thực hiện câu hỏi
+ * @param {Object} answerData - Dữ liệu câu trả lời (bao gồm câu hỏi, đáp án chọn, độ chính xác, transcript)
+ * @returns {Promise<Object>} Kết quả lưu trữ bản ghi thành công
  */
 export const saveSessionAnswer = async (sessionId, userId, answerData) => {
   const response = await learningApi.post(

@@ -6,6 +6,14 @@ import {
   getRecommendations 
 } from '../services/learningHistoryService';
 
+/**
+ * Custom Hook quản lý trạng thái và đồng bộ hóa dữ liệu tiến trình học tập của học viên.
+ * Thực hiện tải đồng thời dữ liệu lịch sử, thống kê cơ bản thông qua Promise.all,
+ * đồng thời tách biệt việc tải gợi ý AI bất đồng bộ để tránh nghẽn luồng xử lý UI chính.
+ * 
+ * @param {string} userId - ID của học viên đang đăng nhập hệ thống
+ * @returns {Object} Đối tượng chứa các state (sessions, statistics, dashboard, recommendations, loading, loadingRecommendations, error) và các hàm fetchAllData, fetchAIRecommendations
+ */
 export const useProgressData = (userId) => {
   const [sessions, setSessions] = useState([]);
   const [statistics, setStatistics] = useState(null);
@@ -15,6 +23,15 @@ export const useProgressData = (userId) => {
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [error, setError] = useState(null);
 
+  /**
+   * Tải đồng thời tất cả các dữ liệu thống kê cơ bản bao gồm Lịch sử học tập,
+   * Số liệu thống kê chi tiết và Chỉ số Dashboard thông qua API Gateway.
+   * Lọc bỏ các phiên 'chat' và 'transcribe' không thuộc phạm vi đồ án.
+   * 
+   * @async
+   * @function fetchAllData
+   * @returns {Promise<void>}
+   */
   const fetchAllData = useCallback(async () => {
     if (!userId) return;
     
@@ -29,7 +46,7 @@ export const useProgressData = (userId) => {
       ]);
 
       if (historyResponse.success) {
-        // Filter out 'chat' and 'transcribe' sessions - Business Logic encapsulated here
+        // Lọc nghiệp vụ: Chỉ giữ lại các phiên trắc nghiệm tương tác câu hỏi
         const rawSessions = historyResponse.sessions || [];
         setSessions(rawSessions.filter(s => s.mode !== 'chat' && s.mode !== 'transcribe'));
       }
@@ -49,6 +66,14 @@ export const useProgressData = (userId) => {
     }
   }, [userId]);
 
+  /**
+   * Tải các lời khuyên học tập cá nhân hóa do Gemini AI phân tích.
+   * Chạy bất đồng bộ, độc lập với luồng tải thống kê cơ bản để tăng trải nghiệm người dùng.
+   * 
+   * @async
+   * @function fetchAIRecommendations
+   * @returns {Promise<void>}
+   */
   const fetchAIRecommendations = useCallback(async () => {
     if (!userId) return;
     
