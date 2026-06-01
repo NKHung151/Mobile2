@@ -1,0 +1,2188 @@
+[{
+  "_id": {
+    "$oid": "69ca53ce1ae4c89952b670cd"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774865392/01_ot8izs.mp3",
+  "content": {
+    "transcript": "What time is your job interview?",
+    "translation": "Buổi phỏng vấn việc làm của bạn vào khi nào?"
+  },
+  "options": [
+    {
+      "text": "Yes, it's a great job.",
+      "translation": "Vâng, đó là một công việc tuyệt vời.",
+      "isCorrect": false
+    },
+    {
+      "text": "At two thirty.",
+      "translation": "Lúc 2h30.",
+      "isCorrect": true
+    },
+    {
+      "text": "It's a great watch.",
+      "translation": "Đó là một cái đồng hồ tuyệt vời.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca59791ae4c89952b670d1"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876281/02_mp3cut.net_jovuo8.mp3",
+  "content": {
+    "transcript": "Is there a gas station near here?",
+    "translation": "Có trạm xăng nào gần đây không?"
+  },
+  "options": [
+    {
+      "text": "Roughly an hour ago.",
+      "translation": "Cách đây xấp xỉ một giờ.",
+      "isCorrect": false
+    },
+    {
+      "text": "Sure, there is one on the corner.",
+      "translation": "Chắc chắn rồi. Có một cái ở góc phố.",
+      "isCorrect": true
+    },
+    {
+      "text": "I didn't leave it here.",
+      "translation": "Tôi đã không để nó ở đây.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5a291ae4c89952b670d3"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876346/03_mp3cut.net_qijtdy.mp3",
+  "content": {
+    "transcript": "When will the next bus arrive?",
+    "translation": "Khi nào chiếc xe buýt tiếp theo sẽ tới?"
+  },
+  "options": [
+    {
+      "text": "At the bus station.",
+      "translation": "Tại bến xe bus.",
+      "isCorrect": false
+    },
+    {
+      "text": "To the library.",
+      "translation": "Tới thư viện.",
+      "isCorrect": false
+    },
+    {
+      "text": "In ten minutes.",
+      "translation": "Trong 10 phút nữa.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5a4c1ae4c89952b670d7"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876404/05_mp3cut.net_xit61y.mp3",
+  "content": {
+    "transcript": "Do you know where Nancy put the folders?",
+    "translation": "Bạn có biết Nancy để các tập tài liệu ở đâu?"
+  },
+  "options": [
+    {
+      "text": "I know it, too.",
+      "translation": "Tôi cũng biết.",
+      "isCorrect": false
+    },
+    {
+      "text": "The sales report.",
+      "translation": "Bản báo cáo doanh thu.",
+      "isCorrect": false
+    },
+    {
+      "text": "It should be in the cabinet.",
+      "translation": "Nó chắc là ở trong tủ hồ sơ.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5e701ae4c89952b670df"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876499/09_mp3cut.net_o3auhs.mp3",
+  "content": {
+    "transcript": "How will we be able to tell who John is?",
+    "translation": "Làm cách nào để chúng ta có thể biết được John là ai?"
+  },
+  "options": [
+    {
+      "text": "John is the new assistant here.",
+      "translation": "John là người phụ tá mới ở đây.",
+      "isCorrect": false
+    },
+    {
+      "text": "Don't worry. I know what he looks like.",
+      "translation": "Đừng lo lắng. Tôi biết anh ấy trông như thế nào.",
+      "isCorrect": true
+    },
+    {
+      "text": "He's a very dependable person, actually.",
+      "translation": "Anh ấy thật sự là một người có thể tin tưởng được.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5ecf1ae4c89952b670e3"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876525/11_mp3cut.net_n3z2lo.mp3",
+  "content": {
+    "transcript": "I really enjoyed the movie.",
+    "translation": "Tôi thực sự đã rất thích bộ phim đó."
+  },
+  "options": [
+    {
+      "text": "I told you that you would, didn't I?",
+      "translation": "Tôi đã bảo là bạn sẽ thích mà, có phải không?",
+      "isCorrect": true
+    },
+    {
+      "text": "No, let's watch it later.",
+      "translation": "Không, hãy để sau rồi xem.",
+      "isCorrect": false
+    },
+    {
+      "text": "Which show would you like to see?",
+      "translation": "Bạn muốn xem buổi biểu diễn nào?",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5f0a1ae4c89952b670e7"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876580/13_mp3cut.net_svecoo.mp3",
+  "content": {
+    "transcript": "If you need a lift later, just come and ask me.",
+    "translation": "Nếu lát nữa bạn cần đi nhờ xe, cứ đến bảo tôi nhé."
+  },
+  "options": [
+    {
+      "text": "I'll be going that way as well.",
+      "translation": "Tôi cũng sẽ đi theo lối đó.",
+      "isCorrect": false
+    },
+    {
+      "text": "Sure, you can ask me anytime.",
+      "translation": "Chắc chắn rồi, bạn có thể hỏi tôi bất cứ lúc nào.",
+      "isCorrect": false
+    },
+    {
+      "text": "Thank you. I think I will.",
+      "translation": "Cảm ơn nhé. Tôi nghĩ là tôi sẽ nhờ bạn đấy.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5f201ae4c89952b670e9"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876684/14_mp3cut.net_aaljlx.mp3",
+  "content": {
+    "transcript": "It's very crowded here today, isn't it?",
+    "translation": "Hôm nay ở đây đông quá nhỉ?"
+  },
+  "options": [
+    {
+      "text": "Yes, it's very quiet today.",
+      "translation": "Vâng, hôm nay ở đây rất yên tĩnh.",
+      "isCorrect": false
+    },
+    {
+      "text": "I haven't seen him yet.",
+      "translation": "Tôi vẫn chưa thấy anh ấy.",
+      "isCorrect": false
+    },
+    {
+      "text": "Yes, it gets like this on the weekend.",
+      "translation": "Đúng vậy, cuối tuần ở đây thường như thế này.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5f6c1ae4c89952b670ef"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876706/17_mp3cut.net_gcwndx.mp3",
+  "content": {
+    "transcript": "When are the applications due?",
+    "translation": "Khi nào thì hết hạn nộp đơn?"
+  },
+  "options": [
+    {
+      "text": "For the accounting job.",
+      "translation": "Cho công việc kế toán.",
+      "isCorrect": false
+    },
+    {
+      "text": "You still have a couple of days.",
+      "translation": "Bạn vẫn còn một vài ngày nữa.",
+      "isCorrect": true
+    },
+    {
+      "text": "It's the form on the table.",
+      "translation": "Đó là những mẫu đơn trên mặt bàn.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5f891ae4c89952b670f1"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876743/18_mp3cut.net_ntsafc.mp3",
+  "content": {
+    "transcript": "Who did you meet last night?",
+    "translation": "Bạn đã gặp ai vào tối qua?"
+  },
+  "options": [
+    {
+      "text": "At exactly six o'clock.",
+      "translation": "Vào chính xác lúc 6 giờ.",
+      "isCorrect": false
+    },
+    {
+      "text": "No, why do you say that?",
+      "translation": "Không, tại sao bạn lại nói vậy?",
+      "isCorrect": false
+    },
+    {
+      "text": "An old friend from college.",
+      "translation": "Một người bạn cũ từ thời đại học.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca5f9f1ae4c89952b670f3"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774876769/19_mp3cut.net_xjekcl.mp3",
+  "content": {
+    "transcript": "Mr. Chen wants to see you.",
+    "translation": "Ông Chen muốn gặp bạn."
+  },
+  "options": [
+    {
+      "text": "No, I don't know him very well.",
+      "translation": "Không, tôi không biết rõ lắm về ông ấy.",
+      "isCorrect": false
+    },
+    {
+      "text": "Really? Do you know why?",
+      "translation": "Thật sao? Bạn có biết tại sao không?",
+      "isCorrect": true
+    },
+    {
+      "text": "When will the meeting take place?",
+      "translation": "Khi nào cuộc họp được tổ chức?",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca78a91ae4c89952b670f5"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877343/20_mp3cut.net_kljxqv.mp3",
+  "content": {
+    "transcript": "Why did you decide to take on the project?",
+    "translation": "Tại sao bạn lại quyết định đảm nhận dự án này?"
+  },
+  "options": [
+    {
+      "text": "The project will start this week.",
+      "translation": "Dự án sẽ bắt đầu vào tuần này.",
+      "isCorrect": false
+    },
+    {
+      "text": "They take too long to finish.",
+      "translation": "Chúng mất quá nhiều thời gian để hoàn thành.",
+      "isCorrect": false
+    },
+    {
+      "text": "I like to take on new challenges.",
+      "translation": "Tôi muốn đảm nhận những thử thách mới.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca78c71ae4c89952b670f7"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877383/21_mp3cut.net_jyx3kv.mp3",
+  "content": {
+    "transcript": "How many days are you going to take off this year?",
+    "translation": "Năm nay bạn định nghỉ phép bao nhiêu ngày?"
+  },
+  "options": [
+    {
+      "text": "Two weeks, probably.",
+      "translation": "Có lẽ là hai tuần.",
+      "isCorrect": true
+    },
+    {
+      "text": "Okay, turn it off later.",
+      "translation": "Được rồi, hãy tắt nó sau.",
+      "isCorrect": false
+    },
+    {
+      "text": "To visit my sister in New York.",
+      "translation": "Để đi thăm chị gái ở New York.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca78e41ae4c89952b670f9"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877409/22_mp3cut.net_cauhyk.mp3",
+  "content": {
+    "transcript": "Why can't we have the meeting here?",
+    "translation": "Tại sao chúng ta không thể tổ chức cuộc họp ở đây?"
+  },
+  "options": [
+    {
+      "text": "To talk about the next project.",
+      "translation": "Để nói về dự án tiếp theo.",
+      "isCorrect": false
+    },
+    {
+      "text": "The sales staff is going to use it.",
+      "translation": "Nhân viên phòng kinh doanh sẽ sử dụng phòng đó.",
+      "isCorrect": true
+    },
+    {
+      "text": "On the second floor conference room.",
+      "translation": "Tại phòng hội thảo ở tầng hai.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca79001ae4c89952b670fb"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877433/23_mp3cut.net_bi00zh.mp3",
+  "content": {
+    "transcript": "The company telephone directory needs to be updated.",
+    "translation": "Danh bạ điện thoại của công ty cần được cập nhật."
+  },
+  "options": [
+    {
+      "text": "You can call me this afternoon.",
+      "translation": "Bạn có thể gọi cho tôi vào chiều nay.",
+      "isCorrect": false
+    },
+    {
+      "text": "Yes, I'll call her directly from my office.",
+      "translation": "Vâng, tôi sẽ gọi trực tiếp cho cô ấy từ văn phòng của mình.",
+      "isCorrect": false
+    },
+    {
+      "text": "Why do we have to do that?",
+      "translation": "Tại sao chúng ta lại phải làm điều đó?",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca79201ae4c89952b670fd"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877459/24_mp3cut.net_f8d3hx.mp3",
+  "content": {
+    "transcript": "Sandra is looking great these days, isn't she?",
+    "translation": "Dạo này nhìn Sandra tuyệt quá nhỉ?"
+  },
+  "options": [
+    {
+      "text": "Yes, she's been working out lately.",
+      "translation": "Đúng vậy, dạo này cô ấy đang chăm chỉ tập thể dục.",
+      "isCorrect": true
+    },
+    {
+      "text": "For the last two weeks.",
+      "translation": "Trong hai tuần vừa qua.",
+      "isCorrect": false
+    },
+    {
+      "text": "I'll look for it today.",
+      "translation": "Tôi sẽ tìm nó vào hôm nay.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca793f1ae4c89952b670ff"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877486/25_mp3cut.net_mdn72v.mp3",
+  "content": {
+    "transcript": "Can we talk about my pay now, or should I come back later?",
+    "translation": "Chúng ta có thể nói về lương của tôi bây giờ không, hay tôi nên quay lại sau?"
+  },
+  "options": [
+    {
+      "text": "Probably during lunch today.",
+      "translation": "Có lẽ là trong bữa trưa hôm nay.",
+      "isCorrect": false
+    },
+    {
+      "text": "You can come by anytime.",
+      "translation": "Bạn có thể ghé qua bất cứ lúc nào.",
+      "isCorrect": false
+    },
+    {
+      "text": "I have to step into a meeting now.",
+      "translation": "Bây giờ tôi phải đi họp rồi.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca79671ae4c89952b67101"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877511/26_mp3cut.net_buutcc.mp3",
+  "content": {
+    "transcript": "Haven't you already been there a couple of times before?",
+    "translation": "Chẳng phải bạn đã từng đến đó vài lần rồi sao?"
+  },
+  "options": [
+    {
+      "text": "No, this will be my first time.",
+      "translation": "Chưa, đây sẽ là lần đầu tiên của tôi.",
+      "isCorrect": true
+    },
+    {
+      "text": "Yes, time is very precious.",
+      "translation": "Vâng, thời gian rất quý báu.",
+      "isCorrect": false
+    },
+    {
+      "text": "At two o'clock this afternoon.",
+      "translation": "Vào lúc 2 giờ chiều nay.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca79801ae4c89952b67103"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877546/27_mp3cut.net_ddsxer.mp3",
+  "content": {
+    "transcript": "Could you please tell me where I should go to return this item?",
+    "translation": "Bạn có thể làm ơn chỉ cho tôi nơi tôi nên đến để trả lại món đồ này không?"
+  },
+  "options": [
+    {
+      "text": "Yes, it is refundable with a receipt.",
+      "translation": "Vâng, nó có thể được hoàn tiền nếu có hóa đơn.",
+      "isCorrect": false
+    },
+    {
+      "text": "Sure, go to the window in the back.",
+      "translation": "Chắc chắn rồi, hãy đi đến cái quầy ở phía sau.",
+      "isCorrect": true
+    },
+    {
+      "text": "They're 30 percent off the regular price.",
+      "translation": "Chúng được giảm giá 30% so với giá thông thường.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca799b1ae4c89952b67105"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877573/28_mp3cut.net_xmwxki.mp3",
+  "content": {
+    "transcript": "When is the last day for submitting the request form?",
+    "translation": "Hạn chót để nộp đơn yêu cầu là khi nào?"
+  },
+  "options": [
+    {
+      "text": "To ask for a few days off from work.",
+      "translation": "Để xin nghỉ phép vài ngày.",
+      "isCorrect": false
+    },
+    {
+      "text": "I went with him last time.",
+      "translation": "Tôi đã đi cùng anh ấy lần trước.",
+      "isCorrect": false
+    },
+    {
+      "text": "Next Friday at 5 p.m.",
+      "translation": "5 giờ chiều Thứ Sáu tới.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "69ca79b81ae4c89952b67107"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1774877602/30_mp3cut.net_ehxml8.mp3",
+  "content": {
+    "transcript": "Would you be interested in seeing a play this weekend?",
+    "translation": "Bạn có hứng thú đi xem một vở kịch vào cuối tuần này không?"
+  },
+  "options": [
+    {
+      "text": "Yes, it was a lot of fun.",
+      "translation": "Vâng, nó đã rất vui.",
+      "isCorrect": false
+    },
+    {
+      "text": "He is an interesting guy.",
+      "translation": "Anh ấy là một anh chàng thú vị.",
+      "isCorrect": false
+    },
+    {
+      "text": "I'd be delighted.",
+      "translation": "Tôi rất sẵn lòng/vinh hạnh.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da5e1c7223e83ddef7948"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780327936/01_mp3cut.net_1_jzcjj9.mp3",
+  "content": {
+    "transcript": "Where did Mary go?",
+    "translation": "Mary đã đi đâu?"
+  },
+  "options": [
+    {
+      "text": "To the head office.",
+      "translation": "Tới văn phòng chính.",
+      "isCorrect": true
+    },
+    {
+      "text": "She is doing great.",
+      "translation": "Cô ấy đang làm rất tuyệt.",
+      "isCorrect": false
+    },
+    {
+      "text": "I talked to her.",
+      "translation": "Tôi đã nói chuyện với cô ấy.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da68cc7223e83ddef794a"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780329094/02_mp3cut.net_elkzjh.mp3",
+  "content": {
+    "transcript": "How was the food?",
+    "translation": "Thức ăn như thế nào?"
+  },
+  "options": [
+    {
+      "text": "At the restaurant.",
+      "translation": "Tại nhà hàng.",
+      "isCorrect": false
+    },
+    {
+      "text": "With the staff members.",
+      "translation": "Với thành viên ban tham mưu.",
+      "isCorrect": false
+    },
+    {
+      "text": "It was very good.",
+      "translation": "Nó rất ngon.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da6bac7223e83ddef794c"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780329189/03_mp3cut.net_kxpzxa.mp3",
+  "content": {
+    "transcript": "Do you like working by yourself or in a group?",
+    "translation": "Bạn muốn làm việc một mình hay theo nhóm?"
+  },
+  "options": [
+    {
+      "text": "He went by himself.",
+      "translation": "Anh ấy đi một mình.",
+      "isCorrect": false
+    },
+    {
+      "text": "Either suits me fine.",
+      "translation": "Cả hai đều hợp với tôi.",
+      "isCorrect": true
+    },
+    {
+      "text": "A group of five people.",
+      "translation": "Một nhóm cho 5 người.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da6d8c7223e83ddef794e"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780329270/04_mp3cut.net_hyxku9.mp3",
+  "content": {
+    "transcript": "It's not too far, is it?",
+    "translation": "Nó không quá xa có phải không?"
+  },
+  "options": [
+    {
+      "text": "Yes, I like it, too.",
+      "translation": "Vâng, tôi cũng thích nó.",
+      "isCorrect": false
+    },
+    {
+      "text": "It is far better.",
+      "translation": "Nó tốt hơn nhiều.",
+      "isCorrect": false
+    },
+    {
+      "text": "No. I don't think so.",
+      "translation": "Không, tôi không nghĩ vậy.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da70bc7223e83ddef7950"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780329808/05_mp3cut.net_wv8yaq.mp3",
+  "content": {
+    "transcript": "When do you want to take off?",
+    "translation": "Khi nào bạn muốn cất cánh?"
+  },
+  "options": [
+    {
+      "text": "Right away.",
+      "translation": "Ngay bây giờ.",
+      "isCorrect": true
+    },
+    {
+      "text": "Sure, take it.",
+      "translation": "Chắc chắn rồi, lấy nó đi.",
+      "isCorrect": false
+    },
+    {
+      "text": "No, I don't want it.",
+      "translation": "Không, tôi không muốn nó.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da77ac7223e83ddef7955"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780329878/06_mp3cut.net_o2ny7r.mp3",
+  "content": {
+    "transcript": "Who requested the sales report?",
+    "translation": "Ai yêu cầu bản báo cáo bán hàng?"
+  },
+  "options": [
+    {
+      "text": "I believe it was Ms. Gomez.",
+      "translation": "Tôi tin rằng đó là bà Gomez.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, I report to Mr. Johnson.",
+      "translation": "Không, tôi báo cáo cho ngài Johnson.",
+      "isCorrect": false
+    },
+    {
+      "text": "By the end of the day.",
+      "translation": "Vào cuối ngày.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da7a1c7223e83ddef7957"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780330647/07_mp3cut.net_vdwq3e.mp3",
+  "content": {
+    "transcript": "Why did John miss the conference today?",
+    "translation": "Tại sao John lại lỡ buổi hội thảo hôm nay?"
+  },
+  "options": [
+    {
+      "text": "The meeting is at 9 o'clock.",
+      "translation": "Cuộc họp vào lúc 9h.",
+      "isCorrect": false
+    },
+    {
+      "text": "Mr. Smith is leading it today.",
+      "translation": "Ông Smith dẫn nó hôm nay.",
+      "isCorrect": false
+    },
+    {
+      "text": "He was stuck in traffic.",
+      "translation": "Anh ấy bị tắc đường.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da7c8c7223e83ddef7959"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780330898/08_mp3cut.net_wkiozi.mp3",
+  "content": {
+    "transcript": "Could you return these DVDs back to the store?",
+    "translation": "Bạn có thể trả những chiếc DVD này lại cửa hàng được không?"
+  },
+  "options": [
+    {
+      "text": "Let's head back soon.",
+      "translation": "Hãy quay lại sớm thôi.",
+      "isCorrect": false
+    },
+    {
+      "text": "Sorry, they're not refundable.",
+      "translation": "Xin lỗi, chúng không thể hoàn tiền được.",
+      "isCorrect": false
+    },
+    {
+      "text": "Of course. I'll take care of it right away.",
+      "translation": "Tất nhiên rồi. Tôi sẽ xử lý việc đó ngay.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da7e7c7223e83ddef795b"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780330949/09_mp3cut.net_a6uiri.mp3",
+  "content": {
+    "transcript": "How much was the new computer?",
+    "translation": "Chiếc máy vi tính mới giá bao nhiêu?"
+  },
+  "options": [
+    {
+      "text": "The Internet.",
+      "translation": "Mạng Internet.",
+      "isCorrect": false
+    },
+    {
+      "text": "Nine hundred dollars.",
+      "translation": "900 đô la.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, it is not new.",
+      "translation": "Không, nó không mới.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da807c7223e83ddef795d"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331032/10_mp3cut.net_hst9yb.mp3",
+  "content": {
+    "transcript": "You've been here a few times before, haven't you?",
+    "translation": "Bạn đã ở đây một vài lần trước đây rồi có phải không?"
+  },
+  "options": [
+    {
+      "text": "Yes, a couple of times.",
+      "translation": "Vâng, một vài lần.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, but maybe later.",
+      "translation": "Không, nhưng có lẽ để sau.",
+      "isCorrect": false
+    },
+    {
+      "text": "I can't hear you too well.",
+      "translation": "Tôi không nghe bạn nói rõ lắm.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da824c7223e83ddef795f"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331101/11_mp3cut.net_z1u8ts.mp3",
+  "content": {
+    "transcript": "Do you want to pick up something to eat on our way?",
+    "translation": "Bạn có muốn mua chút gì đó để ăn trên đường đi không?"
+  },
+  "options": [
+    {
+      "text": "I asked John to pick her up.",
+      "translation": "Tôi đã bảo John đón cô ấy.",
+      "isCorrect": false
+    },
+    {
+      "text": "Yes, we don't have much time.",
+      "translation": "Vâng, chúng ta không có nhiều thời gian đâu.",
+      "isCorrect": true
+    },
+    {
+      "text": "The restaurant closes at ten.",
+      "translation": "Nhà hàng đóng cửa lúc 10h.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da845c7223e83ddef7961"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331179/12_mp3cut.net_fth24s.mp3",
+  "content": {
+    "transcript": "Would you rather have the meeting here or move to another place?",
+    "translation": "Bạn muốn họp ở đây hay chuyển sang một địa điểm khác?"
+  },
+  "options": [
+    {
+      "text": "It doesn't really matter to me.",
+      "translation": "Nó không thực sự thành vấn đề với tôi.",
+      "isCorrect": true
+    },
+    {
+      "text": "The annual conference at the home office.",
+      "translation": "Hội nghị thường niên tại trụ sở chính.",
+      "isCorrect": false
+    },
+    {
+      "text": "The place is quite far from here.",
+      "translation": "Địa điểm đó cách đây khá xa.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da85fc7223e83ddef7963"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331239/13_mp3cut.net_z8ximn.mp3",
+  "content": {
+    "transcript": "I didn't know you were related to Susan.",
+    "translation": "Tôi không biết là bạn có họ hàng với Susan đấy."
+  },
+  "options": [
+    {
+      "text": "Yes, it's related somehow.",
+      "translation": "Vâng, bằng cách nào đó thì nó có liên quan.",
+      "isCorrect": false
+    },
+    {
+      "text": "I'm surprised you don't know her.",
+      "translation": "Tôi ngạc nhiên là bạn không biết cô ấy đấy.",
+      "isCorrect": false
+    },
+    {
+      "text": "She's my cousin.",
+      "translation": "Cô ấy là anh/chị/em họ của tôi.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da878c7223e83ddef7965"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331291/14_mp3cut.net_k6x9mk.mp3",
+  "content": {
+    "transcript": "Would you like a hand with those bags?",
+    "translation": "Bạn có muốn tôi giúp một tay với những chiếc túi đó không?"
+  },
+  "options": [
+    {
+      "text": "Thank you. That's very nice of you.",
+      "translation": "Cảm ơn bạn. Bạn thật tốt bụng.",
+      "isCorrect": true
+    },
+    {
+      "text": "To pack some equipment for the trip.",
+      "translation": "Để đóng gói một số thiết bị cho chuyến đi.",
+      "isCorrect": false
+    },
+    {
+      "text": "Seven of us are going together.",
+      "translation": "Bảy người chúng tôi sẽ đi cùng nhau.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da892c7223e83ddef7967"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331357/15_mp3cut.net_haimex.mp3",
+  "content": {
+    "transcript": "Why is the light on in the storage room?",
+    "translation": "Tại sao đèn trong phòng kho lại bật thế?"
+  },
+  "options": [
+    {
+      "text": "Because it's a bit too bright in there.",
+      "translation": "Bởi vì ở trong đó hơi quá sáng một chút.",
+      "isCorrect": false
+    },
+    {
+      "text": "We store most of our goods there.",
+      "translation": "Chúng ta lưu trữ hầu hết hàng hóa ở đó.",
+      "isCorrect": false
+    },
+    {
+      "text": "Sorry, I must have forgotten to turn it off.",
+      "translation": "Xin lỗi, chắc là tôi đã quên tắt nó rồi.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da8adc7223e83ddef7969"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331416/16_mp3cut.net_hku9sm.mp3",
+  "content": {
+    "transcript": "I'd like to place an order from your catalog.",
+    "translation": "Tôi muốn đặt một đơn hàng từ danh mục sản phẩm của bạn."
+  },
+  "options": [
+    {
+      "text": "Could you tell me the item number?",
+      "translation": "Bạn có thể cho tôi biết mã số của mặt hàng đó được không?",
+      "isCorrect": true
+    },
+    {
+      "text": "I placed it next to the conference table.",
+      "translation": "Tôi đã đặt nó cạnh bàn họp hội nghị.",
+      "isCorrect": false
+    },
+    {
+      "text": "Sure, we will deliver it right away.",
+      "translation": "Chắc chắn rồi, chúng tôi sẽ giao hàng ngay lập tức.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da8cdc7223e83ddef796b"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331874/17_mp3cut.net_yeucdb.mp3",
+  "content": {
+    "transcript": "Where is the phone list of our company staff members?",
+    "translation": "Danh sách số điện thoại của nhân viên công ty chúng ta ở đâu?"
+  },
+  "options": [
+    {
+      "text": "Jane keeps it in her desk drawer.",
+      "translation": "Jane giữ nó trong ngăn kéo bàn của cô ấy.",
+      "isCorrect": true
+    },
+    {
+      "text": "He is not a member here.",
+      "translation": "Anh ấy không phải là thành viên ở đây.",
+      "isCorrect": false
+    },
+    {
+      "text": "I'll give him a call in the afternoon.",
+      "translation": "Tôi sẽ gọi cho anh ấy vào buổi chiều.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da8e9c7223e83ddef796d"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780331934/18_mp3cut.net_m3p87w.mp3",
+  "content": {
+    "transcript": "Would you like to go out and eat?",
+    "translation": "Bạn có muốn ra ngoài ăn không?"
+  },
+  "options": [
+    {
+      "text": "No, she did not go out yet.",
+      "translation": "Không, cô ấy vẫn chưa ra ngoài.",
+      "isCorrect": false
+    },
+    {
+      "text": "Sorry, I brought my lunch today.",
+      "translation": "Xin lỗi, hôm nay tôi đã mang theo bữa trưa rồi.",
+      "isCorrect": true
+    },
+    {
+      "text": "What do you want to do?",
+      "translation": "Bạn muốn làm gì?",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da906c7223e83ddef796f"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332012/19_mp3cut.net_hqplhw.mp3",
+  "content": {
+    "transcript": "Should I call Mr. Wong in our Hong Kong office today?",
+    "translation": "Tôi có nên gọi điện cho ông Wong ở văn phòng Hồng Kông của chúng ta hôm nay không?"
+  },
+  "options": [
+    {
+      "text": "He speaks Chinese fluently.",
+      "translation": "Ông ấy nói tiếng Trung trôi chảy.",
+      "isCorrect": false
+    },
+    {
+      "text": "I already called him.",
+      "translation": "Tôi đã gọi cho ông ấy rồi.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, I will not be going there.",
+      "translation": "Không, tôi sẽ không đến đó.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da920c7223e83ddef7971"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332094/20_mp3cut.net_iskji3.mp3",
+  "content": {
+    "transcript": "Have you heard about the strike at our plant?",
+    "translation": "Bạn đã nghe về cuộc đình công ở nhà máy của chúng ta chưa?"
+  },
+  "options": [
+    {
+      "text": "Yes, I have.",
+      "translation": "Vâng, tôi nghe rồi.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, not here.",
+      "translation": "Không, không phải ở đây.",
+      "isCorrect": false
+    },
+    {
+      "text": "Maybe later.",
+      "translation": "Có lẽ để sau.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da941c7223e83ddef7973"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332508/21_mp3cut.net_naxfpn.mp3",
+  "content": {
+    "transcript": "Would you like to get a ride with John or take the bus?",
+    "translation": "Bạn muốn đi nhờ xe của John hay đi xe buýt?"
+  },
+  "options": [
+    {
+      "text": "Let's get a lift with John.",
+      "translation": "Hãy đi nhờ xe của John đi.",
+      "isCorrect": true
+    },
+    {
+      "text": "The boss is coming, too?",
+      "translation": "Sếp cũng đến nữa à?",
+      "isCorrect": false
+    },
+    {
+      "text": "No, I don't like it very much.",
+      "translation": "Không, tôi không thích nó lắm.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da959c7223e83ddef7975"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332565/22_mp3cut.net_wte8jx.mp3",
+  "content": {
+    "transcript": "Who is looking after the new account?",
+    "translation": "Ai đang chịu trách nhiệm quản lý tài khoản khách hàng mới vậy?"
+  },
+  "options": [
+    {
+      "text": "John's been assigned to it.",
+      "translation": "John đã được chỉ định phụ trách nó rồi.",
+      "isCorrect": true
+    },
+    {
+      "text": "I've looked everywhere for it.",
+      "translation": "Tôi đã tìm nó ở khắp mọi nơi rồi.",
+      "isCorrect": false
+    },
+    {
+      "text": "The new accountant sits here.",
+      "translation": "Người kế toán mới ngồi ở đây.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da979c7223e83ddef7977"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332619/23_mp3cut.net_jwwlnd.mp3",
+  "content": {
+    "transcript": "Didn't you go yet?",
+    "translation": "Bạn vẫn chưa đi à?"
+  },
+  "options": [
+    {
+      "text": "I went over it twice.",
+      "translation": "Tôi đã kiểm tra kỹ nó hai lần rồi.",
+      "isCorrect": false
+    },
+    {
+      "text": "No, the meeting got cancelled.",
+      "translation": "Chưa, cuộc họp đã bị hủy rồi.",
+      "isCorrect": true
+    },
+    {
+      "text": "It's going very nicely, thanks.",
+      "translation": "Mọi chuyện đang diễn ra rất tốt đẹp, cảm ơn.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da995c7223e83ddef7979"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332671/24_mp3cut.net_mwf9rp.mp3",
+  "content": {
+    "transcript": "I'm afraid he won't be there when we arrive this afternoon.",
+    "translation": "Tôi e rằng anh ấy sẽ không có ở đó khi chúng ta đến vào chiều nay."
+  },
+  "options": [
+    {
+      "text": "Oh? Where will he be?",
+      "translation": "Ồ? Vậy anh ấy sẽ ở đâu thế?",
+      "isCorrect": true
+    },
+    {
+      "text": "He should get some life insurance.",
+      "translation": "Anh ấy nên mua một ít bảo hiểm nhân thọ.",
+      "isCorrect": false
+    },
+    {
+      "text": "I'm sorry about that, too.",
+      "translation": "Tôi cũng rất tiếc về điều đó.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da9b0c7223e83ddef797b"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332754/25_mp3cut.net_yhnw7h.mp3",
+  "content": {
+    "transcript": "The sales clerk wasn't very kind, was she?",
+    "translation": "Nhân viên bán hàng đó không được thân thiện lắm, đúng không?"
+  },
+  "options": [
+    {
+      "text": "It's on sale today.",
+      "translation": "Hôm nay mặt hàng đó được giảm giá.",
+      "isCorrect": false
+    },
+    {
+      "text": "There are many kinds there.",
+      "translation": "Ở đó có rất nhiều loại.",
+      "isCorrect": false
+    },
+    {
+      "text": "No, she wasn't.",
+      "translation": "Đúng vậy, cô ấy chẳng thân thiện chút nào.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da9c7c7223e83ddef797d"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332884/26_mp3cut.net_jwzbo3.mp3",
+  "content": {
+    "transcript": "What kind of books do you like reading?",
+    "translation": "Bạn thích đọc loại sách nào?"
+  },
+  "options": [
+    {
+      "text": "Ones that make me think.",
+      "translation": "Những cuốn sách khiến tôi phải suy ngẫm.",
+      "isCorrect": true
+    },
+    {
+      "text": "I booked it for three o'clock.",
+      "translation": "Tôi đã đặt lịch nó vào lúc 3 giờ.",
+      "isCorrect": false
+    },
+    {
+      "text": "I read it several times as well.",
+      "translation": "Tôi cũng đã đọc nó vài lần rồi.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da9dfc7223e83ddef797f"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332933/27_mp3cut.net_rmjpig.mp3",
+  "content": {
+    "transcript": "When will Ms. Chow return from her business trip to Shanghai?",
+    "translation": "Khi nào bà Chow sẽ đi công tác từ Thượng Hải về?"
+  },
+  "options": [
+    {
+      "text": "She speaks Chinese.",
+      "translation": "Bà ấy nói tiếng Trung Quốc.",
+      "isCorrect": false
+    },
+    {
+      "text": "Later this week.",
+      "translation": "Cuối tuần này.",
+      "isCorrect": true
+    },
+    {
+      "text": "To land a contract.",
+      "translation": "Để giành được một hợp đồng.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1da9f6c7223e83ddef7981"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780332980/28_mp3cut.net_ufs1wd.mp3",
+  "content": {
+    "transcript": "Shouldn't we eat something before watching the movie?",
+    "translation": "Chúng ta có nên ăn gì đó trước khi xem phim không?"
+  },
+  "options": [
+    {
+      "text": "Yes, I am getting a bit hungry.",
+      "translation": "Có chứ, tôi cũng đang thấy hơi đói rồi.",
+      "isCorrect": true
+    },
+    {
+      "text": "Let's watch a comedy movie.",
+      "translation": "Hãy xem một bộ phim hài đi.",
+      "isCorrect": false
+    },
+    {
+      "text": "There is always something to do.",
+      "translation": "Luôn luôn có việc gì đó để làm.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1daa0ec7223e83ddef7983"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333025/29_mp3cut.net_un0vg5.mp3",
+  "content": {
+    "transcript": "Which documents do I have to prepare for the interview?",
+    "translation": "Tôi phải chuẩn bị những tài liệu nào cho buổi phỏng vấn?"
+  },
+  "options": [
+    {
+      "text": "The documentary will be about an hour long.",
+      "translation": "Bộ phim tài liệu đó sẽ dài khoảng một tiếng.",
+      "isCorrect": false
+    },
+    {
+      "text": "I've already prepared everything for the interview.",
+      "translation": "Tôi đã chuẩn bị xong xuôi mọi thứ cho buổi phỏng vấn rồi.",
+      "isCorrect": false
+    },
+    {
+      "text": "Just bring the folder I gave you this afternoon.",
+      "translation": "Chỉ cần mang theo tập tài liệu tôi đã đưa cho bạn chiều nay là được.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1daa29c7223e83ddef7985"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333094/30_mp3cut.net_dotbgw.mp3",
+  "content": {
+    "transcript": "Who is supposed to come and pick up the script?",
+    "translation": "Ai có nhiệm vụ phải đến lấy kịch bản vậy?"
+  },
+  "options": [
+    {
+      "text": "I'll pick you up later.",
+      "translation": "Tôi sẽ đến đón bạn sau nhé.",
+      "isCorrect": false
+    },
+    {
+      "text": "John will be here at noon.",
+      "translation": "John sẽ có mặt ở đây vào buổi trưa.",
+      "isCorrect": true
+    },
+    {
+      "text": "Let's read it over once again.",
+      "translation": "Chúng ta hãy cùng đọc rà soát lại nó một lần nữa đi.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbaf7c7223e83ddef7987"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333624/01_mp3cut.net_sashbp.mp3",
+  "content": {
+    "transcript": "To whom should I forward this package?",
+    "translation": "Tôi nên chuyển tiếp gói hàng này cho ai?"
+  },
+  "options": [
+    {
+      "text": "I look forward to it.",
+      "translation": "Tôi rất mong đợi điều đó.",
+      "isCorrect": false
+    },
+    {
+      "text": "Professor Jenson.",
+      "translation": "Giáo sư Jenson.",
+      "isCorrect": true
+    },
+    {
+      "text": "At the post office.",
+      "translation": "Tại bưu điện.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbb26c7223e83ddef7989"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333674/02_mp3cut.net_yuiefq.mp3",
+  "content": {
+    "transcript": "When is the proposal due?",
+    "translation": "Khi nào bản đề xuất hết hạn nộp?"
+  },
+  "options": [
+    {
+      "text": "Next week.",
+      "translation": "Vào tuần tới.",
+      "isCorrect": true
+    },
+    {
+      "text": "To ask for a raise.",
+      "translation": "Để yêu cầu tăng lương.",
+      "isCorrect": false
+    },
+    {
+      "text": "Due to the rain.",
+      "translation": "Bởi vì trời mưa.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbb3dc7223e83ddef798b"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333725/03_mp3cut.net_fejczl.mp3",
+  "content": {
+    "transcript": "How long is the wait at the ticket booth?",
+    "translation": "Thời gian chờ ở quầy bán vé là bao lâu?"
+  },
+  "options": [
+    {
+      "text": "For the play.",
+      "translation": "Cho vở kịch.",
+      "isCorrect": false
+    },
+    {
+      "text": "About fifteen minutes.",
+      "translation": "Khoảng mười lăm phút.",
+      "isCorrect": true
+    },
+    {
+      "text": "To boost up the sales.",
+      "translation": "Để thúc đẩy doanh số bán hàng.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbb55c7223e83ddef798d"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333769/04_mp3cut.net_op6ssz.mp3",
+  "content": {
+    "transcript": "Should I book the largest hall or will a medium-sized one be okay?",
+    "translation": "Tôi nên đặt hội trường lớn nhất hay loại vừa là được rồi?"
+  },
+  "options": [
+    {
+      "text": "In the lobby.",
+      "translation": "Ở sảnh chờ.",
+      "isCorrect": false
+    },
+    {
+      "text": "I think he's okay.",
+      "translation": "Tôi nghĩ anh ấy ổn.",
+      "isCorrect": false
+    },
+    {
+      "text": "Check with Mr. Lee.",
+      "translation": "Hãy kiểm tra lại với ông Lee xem sao.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbb73c7223e83ddef798f"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333824/05_mp3cut.net_rgbvrp.mp3",
+  "content": {
+    "transcript": "Would you like to get some coffee?",
+    "translation": "Bạn có muốn đi uống chút cà phê không?"
+  },
+  "options": [
+    {
+      "text": "Sure, I could use the break.",
+      "translation": "Chắc chắn rồi, tôi cũng đang cần nghỉ giải lao một chút đây.",
+      "isCorrect": true
+    },
+    {
+      "text": "Fifteen copies, please.",
+      "translation": "Làm ơn cho tôi mười lăm bản sao.",
+      "isCorrect": false
+    },
+    {
+      "text": "No, I don't like it much.",
+      "translation": "Không, tôi không thích nó lắm.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbb94c7223e83ddef7991"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333879/06_mp3cut.net_s4ojrr.mp3",
+  "content": {
+    "transcript": "Where can I find John Smith?",
+    "translation": "Tôi có thể tìm gặp anh John Smith ở đâu?"
+  },
+  "options": [
+    {
+      "text": "He's on the next floor up.",
+      "translation": "Anh ấy ở ngay tầng trên đấy.",
+      "isCorrect": true
+    },
+    {
+      "text": "I found it in the meeting room.",
+      "translation": "Tôi đã tìm thấy nó ở trong phòng họp.",
+      "isCorrect": false
+    },
+    {
+      "text": "He was looking for you.",
+      "translation": "Lúc nãy anh ấy cũng đang tìm bạn đấy.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbba9c7223e83ddef7993"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780333958/07_mp3cut.net_ofamuz.mp3",
+  "content": {
+    "transcript": "Why don't we take Robin along with us?",
+    "translation": "Hay là chúng ta rủ Robin đi cùng đi?"
+  },
+  "options": [
+    {
+      "text": "I'll ask him to bring it with him.",
+      "translation": "Tôi sẽ bảo anh ấy mang nó theo cùng.",
+      "isCorrect": false
+    },
+    {
+      "text": "Because he is very busy now.",
+      "translation": "Bởi vì bây giờ anh ấy đang rất bận.",
+      "isCorrect": false
+    },
+    {
+      "text": "He's gone to see a client today.",
+      "translation": "Hôm nay anh ấy đi gặp khách hàng mất rồi.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbbbdc7223e83ddef7995"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334012/08_mp3cut.net_jji1de.mp3",
+  "content": {
+    "transcript": "When's your day off?",
+    "translation": "Khi nào là ngày nghỉ của bạn?"
+  },
+  "options": [
+    {
+      "text": "I am very tired.",
+      "translation": "Tôi đang rất mệt.",
+      "isCorrect": false
+    },
+    {
+      "text": "Next Tuesday.",
+      "translation": "Thứ Ba tới.",
+      "isCorrect": true
+    },
+    {
+      "text": "He's not here.",
+      "translation": "Anh ấy không có ở đây.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbbd2c7223e83ddef7997"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334061/09_mp3cut.net_xhzpyp.mp3",
+  "content": {
+    "transcript": "Did you withdraw money from the bank?",
+    "translation": "Bạn đã rút tiền từ ngân hàng chưa?"
+  },
+  "options": [
+    {
+      "text": "I'll do it on my way back from lunch.",
+      "translation": "Tôi sẽ đi rút trên đường đi ăn trưa về.",
+      "isCorrect": true
+    },
+    {
+      "text": "I have a bank account there, too.",
+      "translation": "Tôi cũng có một tài khoản ngân hàng ở đó.",
+      "isCorrect": false
+    },
+    {
+      "text": "It's located on Maple Street.",
+      "translation": "Nó nằm trên đường Maple.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbbe8c7223e83ddef7999"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334105/10_mp3cut.net_fdco9j.mp3",
+  "content": {
+    "transcript": "Have you taken care of the work, or should I ask Jill to do it?",
+    "translation": "Bạn đã xử lý xong công việc chưa, hay là để tôi bảo Jill làm nhé?"
+  },
+  "options": [
+    {
+      "text": "Get Jill to do it.",
+      "translation": "Cứ bảo Jill làm đi.",
+      "isCorrect": true
+    },
+    {
+      "text": "Lots of housework.",
+      "translation": "Rất nhiều việc nhà.",
+      "isCorrect": false
+    },
+    {
+      "text": "I'm going to work soon.",
+      "translation": "Lát nữa là tôi đi làm rồi.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbe59c7223e83ddef799b"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334429/11_mp3cut.net_pbqtby.mp3",
+  "content": {
+    "transcript": "He's the new sales manager, isn't he?",
+    "translation": "Anh ấy là quản lý bán hàng mới, có phải không?"
+  },
+  "options": [
+    {
+      "text": "I made a sale today.",
+      "translation": "Hôm nay tôi đã bán được một đơn hàng.",
+      "isCorrect": false
+    },
+    {
+      "text": "He likes to manage people.",
+      "translation": "Anh ấy thích quản lý mọi người.",
+      "isCorrect": false
+    },
+    {
+      "text": "Yes, it's his first day here.",
+      "translation": "Đúng vậy, hôm nay là ngày đầu tiên làm việc của anh ấy ở đây.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbe73c7223e83ddef799d"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334505/12_mp3cut.net_swrwua.mp3",
+  "content": {
+    "transcript": "That was the best dish I have ever tasted.",
+    "translation": "Đó là món ăn ngon nhất mà tôi từng được nếm thử."
+  },
+  "options": [
+    {
+      "text": "Yes, it was delicious, wasn't it?",
+      "translation": "Đúng vậy, nó ngon tuyệt cú mèo đúng không?",
+      "isCorrect": true
+    },
+    {
+      "text": "I'm going to the restaurant later.",
+      "translation": "Lát nữa tôi mới đi đến nhà hàng cơ.",
+      "isCorrect": false
+    },
+    {
+      "text": "There should be another dish there.",
+      "translation": "Đáng lẽ phải có một món khác ở đó chứ.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbe95c7223e83ddef799f"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334551/13_mp3cut.net_hnrzfv.mp3",
+  "content": {
+    "transcript": "Where did Ms. Curtis leave the weekly report?",
+    "translation": "Bà Curtis đã để cuốn báo cáo tuần ở đâu vậy?"
+  },
+  "options": [
+    {
+      "text": "She left five minutes ago.",
+      "translation": "Bà ấy vừa mới rời đi cách đây năm phút.",
+      "isCorrect": false
+    },
+    {
+      "text": "On top of your desk.",
+      "translation": "Ở ngay trên bàn làm việc của bạn đấy.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, it's a daily report.",
+      "translation": "Không, đó là báo cáo hằng ngày.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbeabc7223e83ddef79a1"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334591/14_mp3cut.net_d1wmpe.mp3",
+  "content": {
+    "transcript": "Did you see a red folder in the room?",
+    "translation": "Bạn có nhìn thấy một chiếc bìa hồ sơ màu đỏ ở trong phòng không?"
+  },
+  "options": [
+    {
+      "text": "I saw Mike taking it earlier.",
+      "translation": "Lúc nãy tôi thấy Mike lấy nó đi rồi.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, I don't like the color.",
+      "translation": "Không, tôi không thích màu đó.",
+      "isCorrect": false
+    },
+    {
+      "text": "The sales report is in it.",
+      "translation": "Bản báo cáo doanh thu ở bên trong đó.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbec3c7223e83ddef79a3"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334642/15_mp3cut.net_g7mbsp.mp3",
+  "content": {
+    "transcript": "Who do I need to speak to about getting a parking spot?",
+    "translation": "Tôi cần phải nói chuyện với ai để đăng ký một chỗ đậu xe?"
+  },
+  "options": [
+    {
+      "text": "I park my car in the underground garage.",
+      "translation": "Tôi đỗ xe của mình ở hầm gửi xe ngầm.",
+      "isCorrect": false
+    },
+    {
+      "text": "Go to the maintenance department.",
+      "translation": "Hãy đến phòng bảo trì/quản lý tòa nhà.",
+      "isCorrect": true
+    },
+    {
+      "text": "I believe there is a charge to park there.",
+      "translation": "Tôi nghĩ là đỗ xe ở đó có tính phí đấy.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbed6c7223e83ddef79a5"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334684/16_mp3cut.net_cohoim.mp3",
+  "content": {
+    "transcript": "Why don't we use the catering service we used at our last party?",
+    "translation": "Hay là chúng ta lại thuê dịch vụ cung cấp tiệc ăn uống mà mình đã dùng ở bữa tiệc lần trước đi?"
+  },
+  "options": [
+    {
+      "text": "The party is this Friday.",
+      "translation": "Bữa tiệc diễn ra vào thứ Sáu tuần này.",
+      "isCorrect": false
+    },
+    {
+      "text": "At the Crown hotel.",
+      "translation": "Tại khách sạn Crown.",
+      "isCorrect": false
+    },
+    {
+      "text": "Yes, they did a great job.",
+      "translation": "Đúng vậy, lần trước họ làm tốt lắm.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbee9c7223e83ddef79a7"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334725/17_mp3cut.net_i6swey.mp3",
+  "content": {
+    "transcript": "How do you get along with your new assistant?",
+    "translation": "Bạn hòa hợp với người trợ lý mới như thế nào rồi?"
+  },
+  "options": [
+    {
+      "text": "To help me with the project.",
+      "translation": "Để giúp tôi thực hiện dự án.",
+      "isCorrect": false
+    },
+    {
+      "text": "I want to come along as well.",
+      "translation": "Tôi cũng muốn đi cùng nữa.",
+      "isCorrect": false
+    },
+    {
+      "text": "I really like her a lot.",
+      "translation": "Tôi thực sự mến cô ấy lắm.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbf00c7223e83ddef79a9"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334772/18_mp3cut.net_ejfpb3.mp3",
+  "content": {
+    "transcript": "Would you prefer taking a day off this week, or next week?",
+    "translation": "Bạn muốn xin nghỉ một ngày vào tuần này hay tuần sau hơn?"
+  },
+  "options": [
+    {
+      "text": "Next week would be nice.",
+      "translation": "Tuần sau thì tốt quá.",
+      "isCorrect": true
+    },
+    {
+      "text": "I need to go to my dentist.",
+      "translation": "Tôi cần phải đi gặp nha sĩ.",
+      "isCorrect": false
+    },
+    {
+      "text": "Let's take it with us.",
+      "translation": "Chúng ta hãy mang nó theo cùng đi.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbf19c7223e83ddef79ab"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334821/19_mp3cut.net_fixhob.mp3",
+  "content": {
+    "transcript": "I need to pick up my car from the garage.",
+    "translation": "Tôi cần phải đi lấy xe ô tô ở gara về."
+  },
+  "options": [
+    {
+      "text": "Yes, John is arriving.",
+      "translation": "Vâng, John đang đến đấy.",
+      "isCorrect": false
+    },
+    {
+      "text": "I'll give you a lift.",
+      "translation": "Để tôi cho bạn đi nhờ một đoạn nhé.",
+      "isCorrect": true
+    },
+    {
+      "text": "I have a compact car.",
+      "translation": "Tôi sở hữu một chiếc xe cỡ nhỏ.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dbf37c7223e83ddef79ae"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780334863/20_mp3cut.net_q8zk1c.mp3",
+  "content": {
+    "transcript": "Isn't there another bus in ten minutes?",
+    "translation": "Chẳng phải là mười phút nữa sẽ có một chuyến xe buýt khác sao?"
+  },
+  "options": [
+    {
+      "text": "Yes, at 3 o'clock.",
+      "translation": "Đúng vậy, lúc 3 giờ đấy.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, it's in the next room.",
+      "network": false,
+      "translation": "Không, nó ở phòng bên cạnh.",
+      "isCorrect": false
+    },
+    {
+      "text": "The boss will be here.",
+      "translation": "Sếp/Ông chủ sắp tới đây rồi.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc2d7c7223e83ddef79b0"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335573/21_mp3cut.net_ahgknj.mp3",
+  "content": {
+    "transcript": "Could we get together to discuss the presentation today?",
+    "translation": "Hôm nay chúng ta có thể gặp nhau để thảo luận về bài thuyết trình được không?"
+  },
+  "options": [
+    {
+      "text": "John is making the presentation.",
+      "translation": "John đang làm bài thuyết trình rồi.",
+      "isCorrect": false
+    },
+    {
+      "text": "How about over lunch?",
+      "translation": "Vậy tranh thủ lúc ăn trưa thì sao nhỉ?",
+      "isCorrect": true
+    },
+    {
+      "text": "No, that will be held tomorrow.",
+      "translation": "Không, sự kiện đó sẽ được tổ chức vào ngày mai.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc2eec7223e83ddef79b2"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335615/22_mp3cut.net_pqo2pt.mp3",
+  "content": {
+    "transcript": "Why did Carl rush out of the office like that?",
+    "translation": "Tại sao Carl lại lao ra khỏi văn phòng vội vã như vậy?"
+  },
+  "options": [
+    {
+      "text": "He was late for a meeting.",
+      "translation": "Anh ấy bị muộn một cuộc họp.",
+      "isCorrect": true
+    },
+    {
+      "text": "Maybe, he is not like that.",
+      "translation": "Có lẽ anh ấy không phải là người như vậy đâu.",
+      "isCorrect": false
+    },
+    {
+      "text": "To the office upstairs.",
+      "translation": "Đi lên văn phòng ở tầng trên.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc30ec7223e83ddef79b4"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335658/23_mp3cut.net_wdmppk.mp3",
+  "content": {
+    "transcript": "What's the weather forecast for this weekend?",
+    "translation": "Dự báo thời tiết cuối tuần này thế nào nhỉ?"
+  },
+  "options": [
+    {
+      "text": "Probably this Saturday.",
+      "translation": "Chắc là thứ Bảy tuần này.",
+      "isCorrect": false
+    },
+    {
+      "text": "It's supposed to get really cold.",
+      "translation": "Nghe nói là trời sắp chuyển lạnh sâu đấy.",
+      "isCorrect": true
+    },
+    {
+      "text": "Well, let's forget about it.",
+      "translation": "Thôi, cứ quên chuyện đó đi.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc327c7223e83ddef79b6"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335699/24_mp3cut.net_sk52xs.mp3",
+  "content": {
+    "transcript": "There isn't a subway station near here, is there?",
+    "translation": "Ở gần đây không có trạm tàu điện ngầm nào đúng không?"
+  },
+  "options": [
+    {
+      "text": "It would be better to take my car.",
+      "translation": "Đi bằng xe ô tô của tôi sẽ tốt hơn đấy.",
+      "isCorrect": false
+    },
+    {
+      "text": "The place is very close to here.",
+      "translation": "Địa điểm đó ở rất gần đây.",
+      "isCorrect": false
+    },
+    {
+      "text": "No, but there is a bus stop on the corner.",
+      "translation": "Không có, nhưng có một trạm dừng xe buýt ở ngay góc đường.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc33bc7223e83ddef79b8"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335817/25_mp3cut.net_kwj58i.mp3",
+  "content": {
+    "transcript": "Do you know why this box was not mailed out yet?",
+    "translation": "Bạn có biết tại sao cái thùng này vẫn chưa được gửi đi không?"
+  },
+  "options": [
+    {
+      "text": "She's at the post office now.",
+      "translation": "Hiện tại cô ấy đang ở bưu điện rồi.",
+      "isCorrect": false
+    },
+    {
+      "text": "I have not checked my mail yet.",
+      "translation": "Tôi vẫn chưa kiểm tra hòm thư của mình.",
+      "isCorrect": false
+    },
+    {
+      "text": "Sorry, I really don't know.",
+      "translation": "Xin lỗi nhé, tôi thực sự không biết tại sao nữa.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc351c7223e83ddef79ba"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335888/26_mp3cut.net_ycr2mc.mp3",
+  "content": {
+    "transcript": "Mr. Wong will make the presentation at today's meeting, won't he?",
+    "translation": "Ông Wong sẽ là người thuyết trình ở cuộc họp hôm nay có phải không?"
+  },
+  "options": [
+    {
+      "text": "Yes, I'm going to be there.",
+      "translation": "Vâng, tôi cũng sẽ tham gia buổi họp đó.",
+      "isCorrect": false
+    },
+    {
+      "text": "It will be held in room 12.",
+      "translation": "Cuộc họp sẽ được tổ chức ở phòng số 12.",
+      "isCorrect": false
+    },
+    {
+      "text": "No, I think John is doing it.",
+      "translation": "Không đâu, tôi nghĩ lần này John mới là người làm việc đó.",
+      "isCorrect": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc377c7223e83ddef79bc"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335919/27_mp3cut.net_outlei.mp3",
+  "content": {
+    "transcript": "Could you take this file to Mr. Harris?",
+    "translation": "Bạn có thể đem tập tài liệu này qua cho ông Harris giúp tôi được không?"
+  },
+  "options": [
+    {
+      "text": "Where is he?",
+      "translation": "Ông ấy đang ở đâu thế nhỉ?",
+      "isCorrect": true
+    },
+    {
+      "text": "In the cabinet.",
+      "translation": "Ở trong tủ tài liệu.",
+      "isCorrect": false
+    },
+    {
+      "text": "He is due to arrive soon.",
+      "translation": "Ông ấy dự kiến sẽ tới sớm thôi.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc38cc7223e83ddef79be"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335960/28_mp3cut.net_wx0o3d.mp3",
+  "content": {
+    "transcript": "There are not enough chairs for all the guests.",
+    "translation": "Không có đủ ghế ngồi cho tất cả khách mời rồi."
+  },
+  "options": [
+    {
+      "text": "There is plenty of food for everyone.",
+      "translation": "Có rất nhiều đồ ăn cho mọi người mà.",
+      "isCorrect": false
+    },
+    {
+      "text": "How many people are we expecting?",
+      "translation": "Thế chúng ta đang dự tính sẽ có khoảng bao nhiêu người tham dự vậy?",
+      "isCorrect": true
+    },
+    {
+      "text": "I guess he will be coming later.",
+      "translation": "Tôi đoán là anh ấy sẽ đến muộn hơn đấy.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc3a1c7223e83ddef79c0"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780335999/29_mp3cut.net_gvtt4x.mp3",
+  "content": {
+    "transcript": "When's the best time to contact you?",
+    "translation": "Thời gian nào là tốt nhất để tôi liên lạc với bạn nhỉ?"
+  },
+  "options": [
+    {
+      "text": "Try me this afternoon.",
+      "translation": "Cứ gọi/liên lạc với tôi vào chiều nay xem sao nhé.",
+      "isCorrect": true
+    },
+    {
+      "text": "Let's sign the contract.",
+      "translation": "Chúng ta hãy ký kết hợp đồng thôi nào.",
+      "isCorrect": false
+    },
+    {
+      "text": "The best is yet to come.",
+      "translation": "Những điều tốt đẹp nhất vẫn còn ở phía trước.",
+      "isCorrect": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a1dc3b5c7223e83ddef79c2"
+  },
+  "audioUrl": "https://res.cloudinary.com/ddizrhk7g/video/upload/v1780336032/30_mp3cut.net_vyotdm.mp3",
+  "content": {
+    "transcript": "Didn't Ms. Rodriquez come by to deliver the documents herself today?",
+    "translation": "Chẳng phải hôm nay bà Rodriquez đã tự mình ghé qua để giao tài liệu sao?"
+  },
+  "options": [
+    {
+      "text": "Let's send it to her now.",
+      "translation": "Chúng ta hãy gửi nó cho cô ấy ngay bây giờ đi.",
+      "isCorrect": false
+    },
+    {
+      "text": "Yes, we got the papers.",
+      "translation": "Đúng vậy, chúng tôi đã nhận được số giấy tờ đó rồi.",
+      "isCorrect": true
+    },
+    {
+      "text": "No, she will do it by herself.",
+      "translation": "Không, cô ấy sẽ tự mình làm việc đó.",
+      "isCorrect": false
+    }
+  ]
+}]
